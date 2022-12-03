@@ -1,0 +1,107 @@
+[tool.poetry]
+name = "tap-neon"
+version = "0.0.1"
+description = "`tap-neon` is a Singer tap for Neon Serverless Postgres, built with the Meltano SDK for Singer Taps."
+authors = ["Edgar Ramirez <edgarrm358@gmail.com>"]
+keywords = [
+  "ELT",
+  "singer.io",
+  "Neon Serverless Postgres",
+]
+license = "Apache 2.0"
+readme = "README.md"
+homepage = "https://github.com/edgarrmondragon/tap-neon"
+repository = "https://github.com/edgarrmondragon/tap-neon"
+documentation = "https://github.com/edgarrmondragon/tap-neon#readme"
+
+[tool.poetry.dependencies]
+python = "<3.12,>=3.7.1"
+singer-sdk = "^0.14.0"
+
+[tool.poetry.group.dev.dependencies]
+mypy = ">=0.991"
+pytest = ">=7.2.0"
+types-requests = ">=2.28.11.5"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3 # Vertical Hanging Indent
+use_parentheses = true
+include_trailing_comma = true
+src_paths = "tap_neon"
+known_first_party = "tap_neon"
+add_imports = [
+  "from __future__ import annotations",
+]
+
+[tool.pytest.ini_options]
+addopts = "-vvv"
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core>=1,<2"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+# CLI declaration
+"tap-neon" = "tap_neon.tap:TapNeon.cli"
+
+[tool.ruff]
+extend-ignore = [
+  # equivalent to `--docstring-convention=google`
+  "D203",
+  "D204",
+  "D213",
+  "D215",
+  "D400",
+  "D404",
+  "D406",
+  "D407",
+  "D408",
+  "D409",
+  "D413",
+]
+ignore = [
+  "ANN101",
+]
+line-length = 88
+select = [
+  "F", # Pyflakes
+  "E", # pycodestyle (error)
+  "W", # pycodestyle (warning)
+  "I0", # isort
+  "D", # pydocstyle (with google style docstring convention)
+  "U", # pyupgrade
+  "N8", # pep8-naming
+  "ERA", # eradicate
+  "S", # flake8-bandit
+  "C4", # flake8-comprehensions
+  "T1", # flake8-debugger
+  "FBT", # flake8-boolean-trap
+  "B0", # flake8-bugbear
+  "A0", # flake8-builtins
+  "I25", # flake8-tidy-imports
+  "T2", # flake8-print
+  "Q0", # flake8-quotes
+  "ANN", # flake8-annotations
+  "YTT", # flake8-2020
+  "BLE", # flake8-blind-except
+  "C9", # mccabe
+  "PGH", # pygrep-hooks
+  "RUF", # Ruff-specific rules
+  "M", # Meta rules
+]
+src = ["tap_neon"]
+
+[tool.ruff.isort]
+known-first-party = ["tap_neon"]
+
+[tool.ruff.per-file-ignores]
+"noxfile.py" = ["ANN"]
+"tests/*" = ["ANN"]
