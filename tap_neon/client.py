@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from requests import Response
 from singer_sdk import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.pagination import JSONPathPaginator
+
+if TYPE_CHECKING:
+    from requests import Response
 
 
 class NeonCursorPaginator(JSONPathPaginator):
@@ -57,15 +59,14 @@ class NeonStream(RESTStream):
         Returns:
             A dictionary of HTTP headers.
         """
-        headers = {
+        return {
             "User-Agent": f"{self.tap_name}/{self._tap.plugin_version}",
             "Content-Type": "application/json",
         }
-        return headers
 
     def get_url_params(
         self,
-        context: dict | None,
+        context: dict | None,  # noqa: ARG002
         next_page_token: Any | None,
     ) -> dict[str, Any]:
         """Get URL query parameters.
@@ -80,7 +81,7 @@ class NeonStream(RESTStream):
         params: dict = {}
 
         if self.next_page_token_jsonpath:
-            params["limit"] = 500
+            params["limit"] = 100
             params["cursor"] = next_page_token
         return params
 

@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import requests
 from singer_sdk import Stream, Tap
 from singer_sdk import typing as th
 from singer_sdk._singerlib import resolve_schema_references
-from singer_sdk.streams import RESTStream
 
 from tap_neon import streams
+
+if TYPE_CHECKING:
+    from singer_sdk.streams import RESTStream
 
 OPENAPI_URL = "https://dqjnwjfwjj8yz.cloudfront.net/api_spec/main/v2.json"
 STREAMS: list[type[streams.NeonStream]] = [
@@ -46,7 +50,7 @@ class TapNeon(Tap):
         Returns:
             OpenAPI schema.
         """
-        return requests.get(OPENAPI_URL).json()
+        return requests.get(OPENAPI_URL, timeout=5).json()
 
     def discover_streams(self) -> list[Stream]:
         """Return a list of discovered streams.
