@@ -15,7 +15,11 @@ class Projects(NeonStream):
     swagger_ref = "Project"
     records_jsonpath = "$.projects[*]"
 
-    def get_child_context(self, record: dict, context: dict | None) -> dict:
+    def get_child_context(
+        self,
+        record: dict,
+        context: dict | None,  # noqa: ARG002
+    ) -> dict:
         """Return the child context for this record.
 
         Args:
@@ -52,7 +56,11 @@ class Branches(NeonStream):
     records_jsonpath = "$.branches[*]"
     parent_stream_type = Projects
 
-    def get_child_context(self, record: dict, context: dict | None) -> dict:
+    def get_child_context(
+        self,
+        record: dict,
+        context: dict | None,  # noqa: ARG002
+    ) -> dict:
         """Add branch_id to context.
 
         Args:
