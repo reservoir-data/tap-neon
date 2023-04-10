@@ -10,6 +10,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "program": "tap_neon",
+            "justMyCode": false,
             "args": [
                 "--config",
                 "ENV",
