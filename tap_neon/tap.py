@@ -14,7 +14,7 @@ from tap_neon import streams
 if TYPE_CHECKING:
     from singer_sdk.streams import RESTStream
 
-OPENAPI_URL = "https://dqjnwjfwjj8yz.cloudfront.net/api_spec/main/v2.json"
+OPENAPI_URL = "https://dfv3qgd2ykmrx.cloudfront.net/api_spec/release/v2.json"
 STREAMS: list[type[streams.NeonStream]] = [
     streams.Operations,
     streams.Projects,
