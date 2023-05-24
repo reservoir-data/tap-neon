@@ -61,6 +61,7 @@ src = ["tap_neon"]
 
 [tool.ruff.isort]
 known-first-party = ["tap_neon"]
+required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.per-file-ignores]
 "noxfile.py" = ["ANN"]
