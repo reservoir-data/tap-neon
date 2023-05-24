@@ -1,6 +1,13 @@
+[build-system]
+build-backend = "poetry_dynamic_versioning.backend"
+requires = [
+  "poetry-core<2,>=1",
+  "poetry-dynamic-versioning",
+]
+
 [tool.poetry]
 name = "tap-neon"
-version = "0.0.1"
+version = "0.0.0"
 description = "`tap-neon` is a Singer tap for Neon Serverless Postgres, built with the Meltano SDK for Singer Taps."
 authors = ["Edgar Ramirez <edgarrm358@gmail.com>"]
 keywords = ["ELT", "singer.io", "Neon Serverless Postgres"]
@@ -17,14 +24,9 @@ singer-sdk = "^0.27.0"
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.0"
 
-[tool.isort]
-profile = "black"
-multi_line_output = 3                                # Vertical Hanging Indent
-use_parentheses = true
-include_trailing_comma = true
-src_paths = "tap_neon"
-known_first_party = "tap_neon"
-add_imports = ["from __future__ import annotations"]
+[tool.poetry.scripts]
+# CLI declaration
+"tap-neon" = "tap_neon.tap:TapNeon.cli"
 
 [tool.pytest.ini_options]
 addopts = "-vvv"
@@ -36,13 +38,20 @@ warn_unused_configs = true
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
 
-[build-system]
-requires = ["poetry-core>=1,<2"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-# CLI declaration
-"tap-neon" = "tap_neon.tap:TapNeon.cli"
+[tool.poetry-dynamic-versioning]
+enable = true
+format-jinja = """
+    {%- if distance == 0 -%}
+        {{ serialize_pep440(base, stage, revision) }}
+    {%- elif revision is not none -%}
+        {{ serialize_pep440(base, stage, revision + 1, dev=distance, metadata=[commit]) }}
+    {%- else -%}
+        {{ serialize_pep440(bump_version(base), stage, revision, dev=distance, metadata=[commit]) }}
+    {%- endif -%}
+"""
+metadata = true
+style = "pep440"
+vcs = "git"
 
 [tool.ruff]
 ignore = ["ANN101", "DJ", "PD"]

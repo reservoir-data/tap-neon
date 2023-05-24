@@ -82,7 +82,8 @@ class NeonStream(RESTStream):
 
         if self.next_page_token_jsonpath:
             params["limit"] = 100
-            params["cursor"] = next_page_token
+            if next_page_token:
+                params["cursor"] = next_page_token
         return params
 
     def get_new_paginator(self) -> NeonCursorPaginator:
