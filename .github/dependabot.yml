@@ -7,15 +7,30 @@ version: 2
 updates:
   - package-ecosystem: pip
     directory: "/"
+    versioning-strategy: increase
     schedule:
       interval: "daily"
-      time: "13:54"
     reviewers:
       - "edgarrmondragon"
+    ignore:
+      - dependency-name: "singer-sdk"
+    commit-message:
+      prefix: "chore(deps): "
+      prefix-development: "chore(deps-dev): "
+  - package-ecosystem: pip
+    directory: "/"
+    versioning-strategy: increase
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "edgarrmondragon"
+    allow:
+      - dependency-name: "singer-sdk"
+    commit-message:
+      prefix: "feat(deps): "
   - package-ecosystem: pip
     directory: "/.github/workflows"
     schedule:
-      time: "13:54"
       interval: "daily"
     reviewers:
       - "edgarrmondragon"
@@ -23,6 +38,5 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      time: "13:54"
     reviewers:
       - "edgarrmondragon"
