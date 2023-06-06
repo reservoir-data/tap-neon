@@ -26,9 +26,7 @@ class NeonCursorPaginator(JSONPathPaginator):
             True if there are more pages to paginate.
         """
         cursor = next(extract_jsonpath(self._jsonpath, response.json()), None)
-        if cursor == self.current_value and self.count > 1:
-            return False
-        return True
+        return cursor != self.current_value or self.count <= 1
 
 
 class NeonStream(RESTStream):
