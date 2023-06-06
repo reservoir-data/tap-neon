@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from tap_neon.client import NeonStream
 
 
@@ -12,7 +14,7 @@ class Projects(NeonStream):
     path = "/projects"
     primary_keys = ["id"]
     replication_key = None
-    swagger_ref = "Project"
+    swagger_ref = "ProjectListItem"
     records_jsonpath = "$.projects[*]"
 
     def get_child_context(
@@ -103,10 +105,15 @@ class Roles(NeonStream):
 class Endpoints(NeonStream):
     """Endpoints stream."""
 
-    name = "endpoint"
+    name = "endpoints"
     path = "/projects/{project_id}/endpoints"
     primary_keys = ["id"]
     replication_key = None
     swagger_ref = "Endpoint"
     records_jsonpath = "$.endpoints[*]"
     parent_stream_type = Projects
+
+    def __init__(self, *args: t.Any, **kwargs: t.Any) -> None:
+        """Initialize the endpoints stream."""
+        super().__init__(*args, **kwargs)
+        self._schema["properties"]["pooler_mode"]["enum"].append("")
