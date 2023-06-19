@@ -28,6 +28,26 @@ pytest = ">=7.3.1"
 # CLI declaration
 "tap-neon" = "tap_neon.tap:TapNeon.cli"
 
+[tool.ruff]
+ignore = ["ANN101", "DJ", "PD"]
+line-length = 88
+select = ["ALL"]
+src = ["tap_neon"]
+
+[tool.ruff.flake8-annotations]
+allow-star-arg-any = true
+
+[tool.ruff.isort]
+known-first-party = ["tap_neon"]
+required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.per-file-ignores]
+"noxfile.py" = ["ANN"]
+"tests/*" = ["ANN"]
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
 [tool.pytest.ini_options]
 addopts = "-vvv"
 
@@ -49,23 +69,3 @@ format-jinja = """
 metadata = true
 style = "pep440"
 vcs = "git"
-
-[tool.ruff]
-ignore = ["ANN101", "DJ", "PD"]
-line-length = 88
-select = ["ALL"]
-src = ["tap_neon"]
-
-[tool.ruff.flake8-annotations]
-allow-star-arg-any = true
-
-[tool.ruff.isort]
-known-first-party = ["tap_neon"]
-required-imports = ["from __future__ import annotations"]
-
-[tool.ruff.per-file-ignores]
-"noxfile.py" = ["ANN"]
-"tests/*" = ["ANN"]
-
-[tool.ruff.pydocstyle]
-convention = "google"
