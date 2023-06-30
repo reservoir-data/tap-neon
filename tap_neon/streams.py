@@ -36,8 +36,16 @@ class Projects(NeonStream):
     def __init__(self, *args: t.Any, **kwargs: t.Any) -> None:
         """Initialize the projects stream."""
         super().__init__(*args, **kwargs)
-        self._schema["properties"]["default_endpoint_settings"]["properties"]["autoscaling_limit_min_cu"]["minimum"] = 0  # noqa: E501
-        self._schema["properties"]["default_endpoint_settings"]["properties"]["autoscaling_limit_max_cu"]["minimum"] = 0  # noqa: E501
+        self._schema["properties"]["default_endpoint_settings"]["properties"][
+            "autoscaling_limit_min_cu"
+        ][
+            "minimum"
+        ] = 0  # noqa: E501
+        self._schema["properties"]["default_endpoint_settings"]["properties"][
+            "autoscaling_limit_max_cu"
+        ][
+            "minimum"
+        ] = 0  # noqa: E501
 
 
 class Operations(NeonStream):
