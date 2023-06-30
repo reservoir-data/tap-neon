@@ -12,7 +12,7 @@ class Projects(NeonStream):
 
     name = "projects"
     path = "/projects"
-    primary_keys = ("id",)
+    primary_keys = ("id",)  # type: ignore[assignment]
     replication_key = None
     swagger_ref = "ProjectListItem"
     records_jsonpath = "$.projects[*]"
@@ -33,13 +33,23 @@ class Projects(NeonStream):
         """
         return {"project_id": record["id"]}
 
+    def __init__(self, *args: t.Any, **kwargs: t.Any) -> None:
+        """Initialize the projects stream."""
+        super().__init__(*args, **kwargs)
+        self._schema["properties"]["default_endpoint_settings"]["properties"][
+            "autoscaling_limit_min_cu"
+        ]["minimum"] = 0
+        self._schema["properties"]["default_endpoint_settings"]["properties"][
+            "autoscaling_limit_max_cu"
+        ]["minimum"] = 0
+
 
 class Operations(NeonStream):
     """Operations stream."""
 
     name = "operations"
     path = "/projects/{project_id}/operations"
-    primary_keys = ("id",)
+    primary_keys = ("id",)  # type: ignore[assignment]
     replication_key = None
     swagger_ref = "Operation"
     records_jsonpath = "$.operations[*]"
@@ -52,7 +62,7 @@ class Branches(NeonStream):
 
     name = "branches"
     path = "/projects/{project_id}/branches"
-    primary_keys = ("id",)
+    primary_keys = ("id",)  # type: ignore[assignment]
     replication_key = None
     swagger_ref = "Branch"
     records_jsonpath = "$.branches[*]"
@@ -83,7 +93,7 @@ class Databases(NeonStream):
 
     name = "databases"
     path = "/projects/{project_id}/branches/{branch_id}/databases"
-    primary_keys = ("id",)
+    primary_keys = ("id",)  # type: ignore[assignment]
     replication_key = None
     swagger_ref = "Database"
     records_jsonpath = "$.databases[*]"
@@ -95,7 +105,7 @@ class Roles(NeonStream):
 
     name = "roles"
     path = "/projects/{project_id}/branches/{branch_id}/roles"
-    primary_keys = ("name",)
+    primary_keys = ("name",)  # type: ignore[assignment]
     replication_key = None
     swagger_ref = "Role"
     records_jsonpath = "$.roles[*]"
@@ -107,7 +117,7 @@ class Endpoints(NeonStream):
 
     name = "endpoints"
     path = "/projects/{project_id}/endpoints"
-    primary_keys = ("id",)
+    primary_keys = ("id",)  # type: ignore[assignment]
     replication_key = None
     swagger_ref = "Endpoint"
     records_jsonpath = "$.endpoints[*]"
