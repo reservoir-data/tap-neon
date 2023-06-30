@@ -38,14 +38,10 @@ class Projects(NeonStream):
         super().__init__(*args, **kwargs)
         self._schema["properties"]["default_endpoint_settings"]["properties"][
             "autoscaling_limit_min_cu"
-        ][
-            "minimum"
-        ] = 0  # noqa: E501
+        ]["minimum"] = 0
         self._schema["properties"]["default_endpoint_settings"]["properties"][
             "autoscaling_limit_max_cu"
-        ][
-            "minimum"
-        ] = 0  # noqa: E501
+        ]["minimum"] = 0
 
 
 class Operations(NeonStream):
