@@ -65,7 +65,7 @@ class NeonStream(RESTStream):
     def get_url_params(
         self,
         context: dict | None,  # noqa: ARG002
-        next_page_token: Any | None,
+        next_page_token: str | None,
     ) -> dict[str, Any]:
         """Get URL query parameters.
 
