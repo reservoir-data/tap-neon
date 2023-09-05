@@ -33,6 +33,7 @@ ignore = ["ANN101", "DJ", "PD"]
 line-length = 88
 select = ["ALL"]
 src = ["tap_neon"]
+target-version = "py38"
 
 [tool.ruff.flake8-annotations]
 allow-star-arg-any = true
