@@ -1,6 +1,9 @@
 version: 1
 send_anonymous_usage_stats: false
 project_id: tap-neon
+default_environment: dev
+environments:
+- name: dev
 plugins:
   extractors:
   - name: tap-neon
