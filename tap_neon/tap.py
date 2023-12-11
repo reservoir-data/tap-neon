@@ -15,8 +15,10 @@ from tap_neon import streams
 if t.TYPE_CHECKING:
     from singer_sdk.streams import RESTStream
 
+    from tap_neon.client import NeonStream
+
 OPENAPI_URL = "https://dfv3qgd2ykmrx.cloudfront.net/api_spec/release/v2.json"
-STREAMS: list[type[streams.NeonStream]] = [
+STREAMS: list[type[NeonStream]] = [
     streams.Operations,
     streams.Projects,
     streams.Branches,
@@ -70,13 +72,13 @@ class TapNeon(Tap):
         ),
     ).to_dict()
 
-    def get_openapi_schema(self) -> dict:
+    def get_openapi_schema(self) -> dict[t.Any, t.Any]:
         """Retrieve Swagger/OpenAPI schema for this API.
 
         Returns:
             OpenAPI schema.
         """
-        return requests.get(OPENAPI_URL, timeout=5).json()
+        return requests.get(OPENAPI_URL, timeout=5).json()  # type: ignore[no-any-return]
 
     def discover_streams(self) -> list[Stream]:
         """Return a list of discovered streams.
@@ -84,7 +86,7 @@ class TapNeon(Tap):
         Returns:
             A list of Neon Serverless Postgres streams.
         """
-        streams: list[RESTStream] = []
+        streams: list[RESTStream[str]] = []
         openapi_schema = self.get_openapi_schema()
 
         for stream_type in STREAMS:
