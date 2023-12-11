@@ -29,7 +29,7 @@ class NeonCursorPaginator(JSONPathPaginator):
         return cursor != self.current_value or self.count <= 1
 
 
-class NeonStream(RESTStream):
+class NeonStream(RESTStream[str]):
     """Neon Serverless Postgres stream class."""
 
     url_base = "https://console.neon.tech/api/v2"
@@ -51,7 +51,7 @@ class NeonStream(RESTStream):
         )
 
     @property
-    def http_headers(self) -> dict:
+    def http_headers(self) -> dict[str, str]:
         """Return the http headers needed.
 
         Returns:
@@ -64,7 +64,7 @@ class NeonStream(RESTStream):
 
     def get_url_params(
         self,
-        context: dict | None,  # noqa: ARG002
+        context: dict[str, Any] | None,  # noqa: ARG002
         next_page_token: str | None,
     ) -> dict[str, Any]:
         """Get URL query parameters.
@@ -76,7 +76,7 @@ class NeonStream(RESTStream):
         Returns:
             Mapping of URL query parameters.
         """
-        params: dict = {}
+        params: dict[str, Any] = {}
 
         if self.next_page_token_jsonpath:
             params["limit"] = 100

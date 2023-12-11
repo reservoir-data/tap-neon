@@ -6,6 +6,15 @@ import typing as t
 
 from tap_neon.client import NeonStream
 
+__all__ = [
+    "Projects",
+    "Operations",
+    "Branches",
+    "Databases",
+    "Roles",
+    "Endpoints",
+]
+
 
 class Projects(NeonStream):
     """Projects stream."""
@@ -19,9 +28,9 @@ class Projects(NeonStream):
 
     def get_child_context(
         self,
-        record: dict,
-        context: dict | None,  # noqa: ARG002
-    ) -> dict:
+        record: dict[str, t.Any],
+        context: dict[str, t.Any] | None,  # noqa: ARG002
+    ) -> dict[str, t.Any]:
         """Return the child context for this record.
 
         Args:
@@ -70,9 +79,9 @@ class Branches(NeonStream):
 
     def get_child_context(
         self,
-        record: dict,
-        context: dict | None,  # noqa: ARG002
-    ) -> dict:
+        record: dict[str, t.Any],
+        context: dict[str, t.Any] | None,  # noqa: ARG002
+    ) -> dict[str, t.Any]:
         """Add branch_id to context.
 
         Args:
