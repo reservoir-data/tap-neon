@@ -100,13 +100,16 @@ required-imports = ["from __future__ import annotations"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.deptry.package_module_name_map]
+mypy = "mypy"
+types-requests = "requests"
+
 [tool.deptry.per_rule_ignores]
 DEP002 = [
   "deptry",
   "mypy",
   "pendulum",
   "pytest",
-  "types-requests",
 ]
 
 [tool.pytest.ini_options]
