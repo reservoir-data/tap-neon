@@ -34,22 +34,19 @@ dependencies = [
   "requests",
   "singer-sdk~=0.34.0",
 ]
-[project.optional-dependencies]
-testing = [
+optional-dependencies.testing = [
   "deptry>=0.12",
   "pytest>=7.4",
   "singer-sdk[testing]~=0.34.0",
 ]
-typing = [
+optional-dependencies.typing = [
   "mypy",
   "types-requests",
 ]
-[project.urls]
-Documentation = "https://github.com/edgarrmondragon/tap-neon#readme"
-Homepage = "https://github.com/edgarrmondragon/tap-neon"
-Source = "https://github.com/edgarrmondragon/tap-neon"
-[project.scripts]
-"tap-neon" = "tap_neon.tap:TapNeon.cli"
+urls.Documentation = "https://github.com/edgarrmondragon/tap-neon#readme"
+urls.Homepage = "https://github.com/edgarrmondragon/tap-neon"
+urls.Source = "https://github.com/edgarrmondragon/tap-neon"
+scripts."tap-neon" = "tap_neon.tap:TapNeon.cli"
 
 [tool.hatch.version]
 source = "vcs"
