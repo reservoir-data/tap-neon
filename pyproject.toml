@@ -30,7 +30,6 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  'pendulum~=3.0.0b1; python_version >= "3.12"',
   "requests",
   "singer-sdk~=0.34.0",
 ]
@@ -105,7 +104,6 @@ types-requests = "requests"
 DEP002 = [
   "deptry",
   "mypy",
-  "pendulum",
   "pytest",
 ]
 
