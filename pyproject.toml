@@ -14,7 +14,7 @@ keywords = [
   "Neon Serverless Postgres",
   "singer.io",
 ]
-license = "Apache-2.0"
+license.file = "LICENSE"
 maintainers = [{ name = "Edgar Ramírez-Mondragón", email = "edgarrm358@gmail.com" }]
 authors = [{ name = "Edgar Ramírez-Mondragón", email = "edgarrm358@gmail.com" }]
 requires-python = ">=3.8"
@@ -60,6 +60,11 @@ features = ["testing"]
 integration = "pytest {args:tests}"
 dependencies = "deptry ."
 
+[tool.hatch.envs.all]
+template = "test"
+[[tool.hatch.envs.all.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
 [tool.hatch.envs.typing]
 features = ["testing", "typing"]
 [tool.hatch.envs.typing.scripts]
@@ -90,7 +95,6 @@ known-first-party = ["tap_neon"]
 required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint.per-file-ignores]
-"noxfile.py" = ["ANN"]
 "tests/*" = ["ANN"]
 
 [tool.ruff.lint.pydocstyle]
@@ -111,8 +115,10 @@ DEP002 = [
 addopts = "-vvv"
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 warn_redundant_casts = true
+warn_return_any = true
+warn_no_return = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
