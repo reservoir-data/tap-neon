@@ -1,3 +1,6 @@
+# Data files
+*.jsonl
+
 # Ignore meltano internal cache and sqlite systemdb
 
 .meltano/
@@ -158,3 +161,16 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
