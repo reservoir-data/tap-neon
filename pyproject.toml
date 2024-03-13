@@ -35,6 +35,7 @@ dependencies = [
 ]
 optional-dependencies.testing = [
   "deptry>=0.12",
+  'importlib_resources!=6.2.0,!=6.3.0,>=5.2; python_version < "3.9"',
   "pytest>=7.4",
   "singer-sdk[testing]~=0.36.0",
 ]
@@ -105,6 +106,7 @@ types-requests = "requests"
 
 [tool.deptry.per_rule_ignores]
 DEP002 = [
+  "importlib_resources",
   "deptry",
   "mypy",
   "pytest",
