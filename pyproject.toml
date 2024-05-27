@@ -91,6 +91,14 @@ line-length = 88
 lint.select = [
   "ALL",
 ]
+lint.ignore = [
+  "ANN101", # missing-type-self
+  "COM812", # missing-trailing-comma
+  "DJ",     # flake8-django
+  "ISC001", # single-line-implicit-string-concatenation
+  "PD",     # pandas-vet
+]
+
 lint.per-file-ignores."tests/*" = [
   "ANN",
 ]
@@ -105,13 +113,6 @@ lint.isort.required-imports = [
   "from __future__ import annotations",
 ]
 lint.pydocstyle.convention = "google"
-lint.ignore = [
-  "ANN101", # missing-type-self
-  "COM812", # missing-trailing-comma
-  "DJ",     # flake8-django
-  "ISC001", # single-line-implicit-string-concatenation
-  "PD",     # pandas-vet
-]
 
 [tool.deptry.package_module_name_map]
 mypy = "mypy"
