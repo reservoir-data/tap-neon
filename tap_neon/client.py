@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from singer_sdk import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
+
+if TYPE_CHECKING:
+    from singer_sdk.helpers.types import Context
 
 
 class NeonStream(RESTStream[str]):
@@ -43,7 +46,7 @@ class NeonStream(RESTStream[str]):
 
     def get_url_params(
         self,
-        context: dict[str, Any] | None,  # noqa: ARG002
+        context: Context[str, Any] | None,  # noqa: ARG002
         next_page_token: str | None,
     ) -> dict[str, Any]:
         """Get URL query parameters.
