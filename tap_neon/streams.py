@@ -7,7 +7,7 @@ import typing as t
 from tap_neon.client import NeonStream
 
 if t.TYPE_CHECKING:
-    from singer_sdk.helpers.types import Context
+    from singer_sdk.helpers.types import Context, Record
 
 
 __all__ = [
@@ -32,8 +32,8 @@ class Projects(NeonStream):
 
     def get_child_context(
         self,
-        record: dict[str, t.Any],
-        context: Context[str, t.Any] | None,  # noqa: ARG002
+        record: Record,
+        context: Context | None,  # noqa: ARG002
     ) -> dict[str, t.Any]:
         """Return the child context for this record.
 
@@ -83,8 +83,8 @@ class Branches(NeonStream):
 
     def get_child_context(
         self,
-        record: dict[str, t.Any],
-        context: Context[str, t.Any] | None,  # noqa: ARG002
+        record: Record,
+        context: Context | None,  # noqa: ARG002
     ) -> dict[str, t.Any]:
         """Add branch_id to context.
 
