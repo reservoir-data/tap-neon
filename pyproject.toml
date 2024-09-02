@@ -7,7 +7,7 @@ requires = [
 
 [project]
 name = "tap-neon"
-description = "`tap-neon` is a Singer tap for Neon Serverless Postgres, built with the Meltano SDK for Singer Taps."
+description = "Singer tap for Neon Serverless Postgres, built with the Meltano SDK for Singer Taps."
 readme = "README.md"
 keywords = [
   "ELT",
