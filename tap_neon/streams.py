@@ -11,12 +11,12 @@ if t.TYPE_CHECKING:
 
 
 __all__ = [
-    "Projects",
-    "Operations",
     "Branches",
     "Databases",
-    "Roles",
     "Endpoints",
+    "Operations",
+    "Projects",
+    "Roles",
 ]
 
 
