@@ -8,7 +8,6 @@ on:
     - tests/**
     - pyproject.toml
     - .github/workflows/test.yml
-    - .github/workflows/constraints.txt
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
@@ -16,17 +15,24 @@ on:
     - tests/**
     - pyproject.toml
     - .github/workflows/test.yml
-    - .github/workflows/constraints.txt
   schedule:
   - cron: "0 10 * * *"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+  # renovate: datasource=pypi depName=hatch
+  HATCH_VERSION: 1.14.0
+  # renovate: datasource=pypi depName=nox
+  PIP_VERSION: 25.0.1
+
 jobs:
   tests:
     runs-on: ubuntu-latest
-    env:
-      FORCE_COLOR: "1"
-      PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
     strategy:
       fail-fast: false
       matrix:
@@ -54,12 +60,12 @@ jobs:
 
     - name: Upgrade pip
       run: |
-        pip install pip
+        pip install pip==${{ env.PIP_VERSION }}
         pip --version
 
     - name: Install Hatch
       run: |
-        pipx install hatch
+        pipx install hatch==${{ env.HATCH_VERSION }}
         hatch --version
 
     - name: Run
