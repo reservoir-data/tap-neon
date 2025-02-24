@@ -27,7 +27,7 @@ env:
   FORCE_COLOR: "1"
   # renovate: datasource=pypi depName=hatch
   HATCH_VERSION: 1.14.0
-  # renovate: datasource=pypi depName=nox
+  # renovate: datasource=pypi depName=pip
   PIP_VERSION: 25.0.1
 
 jobs:
