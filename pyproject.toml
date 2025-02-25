@@ -1,8 +1,8 @@
 [build-system]
 build-backend = "hatchling.build"
 requires = [
-  "hatch-vcs",
-  "hatchling",
+  "hatch-vcs==0.4.0",
+  "hatchling==1.27.0",
 ]
 
 [project]
@@ -37,18 +37,6 @@ dependencies = [
   "requests>=2.26",
   "singer-sdk~=0.44.2",
 ]
-optional-dependencies.dev = [
-  "tap-neon[testing,typing]",
-]
-optional-dependencies.testing = [
-  "deptry>=0.12",
-  "pytest>=7.4",
-  "singer-sdk[testing]",
-]
-optional-dependencies.typing = [
-  "mypy",
-  "types-requests",
-]
 urls.Documentation = "https://github.com/edgarrmondragon/tap-neon#readme"
 urls.Homepage = "https://github.com/edgarrmondragon/tap-neon"
 urls.Source = "https://github.com/edgarrmondragon/tap-neon"
@@ -57,47 +45,20 @@ scripts."tap-neon" = "tap_neon.tap:TapNeon.cli"
 [tool.hatch.version]
 source = "vcs"
 
-[tool.hatch.envs.default]
-installer = "uv"
-
-[tool.hatch.envs.default.env-vars]
-UV_PRERELEASE = "allow"
-
-[tool.hatch.envs.default.overrides]
-env.GITHUB_ACTIONS.dev-mode = { value = false, if = [
-  "true",
-] }
-
-[tool.hatch.envs.sync.scripts]
-console = "tap-neon {args}"
-jsonl = "tap-neon {args} > tap-neon.jsonl"
-
-[tool.hatch.envs.test]
-features = [
-  "testing",
+[dependency-groups]
+dev = [
+  { include-group = "testing" },
+  { include-group = "typing" },
 ]
-[tool.hatch.envs.test.scripts]
-integration = "pytest {args:tests}"
-dependencies = "deptry ."
-
-[tool.hatch.envs.all]
-template = "test"
-[[tool.hatch.envs.all.matrix]]
-python = [
-  "3.9",
-  "3.10",
-  "3.11",
-  "3.12",
-  "3.13",
+testing = [
+  "deptry>=0.12",
+  "pytest>=7.4",
+  "singer-sdk[testing]",
 ]
-
-[tool.hatch.envs.typing]
-features = [
-  "testing",
-  "typing",
+typing = [
+  "mypy",
+  "types-requests",
 ]
-[tool.hatch.envs.typing.scripts]
-check = "mypy --strict {args:tap_neon tests}"
 
 [tool.ruff]
 line-length = 88
@@ -106,7 +67,6 @@ lint.select = [
   "ALL",
 ]
 lint.ignore = [
-  "ANN101", # missing-type-self
   "COM812", # missing-trailing-comma
   "DJ",     # flake8-django
   "ISC001", # single-line-implicit-string-concatenation
@@ -132,13 +92,6 @@ lint.pydocstyle.convention = "google"
 mypy = "mypy"
 types-requests = "requests"
 
-[tool.deptry.per_rule_ignores]
-DEP002 = [
-  "deptry",
-  "mypy",
-  "pytest",
-]
-
 [tool.pyproject-fmt]
 max_supported_python = "3.13"
 
@@ -152,3 +105,7 @@ warn_no_return = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[tool.uv]
+prerelease = "allow"
+required-version = ">=0.5.19"
