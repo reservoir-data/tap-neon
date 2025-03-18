@@ -1019,11 +1019,11 @@ wheels = [
 
 [[package]]
 name = "typing-extensions"
-version = "4.12.2"
+version = "4.13.0rc1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/df/db/f35a00659bc03fec321ba8bce9420de607a1d37f8342eee1863174c69557/typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8", size = 85321 }
+sdist = { url = "https://files.pythonhosted.org/packages/f8/5c/e5fb357a969ab519114e21570c429635f8b2f032cbe0a949109eb4599bcf/typing_extensions-4.13.0rc1.tar.gz", hash = "sha256:5d1e1dcab6084691e9ad8f5578fee079638b5a892a446d1661f031b70923427a", size = 106487 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d", size = 37438 },
+    { url = "https://files.pythonhosted.org/packages/91/49/819dc2964574051340f7385d0c3ebbd94e4695210157b6402e152876d4ed/typing_extensions-4.13.0rc1-py3-none-any.whl", hash = "sha256:b96098d00e51f5f49e81869f772977899968b109ca444c79a68f85dd1632df37", size = 45710 },
 ]
 
 [[package]]
