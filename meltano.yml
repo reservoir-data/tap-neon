@@ -10,7 +10,7 @@ plugins:
     label: Neon Serverless Postgres
     namespace: neon
     description: Neon is a serverless open-source alternative to AWS Aurora Postgres
-    repository: https://github.com/edgarrmondragon/tap-neon
+    repo: https://github.com/edgarrmondragon/tap-neon
     docs: https://github.com/edgarrmondragon/tap-neon#readme
     logo_url: https://neon.tech/static/logo-black-5ca02e6d7a42cba35e7d0ea79b29c816.svg
     pip_url: -e .
