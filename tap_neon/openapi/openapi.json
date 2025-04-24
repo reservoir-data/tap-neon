@@ -9001,31 +9001,6 @@
           "project_count"
         ]
       },
-      "DataAPICreateRequest": {
-        "description": "Create Neon Data API",
-        "type": "object",
-        "x-sensitive": [
-          "database_name"
-        ],
-        "properties": {
-          "database_name": {
-            "type": "string"
-          }
-        }
-      },
-      "DataAPICreateResponse": {
-        "description": "Neon Data API created successfully",
-        "type": "object",
-        "required": [
-          "url"
-        ],
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri"
-          }
-        }
-      },
       "NeonAuthSupportedAuthProvider": {
         "type": "string",
         "enum": [
