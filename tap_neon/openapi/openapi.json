@@ -6067,6 +6067,10 @@
                   "database_name": {
                     "description": "The database name. If not specified, the default database name, `neondb`, will be used.\n",
                     "type": "string"
+                  },
+                  "annotations": {
+                    "description": "The annotations for the branch.\n",
+                    "$ref": "#/components/schemas/AnnotationValueData"
                   }
                 }
               },
@@ -6597,6 +6601,9 @@
       "ProjectAuditLogLevel": {
         "type": "string",
         "enum": [
+          "base",
+          "extended",
+          "full",
           "hipaa"
         ]
       },
