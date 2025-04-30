@@ -987,6 +987,115 @@
         }
       }
     },
+    "/projects/{project_id}/transfer_requests": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Create a project transfer request",
+        "description": "Creates a transfer request for the specified project. A transfer request allows\nthe project to be transferred to another account or organization. The request\nhas an expiration time after which it can no longer be used. To accept/claim\nthe transfer request, the recipient user/organization must call the\n`/projects/{project_id}/transfer_requests/{request_id}` API endpoint, or visit\nhttps://console.neon.tech/claim?p={project_id}&tr={request_id}&ru={redirect_url}\nin the Neon Console. The `ru` parameter is optional and can be used to redirect\nthe user after accepting the transfer request. This feature is currently in\nprivate preview. Get in touch with us to get access.\n",
+        "tags": [
+          "Project"
+        ],
+        "operationId": "createProjectTransferRequest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ttl_seconds": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Specifies the validity duration of the transfer request in seconds. If not provided,\nthe request will expire after 24 hours (86,400 seconds).\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Project transfer request created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectTransferRequestResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/transfer_requests/{request_id}": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "request_id",
+          "in": "path",
+          "description": "The Neon project transfer request ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Accept a project transfer request",
+        "description": "Accepts a transfer request for the specified project, transferring it to the specified organization\nor user. If org_id is not passed, the project will be transferred to the current user or organization account.\n",
+        "tags": [
+          "Project"
+        ],
+        "operationId": "acceptProjectTransferRequest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "org_id": {
+                    "description": "The Neon organization ID to transfer the project to. If not provided, the project will be\ntransferred to the current user or organization account.\n",
+                    "type": "string",
+                    "pattern": "^[a-z0-9-]{1,60}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Project transfer request accepted successfully"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/jwks": {
       "parameters": [
         {
@@ -6144,6 +6253,37 @@
                 "maximum": 2592000
               }
             }
+          }
+        }
+      },
+      "ProjectTransferRequestResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "project_id",
+          "created_at",
+          "expires_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for the transfer request"
+          },
+          "project_id": {
+            "description": "The ID of the project that is being transferred",
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp when the transfer request was created"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp when the transfer request will expire"
           }
         }
       },
