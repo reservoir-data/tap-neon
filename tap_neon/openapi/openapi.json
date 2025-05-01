@@ -1002,7 +1002,7 @@
       ],
       "post": {
         "summary": "Create a project transfer request",
-        "description": "Creates a transfer request for the specified project. A transfer request allows\nthe project to be transferred to another account or organization. The request\nhas an expiration time after which it can no longer be used. To accept/claim\nthe transfer request, the recipient user/organization must call the\n`/projects/{project_id}/transfer_requests/{request_id}` API endpoint, or visit\nhttps://console.neon.tech/claim?p={project_id}&tr={request_id}&ru={redirect_url}\nin the Neon Console. The `ru` parameter is optional and can be used to redirect\nthe user after accepting the transfer request. This feature is currently in\nprivate preview. Get in touch with us to get access.\n",
+        "description": "Creates a transfer request for the specified project. A transfer request allows\nthe project to be transferred to another account or organization. The request\nhas an expiration time after which it can no longer be used. To accept/claim\nthe transfer request, the recipient user/organization must call the\n`/projects/{project_id}/transfer_requests/{request_id}` API endpoint, or visit\n`https://console.neon.tech/app/claim?p={project_id}&tr={request_id}&ru={redirect_url}`\nin the Neon Console. The `ru` parameter is optional and can be used to redirect\nthe user after accepting the transfer request. This feature is currently in\nprivate preview. Get in touch with us to get access.\n",
         "tags": [
           "Project"
         ],
@@ -9064,7 +9064,8 @@
               ],
               "properties": {
                 "name": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Identifier of the unsatisfied limit. Possible values are:\n- subscription_type\n- projects_count\n- project_region\n"
                 },
                 "expected": {
                   "type": "string"
