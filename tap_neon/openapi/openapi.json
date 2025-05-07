@@ -4029,10 +4029,19 @@
           },
           {
             "name": "include_v1_metrics",
-            "description": "Include metrics utilized in previous pricing models.\n- **data_storage_bytes_hour**: The sum of the maximum observed storage values for each hour\n  for each project, which never decreases.\n",
+            "description": "The field is deprecated. Please use `metrics` instead.\nIf `metrics` is specified, this field is ignored.\nInclude metrics utilized in previous pricing models.\n- **data_storage_bytes_hour**: The sum of the maximum observed storage values for each hour\n  for each project, which never decreases.\n",
             "in": "query",
+            "deprecated": true,
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "metrics",
+            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values: `active_time_seconds`, `compute_time_seconds`, `written_data_bytes`,\n`synthetic_storage_size_bytes`, `data_storage_bytes_hour`\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ConsumptionHistoryQueryMetrics"
             }
           }
         ],
@@ -6578,6 +6587,13 @@
           "daily",
           "monthly"
         ]
+      },
+      "ConsumptionHistoryQueryMetrics": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 5
       },
       "ProjectLimits": {
         "type": "object",
