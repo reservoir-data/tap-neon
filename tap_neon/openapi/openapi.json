@@ -4184,10 +4184,19 @@
           },
           {
             "name": "include_v1_metrics",
-            "description": "Include metrics utilized in previous pricing models.\n- **data_storage_bytes_hour**: The sum of the maximum observed storage values for each hour,\n  which never decreases.\n",
+            "description": "The field is deprecated. Please use `metrics` instead.\nIf `metrics` is specified, this field is ignored.\nInclude metrics utilized in previous pricing models.\n- **data_storage_bytes_hour**: The sum of the maximum observed storage values for each hour,\n  which never decreases.\n",
             "in": "query",
+            "deprecated": true,
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "metrics",
+            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values: `active_time_seconds`, `compute_time_seconds`, `written_data_bytes`,\n`synthetic_storage_size_bytes`, `data_storage_bytes_hour`\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ConsumptionHistoryQueryMetrics"
             }
           }
         ],
@@ -5208,6 +5217,16 @@
           }
         }
       },
+      "SnapshotSchedule": {
+        "description": "Schedule of frequencies to create snapshots",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SnapshotSchedule"
+            }
+          }
+        }
+      },
       "GeneralError": {
         "description": "General Error",
         "content": {
@@ -5264,6 +5283,124 @@
               "type": "string"
             }
           ]
+        }
+      },
+      "TelemetryConnection": {
+        "type": "object",
+        "required": [
+          "protocol",
+          "endpoint",
+          "authentication"
+        ],
+        "properties": {
+          "protocol": {
+            "type": "string",
+            "enum": [
+              "grpc",
+              "http"
+            ],
+            "description": "Required. Communication protocol used to send telemetry data. Options: grpc, http.\n"
+          },
+          "endpoint": {
+            "type": "string",
+            "format": "uri",
+            "description": "Required. URI of the OpenTelemetry Collector (e.g., https://collector.customer.com:4317).\n"
+          },
+          "authentication": {
+            "$ref": "#/components/schemas/TelemetryAuthentication",
+            "description": "Required. Authentication configuration to securely send telemetry.\nOptions include bearer token, basic auth, or API key.\n"
+          }
+        }
+      },
+      "TelemetryAuthentication": {
+        "type": "object",
+        "required": [
+          "method"
+        ],
+        "x-sensitive": [
+          "bearer_token",
+          "api_key"
+        ],
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": [
+              "bearer_token",
+              "basic",
+              "api_key"
+            ],
+            "description": "Required. Specifies the authentication method. Options: bearer_token, basic, api_key.\n"
+          },
+          "bearer_token": {
+            "type": "string",
+            "description": "Required if method == bearer_token. Token used for authorization.\n"
+          },
+          "basic": {
+            "type": "object",
+            "x-sensitive": [
+              "password"
+            ],
+            "properties": {
+              "username": {
+                "type": "string",
+                "description": "Required if method == basic. Username for basic authentication.\n"
+              },
+              "password": {
+                "type": "string",
+                "description": "Required if method == basic. Password for basic authentication.\n"
+              }
+            }
+          },
+          "api_key": {
+            "type": "string",
+            "description": "Required if method == api_key. API key used for authorization.\n"
+          }
+        }
+      },
+      "TelemetryConfig": {
+        "type": "object",
+        "required": [
+          "types"
+        ],
+        "properties": {
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "metrics",
+                "logs"
+              ]
+            },
+            "description": "Required. The telemetry data types to enable. One or both of: metrics, logs.\n"
+          },
+          "endpoints": {
+            "type": "object",
+            "properties": {
+              "metrics": {
+                "type": "string",
+                "format": "uri",
+                "description": "Optional. Overrides the default endpoint for metrics (e.g., https://metrics.customer.com:4317).\n"
+              },
+              "logs": {
+                "type": "string",
+                "format": "uri",
+                "description": "Optional. Overrides the default endpoint for logs (e.g., https://logs.customer.com:4318).\n"
+              }
+            }
+          }
+        }
+      },
+      "TelemetryResource": {
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Optional. Key-value attributes that describe the source of telemetry (e.g., service.name: neon-test).\nSee: @https://opentelemetry.io/docs/specs/semconv/resource/#services\n"
+          }
         }
       },
       "ComputeUnit": {
@@ -5919,9 +6056,13 @@
             "format": "date-time"
           },
           "org_id": {
-            "description": "Organization id if a project belongs to organization.\nPermissions for the project will be given to organization members as defined by the organization admins.\nThe permissions of the project do not depend on the user that created the project if a project belongs to an organization.\n",
+            "description": "Organization id if the project belongs to an organization.\nPermissions for the project will be given to organization members as defined by the organization admins.\nThe permissions of the project do not depend on the user that created the project if a project belongs to an organization.\n",
             "type": "string",
             "pattern": "^[a-z0-9-]{1,60}$"
+          },
+          "org_name": {
+            "type": "string",
+            "description": "Organization name if the project belongs to an organization.\n"
           },
           "history_retention_seconds": {
             "description": "The number of seconds to retain the shared history for all branches in this project.\n",
@@ -9191,9 +9332,7 @@
         "required": [
           "auth_provider",
           "project_id",
-          "branch_id",
-          "database_name",
-          "role_name"
+          "branch_id"
         ],
         "x-sensitive": [
           "database_name"
@@ -9214,7 +9353,8 @@
             "type": "string"
           },
           "role_name": {
-            "type": "string"
+            "type": "string",
+            "deprecated": true
           }
         }
       },
@@ -9603,7 +9743,8 @@
                 "enum": [
                   "vercel",
                   "github",
-                  "datadog"
+                  "datadog",
+                  "opentelemetry"
                 ]
               }
             }
@@ -9613,7 +9754,8 @@
           "winter-boat-259881": [
             "vercel",
             "github",
-            "datadog"
+            "datadog",
+            "opentelemetry"
           ]
         }
       },
@@ -9636,7 +9778,8 @@
                 "enum": [
                   "vercel",
                   "github",
-                  "datadog"
+                  "datadog",
+                  "opentelemetry"
                 ]
               }
             }
@@ -9646,7 +9789,8 @@
           "winter-boat-259881": [
             "vercel",
             "github",
-            "datadog"
+            "datadog",
+            "opentelemetry"
           ]
         }
       },
@@ -9703,6 +9847,61 @@
           },
           "expires_at": {
             "type": "string"
+          }
+        }
+      },
+      "SnapshotScheduleItem": {
+        "type": "object",
+        "required": [
+          "frequency"
+        ],
+        "properties": {
+          "frequency": {
+            "type": "string",
+            "description": "The frequency to take snapshots at; one of the following options:\n  - hourly\n  - daily\n  - weekly\n  - monthly\n  - yearly\n"
+          },
+          "hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 23,
+            "description": "The hour in the day to take a snapshot at (if applicable).\n"
+          },
+          "day": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 31,
+            "description": "The day in the month/week to take a snapshot at (if applicable).\n"
+          },
+          "month": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "The month in the year to take a snapshot at (if applicable).\n"
+          },
+          "retention_seconds": {
+            "type": "integer",
+            "minimum": 3600,
+            "description": "The time in seconds until snapshots created by this schedule are automatically deleted.\nIf not provided, these snapshots are retained indefinitely.\n"
+          },
+          "next": {
+            "type": "string",
+            "format": "timestamp",
+            "readOnly": true,
+            "description": "The timestamp at which the next snapshot will be taken according to this schedule.\n"
+          }
+        }
+      },
+      "SnapshotSchedule": {
+        "type": "object",
+        "required": [
+          "schedule"
+        ],
+        "properties": {
+          "schedule": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SnapshotScheduleItem"
+            }
           }
         }
       }
