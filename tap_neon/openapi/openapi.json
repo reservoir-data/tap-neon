@@ -5303,7 +5303,6 @@
           },
           "endpoint": {
             "type": "string",
-            "format": "uri",
             "description": "Required. URI of the OpenTelemetry Collector (e.g., https://collector.customer.com:4317).\n"
           },
           "authentication": {
@@ -5374,20 +5373,13 @@
             },
             "description": "Required. The telemetry data types to enable. One or both of: metrics, logs.\n"
           },
-          "endpoints": {
-            "type": "object",
-            "properties": {
-              "metrics": {
-                "type": "string",
-                "format": "uri",
-                "description": "Optional. Overrides the default endpoint for metrics (e.g., https://metrics.customer.com:4317).\n"
-              },
-              "logs": {
-                "type": "string",
-                "format": "uri",
-                "description": "Optional. Overrides the default endpoint for logs (e.g., https://logs.customer.com:4318).\n"
-              }
-            }
+          "metrics_endpoint_override": {
+            "type": "string",
+            "description": "Optional. Overrides the default endpoint for metrics (e.g., https://metrics.customer.com:4317).\n"
+          },
+          "logs_endpoint_override": {
+            "type": "string",
+            "description": "Optional. Overrides the default endpoint for logs (e.g., https://logs.customer.com:4318).\n"
           }
         }
       },
@@ -9847,6 +9839,22 @@
           },
           "expires_at": {
             "type": "string"
+          }
+        }
+      },
+      "SnapshotUpdateRequest": {
+        "type": "object",
+        "required": [
+          "snapshot"
+        ],
+        "properties": {
+          "snapshot": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
           }
         }
       },
