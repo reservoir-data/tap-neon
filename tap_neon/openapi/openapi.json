@@ -8504,6 +8504,10 @@
             "description": "A timestamp indicating when the organization was updated\n",
             "type": "string",
             "format": "date-time"
+          },
+          "allow_hipaa_projects": {
+            "description": "If true, allow account to mark projects as HIPAA",
+            "type": "boolean"
           }
         }
       },
