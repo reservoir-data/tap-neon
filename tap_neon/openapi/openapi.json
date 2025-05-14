@@ -4193,7 +4193,7 @@
           },
           {
             "name": "metrics",
-            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values:\n- `active_time_seconds`\n- `compute_time_seconds`\n- `written_data_bytes`\n- `synthetic_storage_size_bytes`\n- `data_storage_bytes_hour`,\n- 'logical_size_bytes_hour`\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
+            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values:\n- `active_time_seconds`\n- `compute_time_seconds`\n- `written_data_bytes`\n- `synthetic_storage_size_bytes`\n- `data_storage_bytes_hour`,\n- 'logical_size_bytes'\n- 'logical_size_bytes_hour`\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/ConsumptionHistoryQueryMetrics"
@@ -5316,43 +5316,52 @@
         "required": [
           "method"
         ],
-        "x-sensitive": [
-          "bearer_token",
-          "api_key"
-        ],
         "properties": {
-          "method": {
-            "type": "string",
-            "enum": [
-              "bearer_token",
-              "basic",
-              "api_key"
-            ],
-            "description": "Required. Specifies the authentication method. Options: bearer_token, basic, api_key.\n"
-          },
           "bearer_token": {
-            "type": "string",
-            "description": "Required if method == bearer_token. Token used for authorization.\n"
+            "type": "object",
+            "required": [
+              "token"
+            ],
+            "x-sensitive": [
+              "token"
+            ],
+            "properties": {
+              "token": {
+                "type": "string"
+              }
+            }
           },
           "basic": {
             "type": "object",
+            "required": [
+              "username",
+              "password"
+            ],
             "x-sensitive": [
               "password"
             ],
             "properties": {
               "username": {
-                "type": "string",
-                "description": "Required if method == basic. Username for basic authentication.\n"
+                "type": "string"
               },
               "password": {
-                "type": "string",
-                "description": "Required if method == basic. Password for basic authentication.\n"
+                "type": "string"
               }
             }
           },
           "api_key": {
-            "type": "string",
-            "description": "Required if method == api_key. API key used for authorization.\n"
+            "type": "object",
+            "required": [
+              "key"
+            ],
+            "x-sensitive": [
+              "key"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -6700,6 +6709,11 @@
           },
           "data_storage_bytes_hour": {
             "description": "Bytes-Hour. The amount of storage consumed hourly.\n",
+            "type": "integer",
+            "format": "uint64"
+          },
+          "logical_size_bytes": {
+            "description": "Bytes. The amount of logical size consumed.\n",
             "type": "integer",
             "format": "uint64"
           },
