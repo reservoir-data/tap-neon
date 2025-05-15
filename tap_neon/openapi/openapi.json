@@ -4038,7 +4038,7 @@
           },
           {
             "name": "metrics",
-            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values: `active_time_seconds`, `compute_time_seconds`, `written_data_bytes`,\n`synthetic_storage_size_bytes`, `data_storage_bytes_hour`\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
+            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values:\n- `active_time_seconds`\n- `compute_time_seconds`\n- `written_data_bytes`\n- `synthetic_storage_size_bytes`\n- `data_storage_bytes_hour`\n\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/ConsumptionHistoryQueryMetrics"
@@ -4193,7 +4193,7 @@
           },
           {
             "name": "metrics",
-            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values:\n- `active_time_seconds`\n- `compute_time_seconds`\n- `written_data_bytes`\n- `synthetic_storage_size_bytes`\n- `data_storage_bytes_hour`,\n- 'logical_size_bytes'\n- 'logical_size_bytes_hour`\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
+            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values:\n- `active_time_seconds`\n- `compute_time_seconds`\n- `written_data_bytes`\n- `synthetic_storage_size_bytes`\n- `data_storage_bytes_hour`\n- `logical_size_bytes`\n- `logical_size_bytes_hour`\n\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/ConsumptionHistoryQueryMetrics"
@@ -8733,6 +8733,10 @@
           },
           "subscription_type": {
             "$ref": "#/components/schemas/BillingSubscriptionType"
+          },
+          "transfer_credits": {
+            "type": "boolean",
+            "description": "Whether to transfer credits from the user account to the newly created organization account.\n"
           }
         }
       },
