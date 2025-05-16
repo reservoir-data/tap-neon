@@ -1247,6 +1247,95 @@
         }
       }
     },
+    "/projects/{project_id}/auth/domains": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List domains in redirect_uri whitelist",
+        "description": "Lists the domains in the redirect_uri whitelist for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "listNeonAuthRedirectURIWhitelistDomains",
+        "responses": {
+          "200": {
+            "description": "Returned the domains in the redirect_uri whitelist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthRedirectURIWhitelistResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add domain to redirect_uri whitelist",
+        "description": "Adds a domain to the redirect_uri whitelist for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "addNeonAuthDomainToRedirectURIWhitelist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthAddDomainToRedirectURIWhitelistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Added the domain to the redirect_uri whitelist"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete domain from redirect_uri whitelist",
+        "description": "Deletes a domain from the redirect_uri whitelist for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "deleteNeonAuthDomainFromRedirectURIWhitelist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthDeleteDomainFromRedirectURIWhitelistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Deleted the domain from the redirect_uri whitelist"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/auth/keys": {
       "post": {
         "summary": "Create Auth Provider SDK keys",
@@ -9345,6 +9434,81 @@
           "initiated",
           "finished"
         ]
+      },
+      "NeonAuthRedirectURIWhitelistDomain": {
+        "type": "object",
+        "required": [
+          "domain",
+          "auth_provider"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string"
+          },
+          "auth_provider": {
+            "$ref": "#/components/schemas/NeonAuthSupportedAuthProvider"
+          }
+        }
+      },
+      "NeonAuthRedirectURIWhitelistResponse": {
+        "type": "object",
+        "required": [
+          "domains"
+        ],
+        "properties": {
+          "domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NeonAuthRedirectURIWhitelistDomain"
+            }
+          }
+        }
+      },
+      "NeonAuthAddDomainToRedirectURIWhitelistRequest": {
+        "type": "object",
+        "required": [
+          "domain",
+          "auth_provider"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "format": "uri"
+          },
+          "auth_provider": {
+            "$ref": "#/components/schemas/NeonAuthSupportedAuthProvider"
+          }
+        }
+      },
+      "NeonAuthDeleteDomainFromRedirectURIWhitelistRequest": {
+        "type": "object",
+        "required": [
+          "domains",
+          "auth_provider"
+        ],
+        "properties": {
+          "auth_provider": {
+            "$ref": "#/components/schemas/NeonAuthSupportedAuthProvider"
+          },
+          "domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NeonAuthDeleteDomainFromRedirectURIWhitelistItem"
+            }
+          }
+        }
+      },
+      "NeonAuthDeleteDomainFromRedirectURIWhitelistItem": {
+        "type": "object",
+        "required": [
+          "domain"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
       },
       "NeonAuthCreateIntegrationRequest": {
         "type": "object",
