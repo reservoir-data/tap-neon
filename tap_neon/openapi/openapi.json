@@ -1212,6 +1212,108 @@
         }
       }
     },
+    "/projects/{project_id}/branches/{branch_id}/data-api": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Create Neon Data API",
+        "description": "Creates a new instance of Neon Data API in the specified branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "tags": [
+          "DataAPI"
+        ],
+        "operationId": "createProjectBranchDataAPI",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataAPICreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Creates a new app",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataAPICreateResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Neon Data API",
+        "description": "Deletes the Neon Data API for the specified branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "tags": [
+          "DataAPI"
+        ],
+        "operationId": "deleteProjectBranchDataAPI",
+        "responses": {
+          "200": {
+            "description": "Deleted the Neon Data API for the specified branch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Neon Data API",
+        "description": "Retrieves the Neon Data API for the specified branch.\n",
+        "tags": [
+          "DataAPI"
+        ],
+        "operationId": "getProjectBranchDataAPI",
+        "responses": {
+          "200": {
+            "description": "Returns the Neon Data API for the specified branch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataAPIReponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/auth/create": {
       "post": {
         "summary": "Create Neon Auth integration",
@@ -9413,6 +9515,68 @@
         "enum": [
           "project_count"
         ]
+      },
+      "DataAPICreateRequest": {
+        "x-tags": [
+          "DataAPI"
+        ],
+        "description": "Create Neon Data API",
+        "type": "object",
+        "x-sensitive": [
+          "database_name"
+        ],
+        "properties": {
+          "database_name": {
+            "type": "string"
+          },
+          "jwks_url": {
+            "description": "The URL that lists the JWKS",
+            "type": "string",
+            "format": "uri"
+          },
+          "jwt_audience": {
+            "description": "WARNING - using this setting will only reject tokens with a\ndifferent audience claim. Tokens without audience claim will still\nbe accepted.\n",
+            "type": "string"
+          }
+        }
+      },
+      "DataAPICreateResponse": {
+        "x-tags": [
+          "DataAPI"
+        ],
+        "description": "Neon Data API created successfully",
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "DataAPIReponse": {
+        "x-tags": [
+          "DataAPI"
+        ],
+        "description": "Neon Data API response",
+        "type": "object",
+        "required": [
+          "url",
+          "status"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The URL of the Neon Data API",
+            "format": "uri"
+          },
+          "status": {
+            "type": "string",
+            "description": "The status of the Neon Data API deployment"
+          }
+        }
       },
       "NeonAuthSupportedAuthProvider": {
         "type": "string",
