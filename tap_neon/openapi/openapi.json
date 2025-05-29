@@ -1716,7 +1716,7 @@
       ],
       "post": {
         "summary": "Create branch",
-        "description": "Creates a branch in the specified project.\nYou can obtain a `project_id` by listing the projects for your Neon account.\n\nThis method does not require a request body, but you can specify one to create a compute endpoint for the branch or to select a non-default parent branch.\nThe default behavior is to create a branch from the project's default branch with no compute endpoint, and the branch name is auto-generated.\nThere is a maximum of one read-write endpoint per branch.\nA branch can have multiple read-only endpoints.\nFor related information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n",
+        "description": "Creates a branch in the specified project.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nThis method does not require a request body, but you can specify one to create a compute endpoint for the branch or to select a non-default parent branch.\nBy default, the branch is created from the project's default branch with no compute endpoint, and the branch name is auto-generated.\nTo access the branch, you must add an endpoint object. A `read_write` endpoint allows you to perform read and write operations on the branch.\nEach branch supports one read-write endpoint and multiple read-only endpoints.\nFor related information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n",
         "tags": [
           "Branch"
         ],
@@ -6111,7 +6111,8 @@
           "timeline_unarchive",
           "start_reserved_compute",
           "sync_dbs_and_roles_from_compute",
-          "apply_schema_from_branch"
+          "apply_schema_from_branch",
+          "timeline_mark_invisible"
         ]
       },
       "OperationStatus": {
@@ -6935,8 +6936,7 @@
         "type": "array",
         "items": {
           "type": "string"
-        },
-        "maxItems": 5
+        }
       },
       "ProjectLimits": {
         "type": "object",
@@ -9891,14 +9891,15 @@
       },
       "GeneralError": {
         "type": "object",
-        "description": "General Error",
+        "description": "General Error.\n\nThe request may or may not be safe to retry, depending on the HTTP method, response status code, and whether a response was received.\n\n\n- If no response is returned from the API, a network error or timeout likely occurred.\n- In some cases, the request may have reached the server and been successfully processed, but the response failed to reach the client. As a result, retrying non-idempotent requests can lead to unintended results.\nThe following HTTP methods are considered non-idempotent: POST, PATCH, DELETE, and PUT. Retrying these methods is generally **not safe**.\nThe following methods are considered idempotent: GET, HEAD, and OPTIONS. Retrying these methods is **safe** in the event of a network error or timeout.\n\nAny request that returns a `503 Service Unavailable` response is always safe to retry.\n",
         "required": [
           "message",
           "code"
         ],
         "properties": {
           "request_id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for the request, useful for debugging.\nYou can set this value manually by including an `X-Request-ID` header in the request. If not provided, the value will be generated automatically.\n"
           },
           "code": {
             "$ref": "#/components/schemas/ErrorCode"
