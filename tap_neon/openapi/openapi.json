@@ -9270,8 +9270,7 @@
           "microsoft",
           "microsoftv2",
           "vercelmp",
-          "keycloak",
-          "test"
+          "keycloak"
         ]
       },
       "EndpointSettingsData": {
