@@ -36,7 +36,7 @@ dynamic = [
 ]
 dependencies = [
   "requests>=2.26",
-  "singer-sdk~=0.45.0",
+  "singer-sdk~=0.46.4",
 ]
 urls.Documentation = "https://github.com/edgarrmondragon/tap-neon#readme"
 urls.Homepage = "https://github.com/edgarrmondragon/tap-neon"
