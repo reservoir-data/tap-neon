@@ -7102,8 +7102,7 @@
         "enum": [
           "base",
           "extended",
-          "full",
-          "hipaa"
+          "full"
         ]
       },
       "AvailablePreloadLibrary": {
@@ -10265,6 +10264,18 @@
             "items": {
               "$ref": "#/components/schemas/SnapshotScheduleItem"
             }
+          }
+        }
+      },
+      "SupportTicket": {
+        "type": "object",
+        "required": [
+          "zendesk_id"
+        ],
+        "properties": {
+          "zendesk_id": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       }
