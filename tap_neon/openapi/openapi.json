@@ -1579,6 +1579,76 @@
         }
       }
     },
+    "/projects/{project_id}/auth/oauth_providers": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List OAuth providers",
+        "description": "Lists the OAuth providers for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "listNeonAuthOauthProviders",
+        "responses": {
+          "200": {
+            "description": "Returns the OAuth providers for the Neon Auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNeonAuthOauthProvidersResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a OAuth provider",
+        "description": "Adds a OAuth provider to the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "addNeonAuthOauthProvider",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthAddOAuthProviderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The OAuth provider has been added to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthOauthProvider"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/auth/integration/{auth_provider}": {
       "delete": {
         "summary": "Delete integration with auth provider",
@@ -7577,6 +7647,10 @@
             "type": "string",
             "pattern": "^[a-z0-9-]{1,60}$"
           },
+          "name": {
+            "type": "string",
+            "description": "Optional name of the compute endpoint\n"
+          },
           "project_id": {
             "description": "The ID of the project to which the compute endpoint belongs\n",
             "type": "string",
@@ -7673,6 +7747,7 @@
         "example": {
           "host": "ep-silent-smoke-806639.us-east-2.aws.neon.tech",
           "id": "ep-silent-smoke-806639",
+          "name": "My cool compute",
           "project_id": "spring-example-302709",
           "branch_id": "br-wispy-meadow-118737",
           "autoscaling_limit_min_cu": 1,
@@ -7841,6 +7916,12 @@
               },
               "suspend_timeout_seconds": {
                 "$ref": "#/components/schemas/SuspendTimeoutSeconds"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "description": "Optional name of the compute endpoint\n"
               }
             }
           }
@@ -7893,6 +7974,12 @@
               },
               "suspend_timeout_seconds": {
                 "$ref": "#/components/schemas/SuspendTimeoutSeconds"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "description": "Optional name of the compute endpoint\n"
               }
             }
           }
@@ -9841,6 +9928,70 @@
             "items": {
               "$ref": "#/components/schemas/NeonAuthIntegration"
             }
+          }
+        }
+      },
+      "ListNeonAuthOauthProvidersResponse": {
+        "type": "object",
+        "required": [
+          "providers"
+        ],
+        "properties": {
+          "providers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NeonAuthOauthProvider"
+            }
+          }
+        }
+      },
+      "NeonAuthOauthProvider": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/NeonAuthOauthProviderType"
+          },
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
+          }
+        }
+      },
+      "NeonAuthOauthProviderType": {
+        "type": "string",
+        "enum": [
+          "standard",
+          "shared"
+        ]
+      },
+      "NeonAuthAddOAuthProviderRequest": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "google",
+              "github",
+              "microsoft"
+            ]
+          },
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
           }
         }
       },
