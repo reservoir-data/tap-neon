@@ -290,7 +290,7 @@
     "/projects": {
       "get": {
         "summary": "List projects",
-        "description": "Retrieves a list of projects for the Neon account.\nA project is the top-level object in the Neon object hierarchy.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n",
+        "description": "Retrieves a list of projects for an organization. \nYou may need to specify an org_id parameter depending on your API key type.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n",
         "tags": [
           "Project"
         ],
@@ -420,7 +420,7 @@
       },
       "post": {
         "summary": "Create project",
-        "description": "Creates a Neon project.\nA project is the top-level object in the Neon object hierarchy.\nPlan limits define how many projects you can create.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n\nYou can specify a region and Postgres version in the request body.\nNeon currently supports PostgreSQL 14, 15, 16, and 17.\nFor supported regions and `region_id` values, see [Regions](https://neon.tech/docs/introduction/regions/).\n",
+        "description": "Creates a Neon project within an organization.\nYou may need to specify an org_id parameter depending on your API key type.\nPlan limits define how many projects you can create.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n\nYou can specify a region and Postgres version in the request body.\nNeon currently supports PostgreSQL 14, 15, 16, and 17.\nFor supported regions and `region_id` values, see [Regions](https://neon.tech/docs/introduction/regions/).\n",
         "tags": [
           "Project"
         ],
@@ -496,7 +496,7 @@
     "/projects/shared": {
       "get": {
         "summary": "List shared projects",
-        "description": "Retrieves a list of shared projects for the Neon account.\nA project is the top-level object in the Neon object hierarchy.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n",
+        "description": "Retrieves a list of projects shared with your Neon account.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n",
         "tags": [
           "Project"
         ],
@@ -612,7 +612,7 @@
       ],
       "get": {
         "summary": "Retrieve project details",
-        "description": "Retrieves information about the specified project.\nA project is the top-level object in the Neon object hierarchy.\nYou can obtain a `project_id` by listing the projects for your Neon account.\n",
+        "description": "Retrieves information about the specified project.\nYou can obtain a `project_id` by listing the projects for an organization.\n",
         "tags": [
           "Project"
         ],
@@ -5383,6 +5383,16 @@
   },
   "components": {
     "responses": {
+      "EmptyResponse": {
+        "description": "Empty response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EmptyResponse"
+            }
+          }
+        }
+      },
       "ListOperations": {
         "description": "Returned a list of operations\n",
         "content": {
@@ -10395,12 +10405,6 @@
             "type": "integer",
             "minimum": 3600,
             "description": "The time in seconds until snapshots created by this schedule are automatically deleted.\nIf not provided, these snapshots are retained indefinitely.\n"
-          },
-          "next": {
-            "type": "string",
-            "format": "timestamp",
-            "readOnly": true,
-            "description": "The timestamp at which the next snapshot will be taken according to this schedule.\n"
           }
         }
       },
