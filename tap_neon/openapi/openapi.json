@@ -290,7 +290,7 @@
     "/projects": {
       "get": {
         "summary": "List projects",
-        "description": "Retrieves a list of projects for an organization. \nYou may need to specify an org_id parameter depending on your API key type.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n",
+        "description": "Retrieves a list of projects for an organization.\nYou may need to specify an org_id parameter depending on your API key type.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n",
         "tags": [
           "Project"
         ],
@@ -1642,6 +1642,78 @@
                 }
               }
             }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/auth/oauth_providers/{oauth_provider_id}": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "oauth_provider_id",
+          "in": "path",
+          "description": "The OAuth provider ID",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/NeonAuthOauthProviderId"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Update OAuth provider",
+        "description": "Updates a OAuth provider for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthOauthProvider",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthUpdateOAuthProviderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The OAuth provider has been added to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthOauthProvider"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete OAuth provider",
+        "description": "Deletes a OAuth provider from the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "deleteNeonAuthOauthProvider",
+        "responses": {
+          "200": {
+            "description": "Deleted the OAuth provider from the project"
           },
           "default": {
             "$ref": "#/components/responses/GeneralError"
@@ -9963,7 +10035,7 @@
         ],
         "properties": {
           "id": {
-            "type": "string"
+            "$ref": "#/components/schemas/NeonAuthOauthProviderId"
           },
           "type": {
             "$ref": "#/components/schemas/NeonAuthOauthProviderType"
@@ -9975,6 +10047,14 @@
             "type": "string"
           }
         }
+      },
+      "NeonAuthOauthProviderId": {
+        "type": "string",
+        "enum": [
+          "google",
+          "github",
+          "microsoft"
+        ]
       },
       "NeonAuthOauthProviderType": {
         "type": "string",
@@ -9990,13 +10070,19 @@
         ],
         "properties": {
           "id": {
-            "type": "string",
-            "enum": [
-              "google",
-              "github",
-              "microsoft"
-            ]
+            "$ref": "#/components/schemas/NeonAuthOauthProviderId"
           },
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string"
+          }
+        }
+      },
+      "NeonAuthUpdateOAuthProviderRequest": {
+        "type": "object",
+        "properties": {
           "client_id": {
             "type": "string"
           },
