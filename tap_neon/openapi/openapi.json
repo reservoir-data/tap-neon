@@ -5553,6 +5553,9 @@
                   "$ref": "#/components/schemas/BranchResponse"
                 },
                 {
+                  "$ref": "#/components/schemas/EndpointsOptionalResponse"
+                },
+                {
                   "$ref": "#/components/schemas/OperationsResponse"
                 }
               ]
@@ -8191,6 +8194,17 @@
         "required": [
           "endpoints"
         ],
+        "properties": {
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Endpoint"
+            }
+          }
+        }
+      },
+      "EndpointsOptionalResponse": {
+        "type": "object",
         "properties": {
           "endpoints": {
             "type": "array",
