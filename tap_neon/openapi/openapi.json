@@ -1508,6 +1508,45 @@
         }
       }
     },
+    "/projects/{project_id}/auth/users/{auth_user_id}": {
+      "delete": {
+        "summary": "Delete auth user",
+        "description": "Deletes the auth user for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "deleteNeonAuthUser",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "description": "The Neon project ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,60}$"
+            }
+          },
+          {
+            "name": "auth_user_id",
+            "in": "path",
+            "description": "The Neon user ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted the auth user"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/auth/transfer_ownership": {
       "post": {
         "summary": "Transfer Neon-managed auth project to your own account",
@@ -7136,6 +7175,7 @@
           "max_root_branches",
           "max_import_size",
           "max_organization_members",
+          "schema_only_branches_size_limit",
           "per_project"
         ],
         "properties": {
@@ -7222,6 +7262,9 @@
             "format": "int64"
           },
           "max_organization_members": {
+            "type": "integer"
+          },
+          "schema_only_branches_size_limit": {
             "type": "integer"
           },
           "per_project": {
@@ -7795,7 +7838,7 @@
             "$ref": "#/components/schemas/EndpointPoolerMode"
           },
           "disabled": {
-            "description": "Whether to restrict connections to the compute endpoint.\nEnabling this option schedules a suspend compute operation.\nA disabled compute endpoint cannot be enabled by a connection or\nconsole action. However, the compute endpoint is periodically\nenabled by check_availability operations.\n",
+            "description": "Whether to restrict connections to the compute endpoint.\nEnabling this option schedules a suspend compute operation.\nA disabled compute endpoint cannot be enabled by a connection or\nconsole action.\n",
             "type": "boolean"
           },
           "passwordless_access": {
