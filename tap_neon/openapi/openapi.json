@@ -5192,6 +5192,43 @@
         }
       }
     },
+    "/organizations/{org_id}/vpc/vpc_endpoints": {
+      "parameters": [
+        {
+          "name": "org_id",
+          "in": "path",
+          "description": "The Neon organization ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List VPC endpoints across all regions",
+        "description": "Retrieves the list of VPC endpoints for the specified Neon organization across all regions.\n",
+        "tags": [
+          "Organizations"
+        ],
+        "operationId": "listOrganizationVPCEndpointsAllRegions",
+        "responses": {
+          "200": {
+            "description": "The list of configured VPC endpoint IDs for the specified organization across all regions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VPCEndpointsWithRegionResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/organizations/{org_id}/vpc/region/{region_id}/vpc_endpoints": {
       "parameters": [
         {
@@ -8201,6 +8238,20 @@
           }
         }
       },
+      "VPCEndpointsWithRegionResponse": {
+        "type": "object",
+        "required": [
+          "endpoints"
+        ],
+        "properties": {
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VPCEndpointWithRegion"
+            }
+          }
+        }
+      },
       "VPCEndpoint": {
         "type": "object",
         "required": [
@@ -8217,6 +8268,25 @@
             "type": "string"
           }
         }
+      },
+      "VPCEndpointWithRegion": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VPCEndpoint"
+          },
+          {
+            "type": "object",
+            "required": [
+              "region_id"
+            ],
+            "properties": {
+              "region_id": {
+                "description": "The region where the VPC endpoint is located",
+                "type": "string"
+              }
+            }
+          }
+        ]
       },
       "VPCEndpointDetails": {
         "type": "object",
