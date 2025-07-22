@@ -1760,6 +1760,76 @@
         }
       }
     },
+    "/projects/{project_id}/auth/email_server": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get email server configuration",
+        "description": "Gets the email server configuration for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "getNeonAuthEmailServer",
+        "responses": {
+          "200": {
+            "description": "Returns the email server configuration for the Neon Auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update email server configuration",
+        "description": "Updates the email server configuration for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthEmailServer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The OAuth provider has been added to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/auth/integration/{auth_provider}": {
       "delete": {
         "summary": "Delete integration with auth provider",
@@ -10252,6 +10322,63 @@
             "type": "string"
           }
         }
+      },
+      "SharedEmailServer": {
+        "type": "object"
+      },
+      "StandardEmailServer": {
+        "type": "object",
+        "required": [
+          "host",
+          "port",
+          "username",
+          "password",
+          "sender_email",
+          "sender_name"
+        ],
+        "x-sensitive": [
+          "host",
+          "password",
+          "username"
+        ],
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "sender_email": {
+            "type": "string"
+          },
+          "sender_name": {
+            "type": "string"
+          }
+        }
+      },
+      "NeonAuthEmailServerConfig": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "standard": "#/components/schemas/StandardEmailServer",
+            "shared": "#/components/schemas/SharedEmailServer"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/StandardEmailServer"
+          },
+          {
+            "$ref": "#/components/schemas/SharedEmailServer"
+          }
+        ]
       },
       "NeonAuthIntegration": {
         "type": "object",
