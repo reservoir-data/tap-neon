@@ -10380,6 +10380,45 @@
           }
         ]
       },
+      "SendNeonAuthTestEmailRequest": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/StandardEmailServer"
+          },
+          {
+            "type": "object",
+            "required": [
+              "recipient_email"
+            ],
+            "properties": {
+              "recipient_email": {
+                "description": "The email address to send the test email to.",
+                "type": "string",
+                "format": "email",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            }
+          }
+        ]
+      },
+      "SendNeonAuthTestEmailResponse": {
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the test email was sent successfully."
+          },
+          "error_message": {
+            "type": "string",
+            "description": "The error message from the email server."
+          }
+        }
+      },
       "NeonAuthIntegration": {
         "type": "object",
         "required": [
