@@ -740,8 +740,8 @@ wheels = [
 
 [[package]]
 name = "singer-sdk"
-version = "0.47.5.dev78+g078c6732"
-source = { git = "https://github.com/meltano/sdk.git#078c673256786239c3fa2f932c6c6ff41b1a5939" }
+version = "0.47.5.dev81+gfa021249"
+source = { git = "https://github.com/meltano/sdk.git#fa0212496dc473b9bfb05c589fa52bb9791705ff" }
 dependencies = [
     { name = "backoff" },
     { name = "backports-datetime-fromisoformat", marker = "python_full_version < '3.11'" },
@@ -820,6 +820,7 @@ source = { editable = "." }
 dependencies = [
     { name = "requests" },
     { name = "singer-sdk" },
+    { name = "typing-extensions", marker = "python_full_version < '3.12'" },
 ]
 
 [package.dev-dependencies]
@@ -844,6 +845,7 @@ typing = [
 requires-dist = [
     { name = "requests", specifier = ">=2.26" },
     { name = "singer-sdk", git = "https://github.com/meltano/sdk.git" },
+    { name = "typing-extensions", marker = "python_full_version < '3.12'", specifier = ">=4.14.1" },
 ]
 
 [package.metadata.requires-dev]
