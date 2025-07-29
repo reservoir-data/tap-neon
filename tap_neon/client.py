@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+import sys
 from typing import TYPE_CHECKING, Any
 
 from singer_sdk import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
+
+if sys.version_info < (3, 12):
+    from typing_extensions import override
+else:
+    from typing import override
 
 if TYPE_CHECKING:
     from singer_sdk.helpers.types import Context
@@ -17,9 +23,8 @@ class NeonStream(RESTStream[str]):
     url_base = "https://console.neon.tech/api/v2"
     next_page_token_jsonpath = "$.next_page"  # noqa: S105
 
-    swagger_ref: str
-
     @property
+    @override
     def authenticator(self) -> BearerTokenAuthenticator:
         """Get an authenticator object.
 
@@ -33,6 +38,7 @@ class NeonStream(RESTStream[str]):
         )
 
     @property
+    @override
     def http_headers(self) -> dict[str, str]:
         """Return the http headers needed.
 
@@ -44,9 +50,10 @@ class NeonStream(RESTStream[str]):
             "Content-Type": "application/json",
         }
 
+    @override
     def get_url_params(
         self,
-        context: Context | None,  # noqa: ARG002
+        context: Context | None,
         next_page_token: str | None,
     ) -> dict[str, Any]:
         """Get URL query parameters.
