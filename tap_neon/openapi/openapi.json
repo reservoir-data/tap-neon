@@ -2555,6 +2555,14 @@
               "format": "date-time",
               "example": "2022-11-30T20:09:48Z"
             }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "The format of the schema to retrieve. Possible values:\n- `sql` (default)\n- `json`\n",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7562,12 +7570,12 @@
             "format": "date-time"
           },
           "ttl_interval_seconds": {
-            "description": "The time-to-live (TTL) duration originally configured for the branch, in seconds. This read-only value represents the interval between the time `expires_at` was set and the expiration timestamp itself. It is preserved to ensure the same TTL duration is reapplied when resetting the branch from its parent, and only updates when a new `expires_at` value is set.\n\nThis feature is currently in private preview. Get in touch with us to get access.\n",
+            "description": "The time-to-live (TTL) duration originally configured for the branch, in seconds. This read-only value represents the interval between the time `expires_at` was set and the expiration timestamp itself. It is preserved to ensure the same TTL duration is reapplied when resetting the branch from its parent, and only updates when a new `expires_at` value is set.\n\nThis feature is still under development and not yet generally available.\n",
             "type": "integer",
             "example": 3600
           },
           "expires_at": {
-            "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time.\n\nThis feature is currently in private preview. Get in touch with us to get access.\n",
+            "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time.\n\nThis feature is still under development and not yet generally available.\n",
             "type": "string",
             "format": "date-time",
             "example": "2025-06-09T18:02:16Z"
@@ -7696,7 +7704,7 @@
                 "type": "string"
               },
               "expires_at": {
-                "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time.\n\nThis feature is currently in private preview. Get in touch with us to get access.\n",
+                "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time.\n\nThis feature is still under development and not yet generally available.\n",
                 "type": "string",
                 "format": "date-time",
                 "example": "2025-06-09T18:02:16Z"
@@ -7722,7 +7730,7 @@
                 "type": "boolean"
               },
               "expires_at": {
-                "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time. If this field is set to null, the expiration timestamp is removed.\n\nThis feature is currently in private preview. Get in touch with us to get access.\n",
+                "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time. If this field is set to null, the expiration timestamp is removed.\n\nThis feature is still under development and not yet generally available.\n",
                 "type": "string",
                 "format": "date-time",
                 "nullable": true,
@@ -7774,6 +7782,9 @@
         "properties": {
           "sql": {
             "type": "string"
+          },
+          "json": {
+            "$ref": "#/components/schemas/BranchSchemaJSON"
           }
         }
       },
@@ -10845,6 +10856,51 @@
           "zendesk_id": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "BranchSchemaJSON": {
+        "type": "object",
+        "required": [
+          "tables"
+        ],
+        "properties": {
+          "tables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "schema",
+                "name",
+                "columns"
+              ],
+              "properties": {
+                "schema": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "columns": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "name",
+                      "type"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
