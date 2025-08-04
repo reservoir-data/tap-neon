@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.10"
 
 [options]
@@ -740,8 +740,8 @@ wheels = [
 
 [[package]]
 name = "singer-sdk"
-version = "0.47.5.dev81+gfa021249"
-source = { git = "https://github.com/meltano/sdk.git#fa0212496dc473b9bfb05c589fa52bb9791705ff" }
+version = "0.48.1.dev1+gfd5dd8a8"
+source = { git = "https://github.com/meltano/sdk.git#fd5dd8a80e5361b984eb20f5344dfaac729370b3" }
 dependencies = [
     { name = "backoff" },
     { name = "backports-datetime-fromisoformat", marker = "python_full_version < '3.11'" },
