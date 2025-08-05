@@ -48,4 +48,5 @@ class TapNeon(Tap):
             streams.Endpoints(tap=self),
             streams.Roles(tap=self),
             streams.Databases(tap=self),
+            streams.Snapshots(tap=self),
         ]

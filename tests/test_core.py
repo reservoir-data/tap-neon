@@ -9,5 +9,7 @@ from tap_neon.tap import TapNeon
 TestTapNeon = get_tap_test_class(
     TapNeon,
     config={},
-    suite_config=SuiteConfig(max_records_limit=None),
+    suite_config=SuiteConfig(
+        max_records_limit=None,
+    ),
 )

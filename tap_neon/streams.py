@@ -28,6 +28,7 @@ __all__ = [
     "Operations",
     "Projects",
     "Roles",
+    "Snapshots",
 ]
 
 
@@ -181,4 +182,16 @@ class Endpoints(NeonStream):
     replication_key = None
     schema = StreamSchema(OPENAPI_SCHEMA, key="Endpoint")
     records_jsonpath = "$.endpoints[*]"
+    parent_stream_type = Projects
+
+
+class Snapshots(NeonStream):
+    """Snapshots stream."""
+
+    name = "snapshots"
+    path = "/projects/{project_id}/snapshots"
+    primary_keys = ("id",)
+    replication_key = None
+    schema = StreamSchema(OPENAPI_SCHEMA, key="Snapshot")
+    records_jsonpath = "$.snapshots[*]"
     parent_stream_type = Projects
