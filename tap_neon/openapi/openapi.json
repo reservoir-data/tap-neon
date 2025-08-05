@@ -2754,6 +2754,53 @@
         }
       }
     },
+    "/projects/{project_id}/branches/{branch_id}/finalize_restore": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Finalize restore",
+        "description": "Finalize the restore operation for a branch created from a snapshot.\nThis operation updates the branch so it functions as the original branch it replaced.\nThis includes:\n  - Reassigning any computes from the original branch to the restored branch (this will restart the computes)\n  - Renaming the restored branch to the original branch\u2019s name\n  - Renaming the original branch so it no longer uses the original name\n\nThis operation only applies to branches created using the `restoreSnapshot` endpoint with `finalize_restore: false`.\n",
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "finalizeRestoreBranch",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/branches/{branch_id}/endpoints": {
       "parameters": [
         {
@@ -5605,6 +5652,318 @@
           }
         }
       }
+    },
+    "/projects/{project_id}/branches/{branch_id}/snapshot": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Create snapshot",
+        "description": "Create a snapshot from the specified branch using the provided parameters.\nThis endpoint may initiate an asynchronous operation.\n",
+        "tags": [
+          "Snapshot"
+        ],
+        "operationId": "createSnapshot",
+        "parameters": [
+          {
+            "name": "lsn",
+            "in": "query",
+            "description": "The target Log Sequence Number (LSN) to take the snapshot from.\nMust fall within the restore window. Cannot be used with `timestamp`\n",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "description": "The target timestamp for the snapshot. Must fall within the restore window.\nUse ISO 8601 format (e.g. 2025-08-05T22:00:00Z). Cannot be used with `lsn`.\n",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "A name for the snapshot.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expires_at",
+            "in": "query",
+            "description": "The time at which the snapshot will be automatically deleted.\nUse ISO 8601 format (e.g. 2025-08-05T22:00:00Z).\n",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created the snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "snapshot",
+                    "operations"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "snapshot": {
+                      "$ref": "#/components/schemas/Snapshot"
+                    },
+                    "operations": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Operation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/snapshots": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List project snapshots",
+        "description": "List the snapshots for the specified project.",
+        "tags": [
+          "Snapshot"
+        ],
+        "operationId": "listSnapshots",
+        "responses": {
+          "200": {
+            "description": "Projects snapshots",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "snapshots"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "snapshots": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Snapshot"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/snapshots/{snapshot_id}": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "snapshot_id",
+          "in": "path",
+          "description": "The snapshot ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Delete snapshot",
+        "description": "Delete the specified snapshot.",
+        "tags": [
+          "Snapshot"
+        ],
+        "operationId": "deleteSnapshot",
+        "responses": {
+          "202": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update snapshot",
+        "description": "Update the specified snapshot.",
+        "tags": [
+          "Snapshot"
+        ],
+        "operationId": "updateSnapshot",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SnapshotUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "snapshot"
+                  ],
+                  "type": "object",
+                  "properties": {
+                    "snapshot": {
+                      "$ref": "#/components/schemas/Snapshot"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/snapshots/{snapshot_id}/restore": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "snapshot_id",
+          "in": "path",
+          "description": "The snapshot ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Restore snapshot",
+        "description": "Restore the specified snapshot to a new branch and optionally finalize the restore operation.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "A name for the newly restored branch. If omitted, a default name will be generated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "A name for the newly restored branch.\nIf omitted, a default name will be generated.\n",
+                    "type": "string"
+                  },
+                  "target_branch_id": {
+                    "description": "The ID of the branch to restore the snapshot into.\nIf not specified, the branch from which the snapshot was originally\ncreated (`snapshot.source_branch_id`) will be used.\n",
+                    "type": "string"
+                  },
+                  "finalize_restore": {
+                    "description": "Set to `true` to finalize the restore operation immediately.\nThis will complete the restore and move any associated computes to the new branch,\nsimilar to the `finalizeRestoreBranch` operation.\nDefaults to `false` to allow previewing the restored snapshot data first.\n",
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Snapshot"
+        ],
+        "operationId": "restoreSnapshot",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RestoredSnapshot"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -7570,12 +7929,12 @@
             "format": "date-time"
           },
           "ttl_interval_seconds": {
-            "description": "The time-to-live (TTL) duration originally configured for the branch, in seconds. This read-only value represents the interval between the time `expires_at` was set and the expiration timestamp itself. It is preserved to ensure the same TTL duration is reapplied when resetting the branch from its parent, and only updates when a new `expires_at` value is set.\n\nThis feature is still under development and not yet generally available.\n",
+            "description": "The time-to-live (TTL) duration originally configured for the branch, in seconds. This read-only value represents the interval between the time `expires_at` was set and the expiration timestamp itself. It is preserved to ensure the same TTL duration is reapplied when resetting the branch from its parent, and only updates when a new `expires_at` value is set.\n\nAccess to this feature is currently limited to participants in the Early Access Program.\n",
             "type": "integer",
             "example": 3600
           },
           "expires_at": {
-            "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time.\n\nThis feature is still under development and not yet generally available.\n",
+            "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time.\n\nAccess to this feature is currently limited to participants in the Early Access Program.\n",
             "type": "string",
             "format": "date-time",
             "example": "2025-06-09T18:02:16Z"
@@ -7704,7 +8063,7 @@
                 "type": "string"
               },
               "expires_at": {
-                "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time.\n\nThis feature is still under development and not yet generally available.\n",
+                "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time.\n\nAccess to this feature is currently limited to participants in the Early Access Program.\n",
                 "type": "string",
                 "format": "date-time",
                 "example": "2025-06-09T18:02:16Z"
@@ -7730,7 +8089,7 @@
                 "type": "boolean"
               },
               "expires_at": {
-                "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time. If this field is set to null, the expiration timestamp is removed.\n\nThis feature is still under development and not yet generally available.\n",
+                "description": "The timestamp when the branch is scheduled to expire and be automatically deleted. Must be set by the client following the [RFC 3339, section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6) format with precision up to seconds (such as 2025-06-09T18:02:16Z). Deletion is performed by a background job and may not occur exactly at the specified time. If this field is set to null, the expiration timestamp is removed.\n\nAccess to this feature is currently limited to participants in the Early Access Program.\n",
                 "type": "string",
                 "format": "date-time",
                 "nullable": true,
@@ -10806,30 +11165,30 @@
         "properties": {
           "frequency": {
             "type": "string",
-            "description": "The frequency to take snapshots at; one of the following options:\n  - hourly\n  - daily\n  - weekly\n  - monthly\n  - yearly\n"
+            "description": "How often to take snapshots. Must be one of the following values:\n  - `hourly`\n  - `daily`\n  - `weekly`\n  - `monthly`\n  - `yearly`\n"
           },
           "hour": {
             "type": "integer",
             "minimum": 0,
             "maximum": 23,
-            "description": "The hour in the day to take a snapshot at (if applicable).\n"
+            "description": "The hour of the day to take the snapshot (if applicable).\n"
           },
           "day": {
             "type": "integer",
             "minimum": 1,
             "maximum": 31,
-            "description": "The day in the month/week to take a snapshot at (if applicable).\n"
+            "description": "The day of the week or month to take the snapshot (if applicable).\n"
           },
           "month": {
             "type": "integer",
             "minimum": 1,
             "maximum": 12,
-            "description": "The month in the year to take a snapshot at (if applicable).\n"
+            "description": "The month of the year to take the snapshot (if applicable).\n"
           },
           "retention_seconds": {
             "type": "integer",
             "minimum": 3600,
-            "description": "The time in seconds until snapshots created by this schedule are automatically deleted.\nIf not provided, these snapshots are retained indefinitely.\n"
+            "description": "How long to keep a snapshot (in seconds) before it's automatically deleted.\nIf not set, the snapshot is kept indefinitely.\n"
           }
         }
       },
