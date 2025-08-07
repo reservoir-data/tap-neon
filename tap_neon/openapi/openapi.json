@@ -1134,7 +1134,7 @@
       },
       "post": {
         "summary": "Add JWKS URL",
-        "description": "Add a new JWKS URL to a project, such that it can be used for verifying JWTs used as the authentication mechanism for the specified project.\n\nThe URL must be a valid HTTPS URL that returns a JSON Web Key Set.\n\nThe `provider_name` field allows you to specify which authentication provider you're using (e.g., Clerk, Auth0, AWS Cognito, etc.).\n\nThe `branch_id` can be used to specify on which branches the JWKS URL will be accepted. If not specified, then it will work on any branch.\n\nThe `role_names` can be used to specify for which roles the JWKS URL will be accepted.\n\nThe `jwt_audience` can be used to specify which \"aud\" values should be accepted by Neon in the JWTs that are used for authentication.\n",
+        "description": "Add a new JWKS URL to a project, such that it can be used for verifying JWTs used as the authentication mechanism for the specified project.\n\nThe URL must be a valid HTTPS URL that returns a JSON Web Key Set.\n\nThe `provider_name` field allows you to specify which authentication provider you're using (e.g., Clerk, Auth0, AWS Cognito, etc.).\n\nThe `branch_id` can be used to specify on which branches the JWKS URL will be accepted. If not specified, then it will work on any branch.\n\nThe `role_names` can be used to specify for which roles the JWKS URL will be accepted. If not specified, then default roles will be used (authenticator, authenticated and anonymous).\n\nThe `jwt_audience` can be used to specify which \"aud\" values should be accepted by Neon in the JWTs that are used for authentication.\n",
         "tags": [
           "Project"
         ],
@@ -6306,8 +6306,7 @@
         "type": "object",
         "required": [
           "jwks_url",
-          "provider_name",
-          "role_names"
+          "provider_name"
         ],
         "properties": {
           "jwks_url": {
@@ -6330,7 +6329,7 @@
           "role_names": {
             "description": "The roles the JWKS should be mapped to",
             "type": "array",
-            "minItems": 1,
+            "minItems": 0,
             "maxItems": 10,
             "items": {
               "type": "string"
