@@ -7986,7 +7986,7 @@
         }
       },
       "BranchState": {
-        "description": "The branch\u2019s state, indicating if it is initializing, ready for use, or archived.\n  * 'init' - the branch is being created but is not available for querying.\n  * 'ready' - the branch is fully operational and ready for querying. Expect normal query response times.\n  * 'archived' - the branch is stored in cost-effective archival storage. Expect slow query response times.\n",
+        "description": "The branch\u2019s state, indicating if it is initializing, ready for use, or archived.\n  * 'init' - the branch is being created but is not available for querying.\n  * 'resetting' - the branch is being reset to a specific point in time or LSN and is not yet available for querying.\n  * 'ready' - the branch is fully operational and ready for querying. Expect normal query response times.\n  * 'archived' - the branch is stored in cost-effective archival storage. Expect slow query response times.\n",
         "type": "string"
       },
       "BranchRestoreStatus": {
@@ -8001,6 +8001,9 @@
         "properties": {
           "type": {
             "$ref": "#/components/schemas/EndpointType"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/EndpointSettingsData"
           },
           "autoscaling_limit_min_cu": {
             "description": "The minimum number of Compute Units. The minimum value is `0.25`.\n    See [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\n    for more information.\n",
@@ -10051,6 +10054,9 @@
           },
           "pgbouncer_settings": {
             "$ref": "#/components/schemas/PgbouncerSettingsData"
+          },
+          "preload_libraries": {
+            "$ref": "#/components/schemas/PreloadLibraries"
           }
         }
       },
