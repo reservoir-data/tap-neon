@@ -10356,7 +10356,8 @@
         "type": "string",
         "enum": [
           "mock",
-          "stack"
+          "stack",
+          "stack_v2"
         ]
       },
       "NeonAuthProviderProjectOwnedBy": {
