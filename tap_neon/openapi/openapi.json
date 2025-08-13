@@ -1212,7 +1212,7 @@
         }
       }
     },
-    "/projects/{project_id}/branches/{branch_id}/data-api": {
+    "/projects/{project_id}/branches/{branch_id}/data-api/{database_name}": {
       "parameters": [
         {
           "name": "project_id",
@@ -1232,6 +1232,15 @@
           "schema": {
             "type": "string",
             "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "database_name",
+          "in": "path",
+          "description": "The database name",
+          "required": true,
+          "schema": {
+            "type": "string"
           }
         }
       ],
@@ -10296,17 +10305,25 @@
         ],
         "description": "Create Neon Data API",
         "type": "object",
-        "x-sensitive": [
-          "database_name"
-        ],
         "properties": {
-          "database_name": {
-            "type": "string"
+          "auth_provider": {
+            "type": "string",
+            "default": "skip",
+            "description": "The authentication provider to use for the Neon Data API",
+            "enum": [
+              "neon_auth",
+              "new",
+              "skip"
+            ]
           },
           "jwks_url": {
             "description": "The URL that lists the JWKS",
             "type": "string",
             "format": "uri"
+          },
+          "provider_name": {
+            "description": "The name of the authentication provider (e.g., Clerk, Stytch, Auth0)",
+            "type": "string"
           },
           "jwt_audience": {
             "description": "WARNING - using this setting will only reject tokens with a\ndifferent audience claim. Tokens without audience claim will still\nbe accepted.\n",
