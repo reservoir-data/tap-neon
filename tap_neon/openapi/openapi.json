@@ -1276,6 +1276,29 @@
           }
         }
       },
+      "patch": {
+        "summary": "Refresh schema cache",
+        "description": "Refreshes the schema cache for the Neon Data API in the specified branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "tags": [
+          "DataAPI"
+        ],
+        "operationId": "refreshSchemaCacheDataAPI",
+        "responses": {
+          "201": {
+            "description": "Refreshed the schema cache for the Neon Data API in the specified branch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
       "delete": {
         "summary": "Delete Neon Data API",
         "description": "Deletes the Neon Data API for the specified branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
@@ -6352,8 +6375,9 @@
             "type": "string"
           },
           "role_names": {
-            "description": "The roles the JWKS should be mapped to",
             "type": "array",
+            "description": "DEPRECATED. This field should only be used when using Neon RLS. The roles the JWKS should be mapped to. By default, the JWKS is mapped to the `authenticator`, `authenticated` and `anonymous` roles.",
+            "deprecated": true,
             "minItems": 0,
             "maxItems": 10,
             "items": {
