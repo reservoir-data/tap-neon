@@ -38,9 +38,9 @@ dependencies = [
   "singer-sdk~=0.48.0",
   "typing-extensions>=4.14.1; python_full_version<'3.12'",
 ]
-urls.Documentation = "https://github.com/edgarrmondragon/tap-neon#readme"
-urls.Homepage = "https://github.com/edgarrmondragon/tap-neon"
-urls.Source = "https://github.com/edgarrmondragon/tap-neon"
+urls.Documentation = "https://github.com/reservoir-data/tap-neon#readme"
+urls.Homepage = "https://github.com/reservoir-data/tap-neon"
+urls.Source = "https://github.com/reservoir-data/tap-neon"
 scripts."tap-neon" = "tap_neon.tap:TapNeon.cli"
 
 [dependency-groups]

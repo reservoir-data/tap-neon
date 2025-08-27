@@ -3,11 +3,11 @@
 # tap-neon
 
 <div>
-  <a href="https://results.pre-commit.ci/latest/github/edgarrmondragon/tap-neon/main">
-    <img alt="pre-commit.ci status" src="https://results.pre-commit.ci/badge/github/edgarrmondragon/tap-neon/main.svg"/>
+  <a href="https://results.pre-commit.ci/latest/github/reservoir-data/tap-neon/main">
+    <img alt="pre-commit.ci status" src="https://results.pre-commit.ci/badge/github/reservoir-data/tap-neon/main.svg"/>
   </a>
-  <a href="https://github.com/edgarrmondragon/tap-neon/blob/main/LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/edgarrmondragon/tap-neon"/>
+  <a href="https://github.com/reservoir-data/tap-neon/blob/main/LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/reservoir-data/tap-neon"/>
   </a>
   <a href="https://github.com/astral-sh/ruff">
     <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json" alt="Ruff" style="max-width:100%;">
