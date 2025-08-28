@@ -2832,6 +2832,22 @@
           "Branch"
         ],
         "operationId": "finalizeRestoreBranch",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "used to rename the existing branch when it is replaced. if omitted, a default name is generated and used"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -10188,10 +10204,10 @@
         }
       },
       "PgVersion": {
-        "description": "The major Postgres version number. Currently supported versions are `14`, `15`, `16`, and `17`.",
+        "description": "The major Postgres version number. Currently supported versions are `14`, `15`, `16`, `17`, and `18`.",
         "type": "integer",
         "minimum": 14,
-        "maximum": 17,
+        "maximum": 18,
         "default": 17
       },
       "HealthCheck": {
