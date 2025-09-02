@@ -7734,11 +7734,11 @@
           },
           "max_autoscaling_cu": {
             "type": "number",
-            "format": "float64"
+            "format": "double"
           },
           "max_fixed_size_cu": {
             "type": "number",
-            "format": "float64"
+            "format": "double"
           },
           "cpu_seconds": {
             "type": "integer",
@@ -11094,6 +11094,16 @@
           }
         }
       },
+      "ApplicationType": {
+        "type": "string",
+        "enum": [
+          "vercel",
+          "github",
+          "datadog",
+          "opentelemetry"
+        ],
+        "description": "Type of application integration"
+      },
       "ProjectsApplicationsMapResponse": {
         "type": "object",
         "x-tags": [
@@ -11110,12 +11120,7 @@
               "type": "array",
               "items": {
                 "type": "string",
-                "enum": [
-                  "vercel",
-                  "github",
-                  "datadog",
-                  "opentelemetry"
-                ]
+                "$ref": "#/components/schemas/ApplicationType"
               }
             }
           }
@@ -11144,13 +11149,7 @@
             "additionalProperties": {
               "type": "array",
               "items": {
-                "type": "string",
-                "enum": [
-                  "vercel",
-                  "github",
-                  "datadog",
-                  "opentelemetry"
-                ]
+                "$ref": "#/components/schemas/ApplicationType"
               }
             }
           }
