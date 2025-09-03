@@ -6236,9 +6236,6 @@
       },
       "TelemetryAuthentication": {
         "type": "object",
-        "required": [
-          "method"
-        ],
         "properties": {
           "bearer_token": {
             "type": "object",
@@ -6347,8 +6344,7 @@
         "description": "Cursor based pagination is used. The user must pass the cursor as is to the backend.\nFor more information about cursor based pagination, see\nhttps://learn.microsoft.com/en-us/ef/core/querying/pagination#keyset-pagination\n",
         "type": "object",
         "required": [
-          "cursor",
-          "limit"
+          "cursor"
         ],
         "properties": {
           "cursor": {
@@ -7693,6 +7689,7 @@
           "active_time",
           "max_projects",
           "max_branches",
+          "max_snapshots",
           "max_protected_branches",
           "max_autoscaling_cu",
           "max_fixed_size_cu",
@@ -7727,6 +7724,9 @@
             "type": "integer"
           },
           "max_branches": {
+            "type": "integer"
+          },
+          "max_snapshots": {
             "type": "integer"
           },
           "max_protected_branches": {
