@@ -6444,6 +6444,12 @@
           "jwt_audience": {
             "description": "The name of the required JWT Audience to be used",
             "type": "string"
+          },
+          "role_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
