@@ -6766,32 +6766,18 @@
             "format": "int32"
           }
         },
-        "example": [
-          {
-            "id": "a07f8772-1877-4da9-a939-3a3ae62d1d8d",
-            "project_id": "spring-example-302709",
-            "branch_id": "br-wispy-meadow-118737",
-            "endpoint_id": "ep-silent-smoke-806639",
-            "action": "create_branch",
-            "status": "running",
-            "failures_count": 0,
-            "created_at": "2022-11-08T23:33:16Z",
-            "updated_at": "2022-11-08T23:33:20Z",
-            "total_duration_ms": 400
-          },
-          {
-            "id": "d8ac46eb-a757-42b1-9907-f78322ee394e",
-            "project_id": "spring-example-302709",
-            "branch_id": "br-wispy-meadow-118737",
-            "endpoint_id": "ep-silent-smoke-806639",
-            "action": "start_compute",
-            "status": "finished",
-            "failures_count": 0,
-            "created_at": "2022-11-15T20:02:00Z",
-            "updated_at": "2022-11-15T20:02:02Z",
-            "total_duration_ms": 200
-          }
-        ]
+        "example": {
+          "id": "d8ac46eb-a757-42b1-9907-f78322ee394e",
+          "project_id": "spring-example-302709",
+          "branch_id": "br-wispy-meadow-118737",
+          "endpoint_id": "ep-silent-smoke-806639",
+          "action": "start_compute",
+          "status": "finished",
+          "failures_count": 0,
+          "created_at": "2022-11-15T20:02:00Z",
+          "updated_at": "2022-11-15T20:02:02Z",
+          "total_duration_ms": 200
+        }
       },
       "OperationResponse": {
         "type": "object",
@@ -7005,7 +6991,12 @@
           }
         },
         "example": {
+          "active_time": 750111,
+          "branch_logical_size_limit": 10,
+          "branch_logical_size_limit_bytes": 10485760,
+          "cpu_used_sec": 523011,
           "id": "spring-example-302709",
+          "owner_id": "629982cc-de05-43db-ae16-28f2399c4910",
           "platform_id": "aws",
           "region_id": "aws-us-east-2",
           "name": "spring-example-302709",
@@ -7219,7 +7210,18 @@
             "branches_limit": 10,
             "subscription_type": "scale"
           },
-          "org_id": "org-morning-bread-81040908"
+          "org_id": "org-morning-bread-81040908",
+          "owner_id": "629982cc-de05-43db-ae16-28f2399c4910",
+          "data_storage_bytes_hour": 2831928,
+          "branch_logical_size_limit": 10,
+          "branch_logical_size_limit_bytes": 10485760,
+          "data_transfer_bytes": 1000,
+          "written_data_bytes": 193990002,
+          "compute_time_seconds": 2485760,
+          "active_time_seconds": 621440,
+          "cpu_used_sec": 155350,
+          "consumption_period_start": "2022-11-01T00:00:00Z",
+          "consumption_period_end": "2022-12-01T00:00:00Z"
         }
       },
       "ProjectCreateRequest": {
@@ -8055,7 +8057,12 @@
           "created_at": "2022-11-30T19:09:48Z",
           "updated_at": "2022-12-01T19:53:05Z",
           "default": true,
-          "init_source": "parent-data"
+          "init_source": "parent-data",
+          "data_transfer_bytes": 72911987,
+          "written_data_bytes": 542998300,
+          "compute_time_seconds": 823880990,
+          "active_time_seconds": 922200,
+          "cpu_used_sec": 461100
         }
       },
       "BranchState": {
@@ -8482,7 +8489,8 @@
           "created_at": "2022-12-03T15:37:07Z",
           "updated_at": "2022-12-03T15:37:07Z",
           "proxy_host": "us-east-2.aws.neon.tech",
-          "suspend_timeout_seconds": 0
+          "suspend_timeout_seconds": 0,
+          "provisioner": "k8s-neonvm"
         }
       },
       "EndpointState": {
@@ -9563,6 +9571,21 @@
           "allow_hipaa_projects": {
             "description": "If true, allow account to mark projects as HIPAA",
             "type": "boolean"
+          }
+        }
+      },
+      "EnableOrganizationFeatureRequest": {
+        "type": "object",
+        "required": [
+          "feature"
+        ],
+        "properties": {
+          "feature": {
+            "description": "The feature to enable for the organization",
+            "type": "string",
+            "enum": [
+              "allow_hipaa_projects"
+            ]
           }
         }
       },
@@ -11034,10 +11057,10 @@
         ],
         "maxProperties": 50,
         "additionalProperties": {
-          "type": "string",
-          "example": {
-            "github-commit-ref": "github-branch-name"
-          }
+          "type": "string"
+        },
+        "example": {
+          "github-commit-ref": "github-branch-name"
         }
       },
       "AnnotationObjectData": {
@@ -11132,12 +11155,14 @@
           }
         },
         "example": {
-          "winter-boat-259881": [
-            "vercel",
-            "github",
-            "datadog",
-            "opentelemetry"
-          ]
+          "applications": {
+            "winter-boat-259881": [
+              "vercel",
+              "github",
+              "datadog",
+              "opentelemetry"
+            ]
+          }
         }
       },
       "ProjectsIntegrationsMapResponse": {
@@ -11161,12 +11186,14 @@
           }
         },
         "example": {
-          "winter-boat-259881": [
-            "vercel",
-            "github",
-            "datadog",
-            "opentelemetry"
-          ]
+          "integrations": {
+            "winter-boat-259881": [
+              "vercel",
+              "github",
+              "datadog",
+              "opentelemetry"
+            ]
+          }
         }
       },
       "CursorPaginationResponse": {
