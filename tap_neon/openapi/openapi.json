@@ -10464,7 +10464,8 @@
         "enum": [
           "mock",
           "stack",
-          "stack_v2"
+          "stack_v2",
+          "better_auth"
         ]
       },
       "NeonAuthProviderProjectOwnedBy": {
@@ -10651,7 +10652,8 @@
         ],
         "x-sensitive": [
           "email",
-          "name"
+          "name",
+          "password"
         ],
         "properties": {
           "project_id": {
@@ -10666,6 +10668,11 @@
             "format": "email",
             "minLength": 1,
             "maxLength": 256
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 128
           },
           "name": {
             "type": "string",
