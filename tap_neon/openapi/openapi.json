@@ -6361,6 +6361,35 @@
         "description": "Empty response.",
         "properties": {}
       },
+      "PlanDetails": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "$ref": "#/components/schemas/PlanVersion"
+          }
+        }
+      },
+      "PlanVersion": {
+        "type": "object",
+        "required": [
+          "major",
+          "minor"
+        ],
+        "properties": {
+          "major": {
+            "type": "integer"
+          },
+          "minor": {
+            "type": "integer"
+          }
+        }
+      },
       "AddProjectJWKSRequest": {
         "description": "Add a new JWKS to a specific endpoint of a project",
         "type": "object",
@@ -9238,6 +9267,9 @@
           "tax_id_type": {
             "description": "The type of the tax identification number based on the country.\n",
             "type": "string"
+          },
+          "plan_details": {
+            "$ref": "#/components/schemas/PlanDetails"
           }
         }
       },
@@ -10973,7 +11005,8 @@
         }
       },
       "ErrorCode": {
-        "type": "string"
+        "type": "string",
+        "default": ""
       },
       "BranchOperations": {
         "allOf": [
