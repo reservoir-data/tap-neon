@@ -2827,7 +2827,7 @@
       ],
       "post": {
         "summary": "Finalize restore",
-        "description": "Finalize the restore operation for a branch created from a snapshot.\nThis operation updates the branch so it functions as the original branch it replaced.\nThis includes:\n  - Reassigning any computes from the original branch to the restored branch (this will restart the computes)\n  - Renaming the restored branch to the original branch\u2019s name\n  - Renaming the original branch so it no longer uses the original name\n\nThis operation only applies to branches created using the `restoreSnapshot` endpoint with `finalize_restore: false`.\n",
+        "description": "Finalize the restore operation for a branch created from a snapshot.\nThis operation updates the branch so it functions as the original branch it replaced.\nThis includes:\n  - Reassigning any computes from the original branch to the restored branch (this will restart the computes)\n  - Renaming the restored branch to the original branch's name\n  - Renaming the original branch so it no longer uses the original name\n\nThis operation only applies to branches created using the `restoreSnapshot` endpoint with `finalize_restore: false`.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Branch"
         ],
@@ -5742,7 +5742,7 @@
       ],
       "post": {
         "summary": "Create snapshot",
-        "description": "Create a snapshot from the specified branch using the provided parameters.\nThis endpoint may initiate an asynchronous operation.\n",
+        "description": "Create a snapshot from the specified branch using the provided parameters.\nThis endpoint may initiate an asynchronous operation.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -5832,7 +5832,7 @@
       ],
       "get": {
         "summary": "List project snapshots",
-        "description": "List the snapshots for the specified project.",
+        "description": "List the snapshots for the specified project.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -5890,7 +5890,7 @@
       ],
       "delete": {
         "summary": "Delete snapshot",
-        "description": "Delete the specified snapshot.",
+        "description": "Delete the specified snapshot.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -5913,7 +5913,7 @@
       },
       "patch": {
         "summary": "Update snapshot",
-        "description": "Update the specified snapshot.",
+        "description": "Update the specified snapshot.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -5978,7 +5978,7 @@
       ],
       "post": {
         "summary": "Restore snapshot",
-        "description": "Restore the specified snapshot to a new branch and optionally finalize the restore operation.",
+        "description": "Restore the specified snapshot to a new branch and optionally finalize the restore operation.\n\n**Note**: This endpoint is currently in Beta.\n",
         "parameters": [
           {
             "name": "name",
@@ -10656,6 +10656,9 @@
           },
           "table_name": {
             "type": "string"
+          },
+          "base_url": {
+            "type": "string"
           }
         }
       },
@@ -10980,6 +10983,9 @@
             "$ref": "#/components/schemas/NeonAuthProviderProjectTransferStatus"
           },
           "jwks_url": {
+            "type": "string"
+          },
+          "base_url": {
             "type": "string"
           }
         }
