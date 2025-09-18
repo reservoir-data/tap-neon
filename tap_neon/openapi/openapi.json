@@ -1090,6 +1090,16 @@
           "204": {
             "description": "Project transfer request accepted successfully"
           },
+          "406": {
+            "description": "Account doesn't satisfy the plan requirements to own the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptProjectTransferRequestSatisfiesPlanError"
+                }
+              }
+            }
+          },
           "default": {
             "$ref": "#/components/responses/GeneralError"
           }
@@ -7394,6 +7404,34 @@
             "type": "string",
             "format": "date-time",
             "description": "The timestamp when the transfer request will expire"
+          }
+        }
+      },
+      "AcceptProjectTransferRequestSatisfiesPlanError": {
+        "type": "object",
+        "required": [
+          "reasons"
+        ],
+        "properties": {
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "message",
+                "code"
+              ],
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Description of why the plan is not satisfied"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "A short code identifying the reason"
+                }
+              }
+            }
           }
         }
       },
