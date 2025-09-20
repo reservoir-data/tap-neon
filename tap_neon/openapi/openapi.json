@@ -10998,7 +10998,7 @@
         ],
         "properties": {
           "auth_provider": {
-            "type": "string"
+            "$ref": "#/components/schemas/NeonAuthSupportedAuthProvider"
           },
           "auth_provider_project_id": {
             "type": "string"
