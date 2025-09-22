@@ -11407,13 +11407,13 @@
       },
       "SupportTicket": {
         "type": "object",
-        "required": [
-          "zendesk_id"
-        ],
         "properties": {
           "zendesk_id": {
             "type": "integer",
             "format": "int64"
+          },
+          "salesforce_id": {
+            "type": "string"
           }
         }
       },
