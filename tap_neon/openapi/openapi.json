@@ -10658,6 +10658,23 @@
           }
         }
       },
+      "EnableNeonAuthIntegrationRequest": {
+        "type": "object",
+        "required": [
+          "auth_provider"
+        ],
+        "x-sensitive": [
+          "database_name"
+        ],
+        "properties": {
+          "auth_provider": {
+            "$ref": "#/components/schemas/NeonAuthSupportedAuthProvider"
+          },
+          "database_name": {
+            "type": "string"
+          }
+        }
+      },
       "NeonAuthCreateIntegrationResponse": {
         "type": "object",
         "required": [
