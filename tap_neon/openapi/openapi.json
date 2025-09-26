@@ -11354,6 +11354,9 @@
           },
           "expires_at": {
             "type": "string"
+          },
+          "manual": {
+            "type": "boolean"
           }
         }
       },
