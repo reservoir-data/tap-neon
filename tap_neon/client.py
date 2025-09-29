@@ -31,11 +31,7 @@ class NeonStream(RESTStream[str]):
         Returns:
             The authenticator instance for this REST stream.
         """
-        token: str = self.config["api_key"]
-        return BearerTokenAuthenticator.create_for_stream(
-            self,
-            token=token,
-        )
+        return BearerTokenAuthenticator(token=self.config["api_key"])
 
     @property
     @override
