@@ -9328,6 +9328,7 @@
         "enum": [
           "UNKNOWN",
           "direct_sales",
+          "direct_sales_v3",
           "aws_marketplace",
           "free_v2",
           "free_v3",
