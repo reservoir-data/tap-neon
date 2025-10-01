@@ -8109,6 +8109,10 @@
           "restored_from": {
             "description": "ID of the snapshot that was the restore source for this branch\n",
             "type": "string"
+          },
+          "restored_as": {
+            "description": "ID of the target branch which was replaced when this branch was restored\n",
+            "type": "string"
           }
         },
         "example": {
@@ -10284,9 +10288,6 @@
           "suspend_timeout_seconds": {
             "$ref": "#/components/schemas/SuspendTimeoutSeconds"
           }
-        },
-        "additionalProperties": {
-          "type": "string"
         }
       },
       "PgSettingsData": {
@@ -11126,7 +11127,8 @@
           "low",
           "normal",
           "high",
-          "critical"
+          "critical",
+          "urgent"
         ]
       },
       "AnnotationData": {
