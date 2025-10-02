@@ -6873,7 +6873,8 @@
           "apply_schema_from_branch",
           "timeline_mark_invisible",
           "prewarm_replica",
-          "promote_replica"
+          "promote_replica",
+          "set_storage_non_dirty"
         ]
       },
       "OperationStatus": {
@@ -11437,6 +11438,12 @@
           },
           "salesforce_id": {
             "type": "string"
+          },
+          "failed_uploads": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
