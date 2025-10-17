@@ -8114,6 +8114,13 @@
           "restored_as": {
             "description": "ID of the target branch which was replaced when this branch was restored\n",
             "type": "string"
+          },
+          "restricted_actions": {
+            "description": "A list of actions that are currently restricted for this branch and the reason why.\n",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BranchRestrictedAction"
+            }
           }
         },
         "example": {
@@ -8144,6 +8151,24 @@
       "BranchRestoreStatus": {
         "description": "Could be `restored`, `finalized` or `detaching`.\nA `restored` branch becomes permanently `finalized` when you call `finalizeRestoreBranch`\nA `restored` or `finalized` branch may begin `detaching` as a one-time performance optimisation, after which it will continue in its original state\n",
         "type": "string"
+      },
+      "BranchRestrictedAction": {
+        "description": "An action that is currently restricted for the branch and the reason why.\n",
+        "type": "object",
+        "required": [
+          "name",
+          "reason"
+        ],
+        "properties": {
+          "name": {
+            "description": "The name of a restricted action. Possible values include `restore`, `delete-rw-endpoint`.\n",
+            "type": "string"
+          },
+          "reason": {
+            "description": "A human-readable explanation of why the action is restricted.\n",
+            "type": "string"
+          }
+        }
       },
       "BranchCreateRequestEndpointOptions": {
         "type": "object",
