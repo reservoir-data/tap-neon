@@ -3,6 +3,9 @@ name: Build
 on:
   push:
 
+env:
+  FORCE_COLOR: "1"
+
 permissions:
   contents: write
   id-token: write
