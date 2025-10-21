@@ -287,6 +287,15 @@
       }
     },
     {
+      "breadcrumb": [
+        "properties",
+        "restricted_actions"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
       "breadcrumb": [],
       "metadata": {
         "inclusion": "available",
@@ -500,6 +509,31 @@
         "description": "ID of the snapshot that was the restore source for this branch\n",
         "type": [
           "string",
+          "null"
+        ]
+      },
+      "restricted_actions": {
+        "description": "A list of actions that are currently restricted for this branch and the reason why.\n",
+        "items": {
+          "description": "An action that is currently restricted for the branch and the reason why.\n",
+          "properties": {
+            "name": {
+              "description": "The name of a restricted action. Possible values include `restore`, `delete-rw-endpoint`.\n",
+              "type": "string"
+            },
+            "reason": {
+              "description": "A human-readable explanation of why the action is restricted.\n",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "reason"
+          ],
+          "type": "object"
+        },
+        "type": [
+          "array",
           "null"
         ]
       },
