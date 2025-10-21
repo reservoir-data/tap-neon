@@ -15,7 +15,6 @@ if TYPE_CHECKING:
 
 def test_catalog_changes(
     pytester: pytest.Pytester,
-    # snapshot_json: SnapshotAssertion,
     snapshot: SnapshotAssertion,
     subtests: SubTests,
 ) -> None:
