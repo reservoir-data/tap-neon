@@ -1,4 +1,4 @@
-name: Update OpenAPI Specification for neon.tech
+name: Update Catalog for neon.tech
 
 on:
   workflow_dispatch:
@@ -12,6 +12,7 @@ env:
 
 jobs:
   update_openapi_specification:
+    name: Update Catalog
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -27,10 +28,13 @@ jobs:
       with:
         version: ${{ env.UV_VERSION }}
     - run: uv run scripts/update_openapi.py
-    - continue-on-error: true
-      run: uv run pytest --snapshot-update tests/test_schema_evolution.py
+    - run: uv run pytest --snapshot-update tests/test_schema_evolution.py
+    - id: check_snapshot_changes
+      continue-on-error: true
+      run: git diff --quiet tests/__snapshots__
     - uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+      if: steps.check_snapshot_changes.outcome == 'failure'
       with:
-        title: 'chore: Update OpenAPI Specification for neon.tech'
+        title: 'fix: Update catalog'
         token: ${{ steps.generate-token.outputs.token }}
         signoff: true
