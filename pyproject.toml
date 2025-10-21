@@ -51,11 +51,15 @@ dev = [
 testing = [
   "deptry>=0.12",
   "pytest>=7.4",
+  "pytest-subtests>=0.15",
   "singer-sdk[testing]",
+  "syrupy>=5",
 ]
 typing = [
   "mypy",
+  "ty>=0.0.1a23",
   "types-requests",
+  { include-group = "testing" },
 ]
 
 [tool.hatch.version]
@@ -76,6 +80,7 @@ lint.ignore = [
 
 lint.per-file-ignores."tests/*" = [
   "ANN",
+  "S101",
 ]
 lint.unfixable = [
   "ERA001", # commented-out-code
@@ -91,6 +96,7 @@ lint.pydocstyle.convention = "google"
 
 [tool.deptry.package_module_name_map]
 mypy = "mypy"
+ty = "ty"
 types-requests = "requests"
 
 [tool.pyproject-fmt]
@@ -106,10 +112,6 @@ env_list = [
   "dependencies",
   "typing",
   "3.14",
-  "3.13",
-  "3.12",
-  "3.11",
-  "3.10",
 ]
 
 [tool.tox.env_run_base]
@@ -124,7 +126,10 @@ commands = [ [ "deptry", "." ] ]
 
 [tool.tox.env.typing]
 dependency_groups = [ "testing", "typing" ]
-commands = [ [ "mypy", "--strict", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ] ]
+commands = [
+  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ],
+  [ "ty", "check", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ],
+]
 
 [tool.mypy]
 warn_redundant_casts = true

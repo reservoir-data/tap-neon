@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   build:
+    name: Build Wheel and Source Distribution
     runs-on: ubuntu-latest
     outputs:
       package_name: ${{ steps.baipp.outputs.package_name }}
@@ -21,6 +22,7 @@ jobs:
         id: baipp
 
   publish:
+    name: Publish to PyPI
     runs-on: ubuntu-latest
     needs: build
     environment:
