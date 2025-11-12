@@ -9,14 +9,13 @@ from syrupy.extensions.json import JSONSnapshotExtension
 
 if TYPE_CHECKING:
     import pytest
-    from pytest_subtests.plugin import SubTests
     from syrupy.assertion import SnapshotAssertion
 
 
 def test_catalog_changes(
     pytester: pytest.Pytester,
     snapshot: SnapshotAssertion,
-    subtests: SubTests,
+    subtests: pytest.Subtests,
 ) -> None:
     """Fail if the catalog has changed."""
     result = pytester.run("tap-neon", "--discover")
