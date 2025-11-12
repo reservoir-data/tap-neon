@@ -10,7 +10,7 @@
     "description": "The Neon API allows you to access and manage Neon programmatically. You can use the Neon API to manage API keys, projects, branches, compute endpoints, databases, roles, and operations. For information about these features, refer to the [Neon documentation](https://neon.tech/docs/manage/overview/).\n\nYou can run Neon API requests from this API reference using the **Try It** feature. Enter your API key as a **Bearer** token in the **Authorization** section of the page.\n\nYou can create and manage API keys in the Neon Console. See [Manage API keys](https://neon.tech/docs/manage/api-keys/) for instructions.",
     "version": "v2",
     "contact": {
-      "email": "support@neon.tech"
+      "email": "help@databricks.com"
     },
     "license": {
       "name": "Proprietary"
@@ -6038,6 +6038,72 @@
           }
         }
       }
+    },
+    "/projects/{project_id}/branches/{branch_id}/backup_schedule": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "View backup schedule",
+        "description": "View the backup schedule for the specified branch.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Snapshot"
+        ],
+        "operationId": "getSnapshotSchedule",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SnapshotSchedule"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update backup schedule",
+        "description": "Update the backup schedule for the specified branch.\n\n**Note** : This endpoint is currently in Beta.\n",
+        "tags": [
+          "Snapshot"
+        ],
+        "operationId": "setSnapshotSchedule",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BackupSchedule"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/EmptyResponse"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6155,7 +6221,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/SnapshotSchedule"
+              "$ref": "#/components/schemas/BackupSchedule"
             }
           }
         }
@@ -6434,6 +6500,11 @@
             "items": {
               "type": "string"
             }
+          },
+          "skip_role_creation": {
+            "type": "boolean",
+            "description": "DEPRECATED. This field should only be used when using Neon RLS. If true, the role creation will be skipped.",
+            "default": false
           }
         }
       },
@@ -8170,6 +8241,50 @@
           }
         }
       },
+      "BranchConsumption": {
+        "type": "object",
+        "required": [
+          "compute_time_seconds",
+          "data_transfer_bytes",
+          "logical_size_bytes",
+          "written_size_since_parent_bytes",
+          "pitr_history_size_since_parent_bytes"
+        ],
+        "properties": {
+          "compute_time_seconds": {
+            "description": "Seconds. The number of CPU seconds used by the branch's compute endpoints, including compute endpoints that have been deleted.\n",
+            "type": "integer",
+            "format": "uint64"
+          },
+          "data_transfer_bytes": {
+            "description": "Bytes. The number of bytes transferred to and from the branch.\n",
+            "type": "integer",
+            "format": "uint64"
+          },
+          "logical_size_bytes": {
+            "description": "Bytes. The logical size of the branch.\n",
+            "type": "integer",
+            "format": "uint64"
+          },
+          "written_size_since_parent_bytes": {
+            "description": "Bytes. The number of bytes written to the branch since the parent branch.\n",
+            "type": "integer",
+            "format": "uint64"
+          },
+          "pitr_history_size_since_parent_bytes": {
+            "description": "Bytes. The number of bytes in the PITR history of the branch since the parent branch.\n",
+            "type": "integer",
+            "format": "uint64"
+          }
+        },
+        "example": {
+          "compute_time_seconds": 3600,
+          "data_transfer_bytes": 104857600,
+          "logical_size_bytes": 1073741824,
+          "written_size_since_parent_bytes": 536870912,
+          "pitr_history_size_since_parent_bytes": 268435456
+        }
+      },
       "BranchCreateRequestEndpointOptions": {
         "type": "object",
         "required": [
@@ -8312,6 +8427,17 @@
         "properties": {
           "branch": {
             "$ref": "#/components/schemas/Branch"
+          }
+        }
+      },
+      "BranchConsumptionResponse": {
+        "type": "object",
+        "required": [
+          "consumption"
+        ],
+        "properties": {
+          "consumption": {
+            "$ref": "#/components/schemas/BranchConsumption"
           }
         }
       },
@@ -10770,8 +10896,7 @@
         ],
         "x-sensitive": [
           "email",
-          "name",
-          "password"
+          "name"
         ],
         "properties": {
           "project_id": {
@@ -10787,10 +10912,28 @@
             "minLength": 1,
             "maxLength": 256
           },
-          "password": {
+          "name": {
             "type": "string",
-            "minLength": 8,
-            "maxLength": 128
+            "minLength": 1,
+            "maxLength": 255
+          }
+        }
+      },
+      "CreateBranchNeonAuthNewUserRequest": {
+        "type": "object",
+        "required": [
+          "email"
+        ],
+        "x-sensitive": [
+          "email",
+          "name"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1,
+            "maxLength": 256
           },
           "name": {
             "type": "string",
@@ -10932,7 +11075,15 @@
         }
       },
       "SharedEmailServer": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "sender_email": {
+            "type": "string"
+          },
+          "sender_name": {
+            "type": "string"
+          }
+        }
       },
       "StandardEmailServer": {
         "type": "object",
@@ -11405,7 +11556,7 @@
           }
         }
       },
-      "SnapshotScheduleItem": {
+      "BackupScheduleItem": {
         "type": "object",
         "required": [
           "frequency"
@@ -11440,7 +11591,7 @@
           }
         }
       },
-      "SnapshotSchedule": {
+      "BackupSchedule": {
         "type": "object",
         "required": [
           "schedule"
@@ -11449,7 +11600,7 @@
           "schedule": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SnapshotScheduleItem"
+              "$ref": "#/components/schemas/BackupScheduleItem"
             }
           }
         }
@@ -11514,6 +11665,25 @@
                 }
               }
             }
+          }
+        }
+      },
+      "SystemStatusSummaryResponse": {
+        "type": "object",
+        "required": [
+          "ongoing_incidents",
+          "in_progress_maintenances",
+          "scheduled_maintenances"
+        ],
+        "properties": {
+          "ongoing_incidents": {
+            "type": "integer"
+          },
+          "in_progress_maintenances": {
+            "type": "integer"
+          },
+          "scheduled_maintenances": {
+            "type": "integer"
           }
         }
       }

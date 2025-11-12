@@ -35,7 +35,7 @@ dynamic = [
 ]
 dependencies = [
   "requests>=2.26",
-  "singer-sdk~=0.51.0",
+  "singer-sdk~=0.52.2",
   "typing-extensions>=4.14.1; python_full_version<'3.12'",
 ]
 urls.Documentation = "https://github.com/reservoir-data/tap-neon#readme"
@@ -50,8 +50,7 @@ dev = [
 ]
 testing = [
   "deptry>=0.12",
-  "pytest>=7.4",
-  "pytest-subtests>=0.15",
+  "pytest>=9",
   "singer-sdk[testing]",
   "syrupy>=5",
 ]
@@ -107,6 +106,7 @@ types-requests = "requests"
 max_supported_python = "3.14"
 
 [tool.pytest.ini_options]
+minversion = "9.0.0"
 addopts = "-vvv"
 
 [tool.tox]
