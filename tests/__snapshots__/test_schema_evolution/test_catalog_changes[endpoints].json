@@ -359,11 +359,6 @@
       },
       "current_state": {
         "description": "The state of the compute endpoint\n",
-        "enum": [
-          "init",
-          "active",
-          "idle"
-        ],
         "type": [
           "string",
           "null"
@@ -415,11 +410,6 @@
       },
       "pending_state": {
         "description": "The state of the compute endpoint\n",
-        "enum": [
-          "init",
-          "active",
-          "idle"
-        ],
         "type": [
           "string",
           "null"
@@ -434,10 +424,6 @@
       },
       "pooler_mode": {
         "description": "The connection pooler mode. Neon supports PgBouncer in `transaction` mode only.\n",
-        "enum": [
-          "transaction",
-          "READ_ONLY"
-        ],
         "type": [
           "string",
           "null"
@@ -553,10 +539,6 @@
       },
       "type": {
         "description": "The compute endpoint type. Either `read_write` or `read_only`.\n",
-        "enum": [
-          "read_only",
-          "read_write"
-        ],
         "type": [
           "string",
           "null"

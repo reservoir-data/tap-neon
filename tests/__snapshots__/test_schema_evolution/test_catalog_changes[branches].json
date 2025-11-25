@@ -519,18 +519,27 @@
           "properties": {
             "name": {
               "description": "The name of a restricted action. Possible values include `restore`, `delete-rw-endpoint`.\n",
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "reason": {
               "description": "A human-readable explanation of why the action is restricted.\n",
-              "type": "string"
+              "type": [
+                "string",
+                "null"
+              ]
             }
           },
           "required": [
             "name",
             "reason"
           ],
-          "type": "object"
+          "type": [
+            "object",
+            "null"
+          ]
         },
         "type": [
           "array",
