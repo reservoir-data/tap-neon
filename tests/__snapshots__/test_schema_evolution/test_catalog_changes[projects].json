@@ -811,11 +811,6 @@
             ]
           },
           "audit_log_level": {
-            "enum": [
-              "base",
-              "extended",
-              "full"
-            ],
             "type": [
               "string",
               "null"
