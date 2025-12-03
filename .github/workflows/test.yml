@@ -3,22 +3,8 @@ name: Test tap-neon
 on:
   push:
     branches: [main]
-    paths:
-    - tap_neon/**
-    - tests/**
-    - pyproject.toml
-    - tox.ini
-    - uv.lock
-    - .github/workflows/test.yml
   pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-    - tap_neon/**
-    - tests/**
-    - pyproject.toml
-    - tox.ini
-    - uv.lock
-    - .github/workflows/test.yml
+  merge_group:
   schedule:
   - cron: "0 10 * * *"
   workflow_dispatch:
@@ -29,6 +15,8 @@ concurrency:
 
 env:
   FORCE_COLOR: "1"
+  # renovate: datasource=pypi depName=prek
+  PREK_VERSION: 0.2.19
   # renovate: datasource=pypi depName=tox
   TOX_VERSION: 4.32.0
   # renovate: datasource=pypi depName=tox-uv
@@ -37,6 +25,24 @@ env:
   UV_VERSION: 0.9.11
 
 jobs:
+  files-changed:
+    runs-on: ubuntu-24.04
+    name: Detect file changes
+    outputs:
+      runtime: ${{ steps.changes.outputs.runtime }}
+    steps:
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+    - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+      id: changes
+      with:
+        filters: |
+          runtime:
+            - 'tap_neon/**'
+            - 'tests/**'
+            - 'pyproject.toml'
+            - 'uv.lock'
+            - '.github/workflows/test.yml'
+
   tests:
     runs-on: ubuntu-24.04
     name: Python ${{ matrix.python-version }}
@@ -97,3 +103,19 @@ jobs:
       run: tox -e typing
     - name: Dependency Checks
       run: tox -e dependencies
+
+  pre-commit:
+    runs-on: ubuntu-24.04
+    name: pre-commit hooks
+    steps:
+    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@1e862dfacbd1d6d858c55d9b792c756523627244 # v7.1.4
+      with:
+        version: ${{ env.UV_VERSION }}
+
+    - run: >
+        uvx
+        --with prek==${{ env.PREK_VERSION }}
+        prek run --show-diff-on-failure --all-files
