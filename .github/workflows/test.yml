@@ -99,10 +99,8 @@ jobs:
           --with tox-uv==${{ env.TOX_UV_VERSION }}
           --with tox==${{ env.TOX_VERSION }}
           tox
-    - name: Type Checks
-      run: tox -e typing
-    - name: Dependency Checks
-      run: tox -e dependencies
+    - name: Static Analysis
+      run: tox -m static
 
   pre-commit:
     runs-on: ubuntu-24.04
