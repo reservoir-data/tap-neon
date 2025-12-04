@@ -42,6 +42,15 @@
     {
       "breadcrumb": [
         "properties",
+        "authentication_method"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
         "created_at"
       ],
       "metadata": {
@@ -72,6 +81,13 @@
   "replication_method": "FULL_TABLE",
   "schema": {
     "properties": {
+      "authentication_method": {
+        "description": "Authentication method configured for this role. Valid options: `password`, `oauth`, `no_login`\n",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
       "branch_id": {
         "description": "The ID of the branch to which the role belongs\n",
         "pattern": "^[a-z0-9-]{1,60}$",
