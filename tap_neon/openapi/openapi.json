@@ -80,6 +80,10 @@
     {
       "name": "Auth",
       "description": "These methods allow you to create and manage Neon Auth projects."
+    },
+    {
+      "name": "Auth (legacy)",
+      "description": "These methods allow you to create and manage Neon Auth projects. Deprecated. See routes with the `Auth` tag instead."
     }
   ],
   "paths": {
@@ -790,6 +794,43 @@
         }
       }
     },
+    "/projects/{project_id}/restore": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Restore a deleted project",
+        "description": "Restores a deleted project during the deletion grace period.\nYou can obtain a `project_id` by listing the projects for your Neon account.\n\n**Note**: This endpoint is currently in Private Preview.\n",
+        "tags": [
+          "Project"
+        ],
+        "operationId": "restoreProject",
+        "responses": {
+          "200": {
+            "description": "Returned the restored project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectRestoreResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/operations": {
       "get": {
         "summary": "List operations",
@@ -1287,15 +1328,24 @@
         }
       },
       "patch": {
-        "summary": "Refresh schema cache",
-        "description": "Refreshes the schema cache for the Neon Data API in the specified branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "summary": "Update Neon Data API",
+        "description": "Updates the Neon Data API configuration for the specified branch.\nYou can optionally provide settings to update the Data API configuration.\nThe schema cache is always refreshed as part of this operation.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
         "tags": [
           "DataAPI"
         ],
-        "operationId": "refreshSchemaCacheDataAPI",
+        "operationId": "updateProjectBranchDataAPI",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataAPIUpdateRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": "Refreshed the schema cache for the Neon Data API in the specified branch",
+            "description": "Updated the Neon Data API configuration and refreshed the schema cache",
             "content": {
               "application/json": {
                 "schema": {
@@ -1359,11 +1409,13 @@
     "/projects/auth/create": {
       "post": {
         "summary": "Create Neon Auth integration",
-        "description": "Creates a project on a third-party authentication provider's platform for use with Neon Auth.\nUse this endpoint if the frontend integration flow can't be used.\n",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth` instead. Creates a project on a third-party authentication provider's platform for use with Neon Auth.\nUse this endpoint if the frontend integration flow can't be used.\n",
         "tags": [
-          "Auth"
+          "Auth (legacy)"
         ],
         "operationId": "createNeonAuthIntegration",
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1391,6 +1443,120 @@
         }
       }
     },
+    "/projects/{project_id}/branches/{branch_id}/auth": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get details of Neon Auth for the branch",
+        "description": "/ Fetches the details of the Neon Auth for the specified branch. You can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.",
+        "tags": [
+          "Auth"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "getNeonAuth",
+        "responses": {
+          "200": {
+            "description": "Fetched the details of the Neon Auth integration for the specified branch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthIntegration"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enable Neon Auth for the branch",
+        "description": "Enables Neon Auth integrationfor the branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "tags": [
+          "Auth"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "createNeonAuth",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnableNeonAuthIntegrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Enables Neon Auth integration for the branch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthCreateIntegrationResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Disables Neon Auth for the branch",
+        "tags": [
+          "Auth"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "disableNeonAuth",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "delete_data": {
+                    "type": "boolean",
+                    "description": "If true, deletes the `neon_auth` schema from the database",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Delete the integration with the authentication provider"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/auth/domains": {
       "parameters": [
         {
@@ -1406,11 +1572,117 @@
       ],
       "get": {
         "summary": "List domains in redirect_uri whitelist",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/domains` instead. Lists the domains in the redirect_uri whitelist for the specified project.\n",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
+        "operationId": "listNeonAuthRedirectURIWhitelistDomains",
+        "responses": {
+          "200": {
+            "description": "Returned the domains in the redirect_uri whitelist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthRedirectURIWhitelistResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add domain to redirect_uri whitelist",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/domains` instead. Adds a domain to the redirect_uri whitelist for the specified project.\n",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
+        "operationId": "addNeonAuthDomainToRedirectURIWhitelist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthAddDomainToRedirectURIWhitelistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Added the domain to the redirect_uri whitelist"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete domain from redirect_uri whitelist",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/domains` instead. Deletes a domain from the redirect_uri whitelist for the specified project.\n",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
+        "operationId": "deleteNeonAuthDomainFromRedirectURIWhitelist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthDeleteDomainFromRedirectURIWhitelistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Deleted the domain from the redirect_uri whitelist"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/domains": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List domains in redirect_uri whitelist",
         "description": "Lists the domains in the redirect_uri whitelist for the specified project.\n",
         "tags": [
           "Auth"
         ],
-        "operationId": "listNeonAuthRedirectURIWhitelistDomains",
+        "x-stability-level": "beta",
+        "operationId": "listBranchNeonAuthTrustedDomains",
         "responses": {
           "200": {
             "description": "Returned the domains in the redirect_uri whitelist",
@@ -1433,7 +1705,8 @@
         "tags": [
           "Auth"
         ],
-        "operationId": "addNeonAuthDomainToRedirectURIWhitelist",
+        "x-stability-level": "beta",
+        "operationId": "addBranchNeonAuthTrustedDomain",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1459,7 +1732,8 @@
         "tags": [
           "Auth"
         ],
-        "operationId": "deleteNeonAuthDomainFromRedirectURIWhitelist",
+        "x-stability-level": "beta",
+        "operationId": "deleteBranchNeonAuthTrustedDomain",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1485,7 +1759,7 @@
         "summary": "Create Auth Provider SDK keys",
         "description": "Generates SDK or API Keys for the auth provider. These might be called different things depending\non the auth provider you're using, but are generally used for setting up the frontend and backend SDKs.\n",
         "tags": [
-          "Auth"
+          "Auth (legacy)"
         ],
         "operationId": "createNeonAuthProviderSDKKeys",
         "requestBody": {
@@ -1518,10 +1792,12 @@
     "/projects/auth/user": {
       "post": {
         "summary": "Create new auth user",
-        "description": "Creates a new user in Neon Auth.\nThe user will be created in your neon_auth.users_sync table and automatically propagated to your auth project, whether Neon-managed or provider-owned.\n",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/users` instead. Creates a new user in Neon Auth.\nThe user will be created in your neon_auth.users_sync table and automatically propagated to your auth project, whether Neon-managed or provider-owned.\n",
         "tags": [
-          "Auth"
+          "Auth (legacy)"
         ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
         "operationId": "createNeonAuthNewUser",
         "requestBody": {
           "content": {
@@ -1550,13 +1826,189 @@
         }
       }
     },
-    "/projects/{project_id}/auth/users/{auth_user_id}": {
+    "/projects/{project_id}/branches/{branch_id}/auth/users": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Create new auth user",
+        "description": "Creates a new user in Neon Auth.\n",
+        "tags": [
+          "Auth"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "createBranchNeonAuthNewUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBranchNeonAuthNewUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Creates new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthCreateNewUserResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/users/{auth_user_id}": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "auth_user_id",
+          "in": "path",
+          "description": "The Neon user ID",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
       "delete": {
         "summary": "Delete auth user",
         "description": "Deletes the auth user for the specified project.\n",
         "tags": [
           "Auth"
         ],
+        "x-stability-level": "beta",
+        "operationId": "deleteBranchNeonAuthUser",
+        "responses": {
+          "204": {
+            "description": "Deleted the auth user"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/users/{auth_user_id}/role": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "auth_user_id",
+          "in": "path",
+          "description": "The Neon user ID",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Update auth user role",
+        "description": "Updates the role of an auth user for the specified project.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthUserRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNeonAuthUserRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated the auth user role",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateNeonAuthUserRoleResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/auth/users/{auth_user_id}": {
+      "delete": {
+        "summary": "Delete auth user",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/users/{auth_user_id}` instead. Deletes the auth user for the specified project.\n",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
         "operationId": "deleteNeonAuthUser",
         "parameters": [
           {
@@ -1594,7 +2046,7 @@
         "summary": "Transfer Neon-managed auth project to your own account",
         "description": "Transfer ownership of your Neon-managed auth project to your own auth provider account.\n",
         "tags": [
-          "Auth"
+          "Auth (legacy)"
         ],
         "operationId": "transferNeonAuthProviderProject",
         "requestBody": {
@@ -1627,10 +2079,13 @@
     "/projects/{project_id}/auth/integrations": {
       "get": {
         "summary": "Lists active integrations with auth providers",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth` instead.",
         "tags": [
-          "Auth"
+          "Auth (legacy)"
         ],
         "operationId": "listNeonAuthIntegrations",
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
         "parameters": [
           {
             "name": "project_id",
@@ -1675,11 +2130,96 @@
       ],
       "get": {
         "summary": "List OAuth providers",
-        "description": "Lists the OAuth providers for the specified project.\n",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/oauth_providers` instead. Lists the OAuth providers for the specified project.\n",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
+        "operationId": "listNeonAuthOauthProviders",
+        "responses": {
+          "200": {
+            "description": "Returns the OAuth providers for the Neon Auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNeonAuthOauthProvidersResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a OAuth provider",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/oauth_providers` instead. Adds a OAuth provider to the specified project.\n",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
+        "operationId": "addNeonAuthOauthProvider",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthAddOAuthProviderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The OAuth provider has been added to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthOauthProvider"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/oauth_providers": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List OAuth providers for neon auth for a branch",
+        "description": "Lists the OAuth providers for the specified project and branch.\n",
         "tags": [
           "Auth"
         ],
-        "operationId": "listNeonAuthOauthProviders",
+        "x-stability-level": "beta",
+        "operationId": "listBranchNeonAuthOauthProviders",
         "responses": {
           "200": {
             "description": "Returns the OAuth providers for the Neon Auth",
@@ -1702,7 +2242,8 @@
         "tags": [
           "Auth"
         ],
-        "operationId": "addNeonAuthOauthProvider",
+        "x-stability-level": "beta",
+        "operationId": "addBranchNeonAuthOauthProvider",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1754,11 +2295,98 @@
       ],
       "patch": {
         "summary": "Update OAuth provider",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/oauth_providers/{oauth_provider_id}` instead. Updates a OAuth provider for the specified project.\n",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
+        "operationId": "updateNeonAuthOauthProvider",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthUpdateOAuthProviderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The OAuth provider has been added to the project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthOauthProvider"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete OAuth provider",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/oauth_providers/{oauth_provider_id}` instead. Deletes a OAuth provider from the specified project.\n",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
+        "operationId": "deleteNeonAuthOauthProvider",
+        "responses": {
+          "200": {
+            "description": "Deleted the OAuth provider from the project"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/oauth_providers/{oauth_provider_id}": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "oauth_provider_id",
+          "in": "path",
+          "description": "The OAuth provider ID",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/NeonAuthOauthProviderId"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Update OAuth provider",
         "description": "Updates a OAuth provider for the specified project.\n",
         "tags": [
           "Auth"
         ],
-        "operationId": "updateNeonAuthOauthProvider",
+        "x-stability-level": "beta",
+        "operationId": "updateBranchNeonAuthOauthProvider",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1791,7 +2419,8 @@
         "tags": [
           "Auth"
         ],
-        "operationId": "deleteNeonAuthOauthProvider",
+        "x-stability-level": "beta",
+        "operationId": "deleteBranchNeonAuthOauthProvider",
         "responses": {
           "200": {
             "description": "Deleted the OAuth provider from the project"
@@ -1817,10 +2446,12 @@
       ],
       "get": {
         "summary": "Get email server configuration",
-        "description": "Gets the email server configuration for the specified project.\n",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/email_provider` instead. Gets the email server configuration for the specified project.\n",
         "tags": [
-          "Auth"
+          "Auth (legacy)"
         ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
         "operationId": "getNeonAuthEmailServer",
         "responses": {
           "200": {
@@ -1840,10 +2471,12 @@
       },
       "patch": {
         "summary": "Update email server configuration",
-        "description": "Updates the email server configuration for the specified project.\n",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/email_provider` instead. Updates the email server configuration for the specified project.\n",
         "tags": [
-          "Auth"
+          "Auth (legacy)"
         ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
         "operationId": "updateNeonAuthEmailServer",
         "requestBody": {
           "content": {
@@ -1872,12 +2505,233 @@
         }
       }
     },
-    "/projects/{project_id}/auth/integration/{auth_provider}": {
-      "delete": {
-        "summary": "Delete integration with auth provider",
+    "/projects/{project_id}/branches/{branch_id}/auth/send_test_email": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Send test email",
+        "description": "Sends a test email to the specified email address.\n",
         "tags": [
           "Auth"
         ],
+        "x-stability-level": "beta",
+        "operationId": "sendNeonAuthTestEmail",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendNeonAuthTestEmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Response with the result of the test email send",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendNeonAuthTestEmailResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/email_and_password": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get email and password configuration",
+        "description": "Gets the email and password authentication configuration for Neon Auth\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "getNeonAuthEmailAndPasswordConfig",
+        "responses": {
+          "200": {
+            "description": "Returns the email and password configuration for Neon Auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthEmailAndPasswordConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update email and password configuration",
+        "description": "Updates the email and password authentication configuration for Neon Auth\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthEmailAndPasswordConfig",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthEmailAndPasswordConfigUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The email and password configuration has been updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthEmailAndPasswordConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/email_provider": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get email provider configuration",
+        "description": "Gets the email provider configuration for the specified branch.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "getNeonAuthEmailProvider",
+        "responses": {
+          "200": {
+            "description": "Returns the email provider configuration for the Neon Auth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update email provider configuration",
+        "description": "Updates the email provider configuration for the specified branch.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthEmailProvider",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The email provider configuration has been updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/auth/integration/{auth_provider}": {
+      "delete": {
+        "summary": "Delete integration with auth provider",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth` instead.",
+        "tags": [
+          "Auth (legacy)"
+        ],
+        "deprecated": true,
+        "x-sunset": "2026-03-01",
         "operationId": "deleteNeonAuthIntegration",
         "parameters": [
           {
@@ -2000,6 +2854,86 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ConnectionURIResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/allow_localhost": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get allow localhost",
+        "description": "Get the allow localhost configuration for the specified branch.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "getNeonAuthAllowLocalhost",
+        "responses": {
+          "200": {
+            "description": "The allow localhost configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthAllowLocalhostResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update allow localhost",
+        "description": "Updates the allow localhost configuration for the specified branch.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthAllowLocalhost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNeonAuthAllowLocalhostRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated the allow localhost configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthAllowLocalhostResponse"
                 }
               }
             }
@@ -2224,6 +3158,46 @@
                 }
               }
             }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branch_anonymized": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Create anonymized branch",
+        "description": "Creates a new branch with anonymized data using PostgreSQL Anonymizer for static masking.\nThis allows developers to work with masked production data.\nOptionally, provide `masking_rules` to set initial masking rules for the branch\nand `start_anonymization` to automatically start anonymization after creation. This\ncombines functionality of updating masking rules and starting anonymization into the\nbranch creation request.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "createProjectBranchAnonymized",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BranchAnonymizedCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/CreatedBranch"
           },
           "default": {
             "$ref": "#/components/responses/GeneralError"
@@ -2732,6 +3706,180 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BranchSchemaCompareResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/masking_rules": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "Get masking rules",
+        "description": "Retrieves the masking rules for the specified anonymized branch.\nMasking rules define how sensitive data should be anonymized using PostgreSQL Anonymizer.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "operationId": "getMaskingRules",
+        "responses": {
+          "200": {
+            "description": "Masking rules retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaskingRulesResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "Update masking rules",
+        "description": "Updates the masking rules for the specified anonymized branch.\nMasking rules define how sensitive data should be anonymized using PostgreSQL Anonymizer.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "operationId": "updateMaskingRules",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MaskingRulesUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Masking rules updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MaskingRulesResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/anonymized_status": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "Get anonymized branch status",
+        "description": "Retrieves the current status of an anonymized branch, including its state and progress information.\nThis endpoint allows you to monitor the anonymization process from initialization through completion.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nOnly anonymized branches will have status information available.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "operationId": "getAnonymizedBranchStatus",
+        "responses": {
+          "200": {
+            "description": "Anonymized branch status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnonymizedBranchStatusResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/anonymize": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "Branch"
+        ],
+        "summary": "Start anonymization",
+        "description": "Starts the anonymization process for an anonymized branch that is in the initialized, error, or anonymized state.\nThis will apply all defined masking rules to anonymize sensitive data in the branch databases.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nThe branch must be an anonymized branch to start anonymization.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "operationId": "startAnonymization",
+        "responses": {
+          "200": {
+            "description": "Anonymization started successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnonymizedBranchStatusResponse"
                 }
               }
             }
@@ -4554,7 +5702,7 @@
     "/consumption_history/account": {
       "get": {
         "summary": "Retrieve account consumption metrics",
-        "description": "Retrieves consumption metrics for Scale, Business, and Enterprise plan accounts. History begins at the time of upgrade.\n",
+        "description": "Retrieves consumption metrics for Scale and Enterprise plan accounts, and for legacy Scale, Business, and Enterprise plan accounts.\nConsumption history begins at the time the account was upgraded to a supported plan.\n",
         "tags": [
           "Consumption"
         ],
@@ -5987,14 +7135,17 @@
         }
       ],
       "post": {
+        "x-stability-level": "beta",
         "summary": "Restore snapshot",
         "description": "Restore the specified snapshot to a new branch and optionally finalize the restore operation.\n\n**Note**: This endpoint is currently in Beta.\n",
         "parameters": [
           {
             "name": "name",
             "in": "query",
-            "description": "A name for the newly restored branch. If omitted, a default name will be generated.",
+            "description": "DEPRECATED. Use the `name` field in the request body instead.\nA name for the newly restored branch. If omitted, a default name will be generated.\n",
             "required": false,
+            "deprecated": true,
+            "x-sunset": "2025-11-29",
             "schema": {
               "type": "string"
             }
@@ -7553,6 +8704,16 @@
           }
         }
       },
+      "ProjectRestoreResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProjectResponse"
+          },
+          {
+            "$ref": "#/components/schemas/BranchesResponse"
+          }
+        ]
+      },
       "ProjectsResponse": {
         "type": "object",
         "required": [
@@ -8313,6 +9474,29 @@
           }
         }
       },
+      "BranchAnonymizedCreateRequest": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "branch_create": {
+                "$ref": "#/components/schemas/BranchCreateRequest"
+              },
+              "masking_rules": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MaskingRule"
+                },
+                "description": "List of masking rules to apply to the branch.\n"
+              },
+              "start_anonymization": {
+                "description": "If true, automatically start anonymization after the branch is created.\nDefaults to false.\n",
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
       "BranchCreateRequest": {
         "type": "object",
         "properties": {
@@ -8484,6 +9668,142 @@
             "type": "integer",
             "format": "int"
           }
+        }
+      },
+      "MaskingRule": {
+        "type": "object",
+        "required": [
+          "database_name",
+          "schema_name",
+          "table_name",
+          "column_name"
+        ],
+        "x-sensitive": [
+          "database_name",
+          "schema_name",
+          "table_name",
+          "column_name",
+          "masking_function",
+          "masking_value"
+        ],
+        "properties": {
+          "database_name": {
+            "description": "The name of the database containing the table to be masked\n",
+            "type": "string"
+          },
+          "schema_name": {
+            "description": "The name of the schema containing the table to be masked\n",
+            "type": "string"
+          },
+          "table_name": {
+            "description": "The name of the table containing the column to be masked\n",
+            "type": "string"
+          },
+          "column_name": {
+            "description": "The name of the column to be masked\n",
+            "type": "string"
+          },
+          "masking_function": {
+            "description": "The PostgreSQL Anonymizer masking function to apply.\nCan be a predefined function (e.g., 'anon.random_string(10)', 'anon.fake_email()')\nor a custom function definition (e.g., 'anon.hash(column_name)')\n",
+            "type": "string"
+          },
+          "masking_value": {
+            "description": "A literal value to set on the column when masking.\n",
+            "type": "string"
+          }
+        },
+        "example": {
+          "database_name": "neondb",
+          "schema_name": "public",
+          "table_name": "users",
+          "column_name": "email",
+          "masking_function": "anon.fake_email()"
+        }
+      },
+      "MaskingRulesResponse": {
+        "type": "object",
+        "required": [
+          "masking_rules"
+        ],
+        "properties": {
+          "masking_rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MaskingRule"
+            },
+            "description": "List of masking rules for the branch\n"
+          }
+        }
+      },
+      "MaskingRulesUpdateRequest": {
+        "type": "object",
+        "required": [
+          "masking_rules"
+        ],
+        "properties": {
+          "masking_rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MaskingRule"
+            },
+            "description": "List of masking rules to apply to the branch.\nThis will replace all existing masking rules for the branch.\n"
+          }
+        }
+      },
+      "AnonymizedBranchStatusResponse": {
+        "type": "object",
+        "required": [
+          "project_id",
+          "branch_id",
+          "state",
+          "created_at",
+          "updated_at"
+        ],
+        "x-sensitive": [
+          "state"
+        ],
+        "properties": {
+          "project_id": {
+            "description": "The ID of the project\n",
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          },
+          "branch_id": {
+            "description": "The ID of the anonymized branch\n",
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          },
+          "state": {
+            "description": "The current state of the anonymized branch. Possible values: created, initialized, initialization_error, anonymizing, anonymized, error\n",
+            "type": "string"
+          },
+          "status_message": {
+            "description": "A descriptive message about the current status or any errors\n",
+            "type": "string"
+          },
+          "created_at": {
+            "description": "A timestamp indicating when the anonymized branch was created\n",
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "description": "A timestamp indicating when the anonymized branch status was last updated\n",
+            "type": "string",
+            "format": "date-time"
+          },
+          "failed_at": {
+            "description": "A timestamp indicating when the anonymized branch operation failed (if applicable)\n",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "example": {
+          "branch_id": "br-aged-salad-637688",
+          "project_id": "simple-truth-637688",
+          "state": "anonymizing",
+          "status_message": "Anonymizing table mydb.public.users (3/5)",
+          "created_at": "2022-11-30T18:25:15Z",
+          "updated_at": "2022-11-30T18:30:22Z"
         }
       },
       "ConnectionParameters": {
@@ -9215,6 +10535,10 @@
           "protected": {
             "description": "Whether or not the role is system-protected\n",
             "type": "boolean"
+          },
+          "authentication_method": {
+            "description": "Authentication method configured for this role. Valid options: `password`, `oauth`, `no_login`\n",
+            "type": "string"
           },
           "created_at": {
             "description": "A timestamp indicating when the role was created\n",
@@ -10588,10 +11912,6 @@
             {
               "id": "long-leaf-72329067",
               "integration": "vercel"
-            },
-            {
-              "id": "shrill-bush-06966719",
-              "integration": "outerbase"
             }
           ]
         }
@@ -10609,6 +11929,62 @@
         "enum": [
           "project_count"
         ]
+      },
+      "DataAPISettings": {
+        "x-tags": [
+          "DataAPI"
+        ],
+        "description": "Configuration settings for the Neon Data API",
+        "type": "object",
+        "properties": {
+          "db_aggregates_enabled": {
+            "type": "boolean",
+            "description": "Enable aggregates feature",
+            "default": true
+          },
+          "db_anon_role": {
+            "type": "string",
+            "description": "Database role to use for anonymous requests",
+            "default": "anonymous"
+          },
+          "db_extra_search_path": {
+            "type": "string",
+            "description": "Extra schemas to add to the search path"
+          },
+          "db_max_rows": {
+            "type": "integer",
+            "description": "Maximum number of rows that can be returned in a single request"
+          },
+          "db_schemas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of schemas to expose via the API. Default: [\"public\"]"
+          },
+          "jwt_role_claim_key": {
+            "type": "string",
+            "description": "JWT claim key to use for role extraction",
+            "default": ".\"role\""
+          },
+          "jwt_cache_max_lifetime": {
+            "type": "integer",
+            "description": "Maximum lifetime for JWT cache in seconds"
+          },
+          "openapi_mode": {
+            "type": "string",
+            "description": "OpenAPI specification mode (ignore-privileges, disabled)",
+            "default": "disabled"
+          },
+          "server_cors_allowed_origins": {
+            "type": "string",
+            "description": "CORS allowed origins"
+          },
+          "server_timing_enabled": {
+            "type": "boolean",
+            "description": "Enable server timing headers"
+          }
+        }
       },
       "DataAPICreateRequest": {
         "x-tags": [
@@ -10642,6 +12018,15 @@
             "description": "Grant all permissions to the tables in the public schema to authenticated users",
             "type": "boolean",
             "default": false
+          },
+          "skip_auth_schema": {
+            "description": "Skip creating the auth schema and RLS functions",
+            "type": "boolean",
+            "default": false
+          },
+          "settings": {
+            "$ref": "#/components/schemas/DataAPISettings",
+            "description": "Configuration settings for the Data API"
           }
         }
       },
@@ -10680,6 +12065,37 @@
           "status": {
             "type": "string",
             "description": "The status of the Neon Data API deployment"
+          },
+          "settings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DataAPISettings"
+              }
+            ],
+            "type": "object",
+            "nullable": true,
+            "description": "Configuration settings for the Data API (SubZero only)"
+          },
+          "available_schemas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "List of available database schemas (SubZero only)"
+          }
+        }
+      },
+      "DataAPIUpdateRequest": {
+        "x-tags": [
+          "DataAPI"
+        ],
+        "description": "Update Neon Data API",
+        "type": "object",
+        "properties": {
+          "settings": {
+            "$ref": "#/components/schemas/DataAPISettings",
+            "description": "Configuration settings for the Data API"
           }
         }
       },
@@ -10954,6 +12370,61 @@
           }
         }
       },
+      "UpdateNeonAuthUserRoleRequest": {
+        "type": "object",
+        "required": [
+          "roles"
+        ],
+        "properties": {
+          "roles": {
+            "type": "array",
+            "description": "Array of roles to assign to the user",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "example": [
+              "admin"
+            ]
+          }
+        }
+      },
+      "UpdateNeonAuthUserRoleResponse": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "description": "ID of the updated user",
+            "type": "string"
+          }
+        }
+      },
+      "NeonAuthAllowLocalhostResponse": {
+        "type": "object",
+        "required": [
+          "allow_localhost"
+        ],
+        "properties": {
+          "allow_localhost": {
+            "type": "boolean",
+            "description": "Whether to allow localhost connections"
+          }
+        }
+      },
+      "UpdateNeonAuthAllowLocalhostRequest": {
+        "type": "object",
+        "required": [
+          "allow_localhost"
+        ],
+        "properties": {
+          "allow_localhost": {
+            "type": "boolean",
+            "description": "Whether to allow localhost connections"
+          }
+        }
+      },
       "NeonAuthTransferAuthProviderProjectRequest": {
         "type": "object",
         "required": [
@@ -11060,6 +12531,9 @@
           },
           "client_secret": {
             "type": "string"
+          },
+          "microsoft_tenant_id": {
+            "type": "string"
           }
         }
       },
@@ -11070,6 +12544,9 @@
             "type": "string"
           },
           "client_secret": {
+            "type": "string"
+          },
+          "microsoft_tenant_id": {
             "type": "string"
           }
         }
@@ -11175,6 +12652,89 @@
           "error_message": {
             "type": "string",
             "description": "The error message from the email server."
+          }
+        }
+      },
+      "NeonAuthEmailVerificationMethod": {
+        "type": "string",
+        "enum": [
+          "link",
+          "otp"
+        ],
+        "description": "The email verification method to use.\n- `link`: Sends a verification link via email\n- `otp`: Sends a one-time password (OTP) via email\n"
+      },
+      "NeonAuthEmailAndPasswordConfig": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "email_verification_method",
+          "require_email_verification",
+          "auto_sign_in_after_verification",
+          "send_verification_email_on_sign_up",
+          "send_verification_email_on_sign_in",
+          "disable_sign_up"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether email and password authentication is enabled"
+          },
+          "email_verification_method": {
+            "$ref": "#/components/schemas/NeonAuthEmailVerificationMethod",
+            "description": "The email verification method to use"
+          },
+          "require_email_verification": {
+            "type": "boolean",
+            "description": "Whether email verification is required before users can sign in"
+          },
+          "auto_sign_in_after_verification": {
+            "type": "boolean",
+            "description": "Whether users are automatically signed in after verifying their email"
+          },
+          "send_verification_email_on_sign_up": {
+            "type": "boolean",
+            "description": "Whether to send a verification email when users sign up"
+          },
+          "send_verification_email_on_sign_in": {
+            "type": "boolean",
+            "description": "Whether to send a verification email when users sign in"
+          },
+          "disable_sign_up": {
+            "type": "boolean",
+            "description": "Whether to disable new user sign ups"
+          }
+        }
+      },
+      "NeonAuthEmailAndPasswordConfigUpdate": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether email and password authentication is enabled"
+          },
+          "email_verification_method": {
+            "$ref": "#/components/schemas/NeonAuthEmailVerificationMethod",
+            "description": "The email verification method to use"
+          },
+          "require_email_verification": {
+            "type": "boolean",
+            "description": "Whether email verification is required before users can sign in"
+          },
+          "auto_sign_in_after_verification": {
+            "type": "boolean",
+            "description": "Whether users are automatically signed in after verifying their email"
+          },
+          "send_verification_email_on_sign_up": {
+            "type": "boolean",
+            "description": "Whether to send a verification email when users sign up"
+          },
+          "send_verification_email_on_sign_in": {
+            "type": "boolean",
+            "description": "Whether to send a verification email when users sign in"
+          },
+          "disable_sign_up": {
+            "type": "boolean",
+            "description": "Whether to disable new user sign ups"
           }
         }
       },
@@ -11608,10 +13168,6 @@
       "SupportTicket": {
         "type": "object",
         "properties": {
-          "zendesk_id": {
-            "type": "integer",
-            "format": "int64"
-          },
           "salesforce_id": {
             "type": "string"
           },
@@ -11659,6 +13215,38 @@
                       },
                       "type": {
                         "type": "string"
+                      },
+                      "nullable": {
+                        "type": "boolean",
+                        "description": "Whether the column allows NULL values"
+                      }
+                    }
+                  }
+                },
+                "constraints": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "type",
+                      "columns"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "Type of constraint. Possible values: `primary_key`, `unique`\n"
+                      },
+                      "columns": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "minItems": 1,
+                        "description": "Column names participating in this constraint"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Optional name of the constraint"
                       }
                     }
                   }
