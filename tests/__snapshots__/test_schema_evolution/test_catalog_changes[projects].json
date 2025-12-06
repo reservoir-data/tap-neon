@@ -548,6 +548,24 @@
       }
     },
     {
+      "breadcrumb": [
+        "properties",
+        "deleted_at"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "recoverable_until"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
       "breadcrumb": [],
       "metadata": {
         "inclusion": "available",
@@ -675,6 +693,14 @@
           "null"
         ]
       },
+      "deleted_at": {
+        "description": "A timestamp indicating when the project was deleted",
+        "format": "date-time",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
       "hipaa_enabled_at": {
         "description": "A timestamp indicating when HIPAA was enabled for this project",
         "format": "date-time",
@@ -769,6 +795,14 @@
       "quota_reset_at": {
         "deprecated": true,
         "description": "DEPRECATED. Use `consumption_period_end` from the getProject endpoint instead.\nA timestamp indicating when the project quota resets\n",
+        "format": "date-time",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "recoverable_until": {
+        "description": "A timestamp indicating the project will be recoverable until this date and time.",
         "format": "date-time",
         "type": [
           "string",
