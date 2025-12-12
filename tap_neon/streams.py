@@ -2,20 +2,15 @@
 
 from __future__ import annotations
 
-import sys
 import typing as t
 from copy import deepcopy
 from importlib import resources
+from typing import override
 
 from singer_sdk import OpenAPISchema, StreamSchema
 
 from tap_neon import openapi
 from tap_neon.client import NeonStream
-
-if sys.version_info < (3, 12):
-    from typing_extensions import override
-else:
-    from typing import override
 
 if t.TYPE_CHECKING:
     from singer_sdk.helpers.types import Context, Record
