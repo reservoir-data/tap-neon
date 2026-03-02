@@ -31,23 +31,23 @@ Built with the [Meltano Singer SDK](https://sdk.meltano.com).
 
 ## Capabilities
 
-* `catalog`
-* `state`
-* `discover`
-* `about`
-* `stream-maps`
-* `schema-flattening`
+- `catalog`
+- `state`
+- `discover`
+- `about`
+- `stream-maps`
+- `schema-flattening`
 
 ## Settings
 
-| Setting             | Required | Default | Description |
-|:--------------------|:--------:|:-------:|:------------|
-| api_key             | True     | None    | API Key for Neon Serverless Postgres |
-| start_date          | False    | None    | Earliest datetime to get data from |
-| stream_maps         | False    | None    | Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html). |
-| stream_map_config   | False    | None    | User-defined config values to be used within map expressions. |
-| flattening_enabled  | False    | None    | 'True' to enable schema flattening and automatically expand nested properties. |
-| flattening_max_depth| False    | None    | The max depth to flatten schemas. |
+| Setting              | Required | Default | Description                                                                                                                                 |
+| :------------------- | :------: | :-----: | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| api_key              |   True   |  None   | API Key for Neon Serverless Postgres                                                                                                        |
+| start_date           |  False   |  None   | Earliest datetime to get data from                                                                                                          |
+| stream_maps          |  False   |  None   | Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html). |
+| stream_map_config    |  False   |  None   | User-defined config values to be used within map expressions.                                                                               |
+| flattening_enabled   |  False   |  None   | 'True' to enable schema flattening and automatically expand nested properties.                                                              |
+| flattening_max_depth |  False   |  None   | The max depth to flatten schemas.                                                                                                           |
 
 A full list of supported settings and capabilities is available by running: `tap-neon --about`
 
