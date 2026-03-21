@@ -719,7 +719,6 @@
       },
       "id": {
         "description": "The project ID",
-        "pattern": "^[a-z0-9-]{1,60}$",
         "type": [
           "string",
           "null"
@@ -742,7 +741,6 @@
       },
       "org_id": {
         "description": "Organization id if the project belongs to an organization.\nPermissions for the project will be given to organization members as defined by the organization admins.\nThe permissions of the project do not depend on the user that created the project if a project belongs to an organization.\n",
-        "pattern": "^[a-z0-9-]{1,60}$",
         "type": [
           "string",
           "null"

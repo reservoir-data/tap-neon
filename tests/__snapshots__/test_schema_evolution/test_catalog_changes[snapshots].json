@@ -103,7 +103,6 @@
         ]
       },
       "id": {
-        "pattern": "^[a-z0-9-]{1,60}$",
         "type": [
           "string",
           "null"
@@ -128,7 +127,6 @@
         ]
       },
       "source_branch_id": {
-        "pattern": "^[a-z0-9-]{1,60}$",
         "type": [
           "string",
           "null"
