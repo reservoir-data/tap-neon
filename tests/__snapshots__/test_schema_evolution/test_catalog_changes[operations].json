@@ -135,7 +135,6 @@
       },
       "branch_id": {
         "description": "The branch ID",
-        "pattern": "^[a-z0-9-]{1,60}$",
         "type": [
           "string",
           "null"
@@ -151,7 +150,6 @@
       },
       "endpoint_id": {
         "description": "The endpoint ID",
-        "pattern": "^[a-z0-9-]{1,60}$",
         "type": [
           "string",
           "null"
@@ -182,7 +180,6 @@
       },
       "project_id": {
         "description": "The Neon project ID",
-        "pattern": "^[a-z0-9-]{1,60}$",
         "type": [
           "string",
           "null"

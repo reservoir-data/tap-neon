@@ -90,7 +90,6 @@
       },
       "branch_id": {
         "description": "The ID of the branch to which the role belongs\n",
-        "pattern": "^[a-z0-9-]{1,60}$",
         "type": [
           "string",
           "null"
