@@ -37,7 +37,7 @@ file = "LICENSE"
 name = "Edgar Ramírez-Mondragón"
 email = "edgarrm358@gmail.com"
 [project.scripts]
-"tap-neon" = "tap_neon.tap:TapNeon.cli"
+tap-neon = "tap_neon.tap:TapNeon.cli"
 [project.urls]
 Documentation = "https://github.com/reservoir-data/tap-neon#readme"
 Homepage = "https://github.com/reservoir-data/tap-neon"
@@ -102,44 +102,61 @@ ty = "ty"
 types-requests = "requests"
 
 [tool.pyproject-fmt]
-max_supported_python = "3.14"
 table_format = "long"
 
-[tool.pytest.ini_options]
-minversion = "9.0.0"
-addopts = "-vvv"
-
-[tool.tox]
-min_version = "4.22"
-requires = [ "tox", "tox-uv" ]
-env_list = [
-  "dependencies",
-  "typing",
-  "3.14",
-]
-[tool.tox.env.dependencies]
-dependency_groups = [ "testing" ]
-commands = [ [ "deptry", "." ] ]
-[tool.tox.env.typing]
-dependency_groups = [ "testing", "typing" ]
-commands = [
-  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ],
-  [ "ty", "check", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ],
-]
-
-[tool.tox.env_run_base]
-runner = "uv-venv-lock-runner"
-pass_env = [ "TAP_NEON_*" ]
-dependency_groups = [ "testing" ]
-commands = [ [ "pytest", { replace = "posargs", default = [ "tests" ], extend = true } ] ]
-[tool.tox.labels]
-test = [ "3.14" ]
-static = [ "dependencies", "typing" ]
-
 [tool.mypy]
+enable_error_code = [ "ignore-without-code", "redundant-expr", "truthy-bool" ]
+strict = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_no_return = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
+
+[tool.pytest]
+addopts = [
+  "-v",
+  "-ra",
+]
+filterwarnings = [
+  "error",
+  "once:No records were available to test:UserWarning",
+  "once:Fields in transformed catalog but not in records:UserWarning",
+]
+log_level = "INFO"
+minversion = "9"
+strict = true
+testpaths = [ "tests" ]
+
+[tool.tox]
+min_version = "4.43"
+requires = [ "tox", "tox-uv" ]
+env_list = [
+  "dependencies",
+  "typing",
+  { product = [
+    { prefix = "3.", start = 12 },
+  ] },
+]
+[tool.tox.env.dependencies]
+description = "check for unused, missing and transitive dependencies"
+dependency_groups = [ "testing" ]
+labels = [ "check" ]
+commands = [ [ "deptry", "." ] ]
+[tool.tox.env.typing]
+description = "type checks with mypy and ty"
+dependency_groups = [ "testing", "typing" ]
+labels = [ "check" ]
+commands = [
+  [ "mypy", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ],
+  [ "ty", "check", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ],
+]
+
+[tool.tox.env_run_base]
+description = "run tests on Python {env_name}"
+labels = [ "test" ]
+runner = "uv-venv-lock-runner"
+pass_env = [ "TAP_NEON_*" ]
+dependency_groups = [ "testing" ]
+commands = [ [ "pytest", { replace = "posargs", default = [ "tests" ], extend = true } ] ]
