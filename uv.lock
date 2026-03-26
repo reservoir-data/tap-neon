@@ -732,7 +732,7 @@ typing = [
 
 [package.metadata]
 requires-dist = [
-    { name = "requests", specifier = "~=2.26" },
+    { name = "requests", specifier = "~=2.33" },
     { name = "singer-sdk", specifier = "~=0.54.0a4" },
 ]
 
