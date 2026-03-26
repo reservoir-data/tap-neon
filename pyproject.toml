@@ -14,6 +14,7 @@ keywords = [
   "Neon Serverless Postgres",
   "singer.io",
 ]
+license = "Apache-2.0"
 requires-python = ">=3.12"
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
@@ -25,14 +26,12 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  "requests~=2.26",
+  "requests~=2.33",
   "singer-sdk~=0.54.0a4",
 ]
 [[project.authors]]
 name = "Edgar Ramírez-Mondragón"
 email = "edgarrm358@gmail.com"
-[project.license]
-file = "LICENSE"
 [[project.maintainers]]
 name = "Edgar Ramírez-Mondragón"
 email = "edgarrm358@gmail.com"
@@ -62,11 +61,13 @@ typing = [
 ]
 
 [tool.hatch.version]
+fallback-version = "0.1.0.dev0"
 source = "vcs"
 
 [tool.uv]
-required-version = ">=0.5.19"
+required-version = ">=0.10"
 prerelease = "allow"
+preview = true
 
 [tool.ruff]
 line-length = 88
@@ -88,12 +89,6 @@ unfixable = [
   "ERA001", # commented-out-code
 ]
 flake8-annotations.allow-star-arg-any = true
-isort.known-first-party = [
-  "tap_neon",
-]
-isort.required-imports = [
-  "from __future__ import annotations",
-]
 pydocstyle.convention = "google"
 
 [tool.deptry.package_module_name_map]
@@ -105,7 +100,11 @@ types-requests = "requests"
 table_format = "long"
 
 [tool.mypy]
-enable_error_code = [ "ignore-without-code", "redundant-expr", "truthy-bool" ]
+enable_error_code = [
+  "ignore-without-code",
+  "redundant-expr",
+  "truthy-bool",
+]
 strict = true
 warn_redundant_casts = true
 warn_return_any = true
@@ -130,20 +129,23 @@ strict = true
 testpaths = [ "tests" ]
 
 [tool.tox]
-min_version = "4.43"
-requires = [ "tox", "tox-uv" ]
+requires = [
+  "tox>=4.34",
+  "tox-uv",
+]
 env_list = [
   "dependencies",
   "typing",
-  { product = [
-    { prefix = "3.", start = 12 },
-  ] },
+  "test",
 ]
 [tool.tox.env.dependencies]
 description = "check for unused, missing and transitive dependencies"
 dependency_groups = [ "testing" ]
 labels = [ "check" ]
 commands = [ [ "deptry", "." ] ]
+[tool.tox.env.test]
+description = "run tests on Python {py_dot_ver}"
+base_python = "3.14"  # TODO: Use .python-version (https://github.com/tox-dev/tox/issues/3894)
 [tool.tox.env.typing]
 description = "type checks with mypy and ty"
 dependency_groups = [ "testing", "typing" ]
@@ -155,7 +157,6 @@ commands = [
 
 [tool.tox.env_run_base]
 description = "run tests on Python {env_name}"
-labels = [ "test" ]
 runner = "uv-venv-lock-runner"
 pass_env = [ "TAP_NEON_*" ]
 dependency_groups = [ "testing" ]
