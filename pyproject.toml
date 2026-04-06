@@ -130,7 +130,7 @@ testpaths = [ "tests" ]
 
 [tool.tox]
 requires = [
-  "tox>=4.34",
+  "tox>=4.51",
   "tox-uv",
 ]
 env_list = [
