@@ -144,8 +144,7 @@ dependency_groups = [ "testing" ]
 labels = [ "check" ]
 commands = [ [ "deptry", "." ] ]
 [tool.tox.env.test]
-description = "run tests on Python {py_dot_ver}"
-base_python = "3.14"  # TODO: Use .python-version (https://github.com/tox-dev/tox/issues/3894)
+base_python_file = [ ".python-version" ]
 [tool.tox.env.typing]
 description = "type checks with mypy and ty"
 dependency_groups = [ "testing", "typing" ]
@@ -156,7 +155,8 @@ commands = [
 ]
 
 [tool.tox.env_run_base]
-description = "run tests on Python {env_name}"
+description = "run tests on Python {py_dot_ver}"
+labels = [ "test" ]
 runner = "uv-venv-lock-runner"
 pass_env = [ "TAP_NEON_*" ]
 dependency_groups = [ "testing" ]
