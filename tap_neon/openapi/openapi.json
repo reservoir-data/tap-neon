@@ -3192,6 +3192,121 @@
         }
       }
     },
+    "/projects/{project_id}/branches/{branch_id}/auth/config": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Update auth configuration",
+        "description": "Updates the auth configuration for the branch.\nCurrently supports updating the application name used in auth emails.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthConfig",
+        "x-internal": true,
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthConfigUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The auth configuration has been updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthConfigResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/plugins/magic-link": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "patch": {
+        "summary": "Update magic link plugin configuration",
+        "description": "Updates the magic link plugin configuration for Neon Auth.\nThe magic link plugin enables passwordless authentication via email magic links.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthMagicLinkPlugin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthMagicLinkConfigUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The magic link plugin configuration has been updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthMagicLinkConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/branches/{branch_id}/auth/webhooks": {
       "parameters": [
         {
@@ -6030,7 +6145,9 @@
     "/consumption_history/account": {
       "get": {
         "summary": "Retrieve account consumption metrics (legacy plans)",
-        "description": "Retrieves consumption metrics for Scale and Enterprise plan accounts, and for legacy Scale, Business, and Enterprise plan accounts.\nConsumption history begins at the time the account was upgraded to a supported plan.\n",
+        "description": "Retrieves consumption metrics for Scale and Enterprise plan accounts, and for legacy Scale, Business, and Enterprise plan accounts.\nConsumption history begins at the time the account was upgraded to a supported plan.\n\n**Deprecated**: This endpoint will be removed on June 1, 2026.\n",
+        "deprecated": true,
+        "x-sunset": "2026-06-01",
         "tags": [
           "Consumption"
         ],
@@ -7249,11 +7366,23 @@
     "/regions": {
       "get": {
         "summary": "List supported regions",
-        "description": "Lists supported Neon regions\n",
+        "description": "Lists supported Neon regions.\n\n**Note:** Not all regions are available to all organizations. Pass the `org_id`\nparameter to get an accurate list of regions available to your organization.\n",
         "tags": [
           "Region"
         ],
         "operationId": "getActiveRegions",
+        "parameters": [
+          {
+            "name": "org_id",
+            "description": "Organization ID. When provided, returns only regions available to this organization.\nRecommended for accurate region availability.\n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,60}$"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The list of active regions",
@@ -13379,6 +13508,54 @@
           }
         }
       },
+      "NeonAuthMagicLinkConfig": {
+        "type": "object",
+        "required": [
+          "enabled",
+          "expires_in",
+          "disable_sign_up"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the magic link plugin is enabled",
+            "default": false
+          },
+          "expires_in": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 5,
+            "maximum": 1440,
+            "default": 5,
+            "description": "Time in minutes before the magic link expires"
+          },
+          "disable_sign_up": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to disable sign-up via magic link"
+          }
+        }
+      },
+      "NeonAuthMagicLinkConfigUpdate": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the magic link plugin is enabled"
+          },
+          "expires_in": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 5,
+            "maximum": 1440,
+            "description": "Time in minutes before the magic link expires"
+          },
+          "disable_sign_up": {
+            "type": "boolean",
+            "description": "Whether to disable sign-up via magic link"
+          }
+        }
+      },
       "NeonAuthTransferAuthProviderProjectRequest": {
         "type": "object",
         "required": [
@@ -13442,6 +13619,9 @@
           "organization": {
             "$ref": "#/components/schemas/NeonAuthOrganizationConfig"
           },
+          "magic_link": {
+            "$ref": "#/components/schemas/NeonAuthMagicLinkConfig"
+          },
           "email_provider": {
             "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
           },
@@ -13479,7 +13659,9 @@
                 "user.before_create",
                 "user.created",
                 "send.otp",
-                "send.magic_link"
+                "send.magic_link",
+                "organization.invitation.created",
+                "organization.invitation.accepted"
               ]
             }
           },
@@ -13792,6 +13974,38 @@
           },
           "base_url": {
             "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "The application name used in auth emails and communications. Defaults to the Neon project name.",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        }
+      },
+      "NeonAuthConfigUpdate": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The application name used in auth emails and communications.",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        }
+      },
+      "NeonAuthConfigResponse": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The application name used in auth emails and communications."
           }
         }
       },
@@ -14108,6 +14322,16 @@
           },
           "manual": {
             "type": "boolean"
+          },
+          "full_size": {
+            "description": "Full logical size of the snapshot in bytes at the time it was taken.\n\nWhen absent, the logical size has not been calculated yet and the snapshot is not being charged.\n\nWhen present, a value of 0 means the snapshot is not being charged.\n",
+            "type": "integer",
+            "format": "int64"
+          },
+          "diff_size": {
+            "description": "Incremental storage size in bytes since the previous scheduled snapshot, when the snapshot is billed on incremental (diff) usage.\n\nWhen absent, either the incremental size has not been calculated yet and the snapshot is not being charged, or the snapshot is charged at full logical size (in that case `full_size` is set).\n",
+            "type": "integer",
+            "format": "int64"
           }
         }
       },

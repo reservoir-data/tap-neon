@@ -76,6 +76,24 @@
       }
     },
     {
+      "breadcrumb": [
+        "properties",
+        "full_size"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "diff_size"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
       "breadcrumb": [],
       "metadata": {
         "inclusion": "available",
@@ -96,9 +114,25 @@
           "null"
         ]
       },
+      "diff_size": {
+        "description": "Incremental storage size in bytes since the previous scheduled snapshot, when the snapshot is billed on incremental (diff) usage.\n\nWhen absent, either the incremental size has not been calculated yet and the snapshot is not being charged, or the snapshot is charged at full logical size (in that case `full_size` is set).\n",
+        "format": "int64",
+        "type": [
+          "integer",
+          "null"
+        ]
+      },
       "expires_at": {
         "type": [
           "string",
+          "null"
+        ]
+      },
+      "full_size": {
+        "description": "Full logical size of the snapshot in bytes at the time it was taken.\n\nWhen absent, the logical size has not been calculated yet and the snapshot is not being charged.\n\nWhen present, a value of 0 means the snapshot is not being charged.\n",
+        "format": "int64",
+        "type": [
+          "integer",
           "null"
         ]
       },
