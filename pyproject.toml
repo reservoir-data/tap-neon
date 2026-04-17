@@ -140,15 +140,15 @@ env_list = [
 ]
 [tool.tox.env.dependencies]
 description = "check for unused, missing and transitive dependencies"
-dependency_groups = [ "testing" ]
 labels = [ "check" ]
+dependency_groups = [ "testing" ]
 commands = [ [ "deptry", "." ] ]
 [tool.tox.env.test]
 base_python_file = [ ".python-version" ]
 [tool.tox.env.typing]
 description = "type checks with mypy and ty"
-dependency_groups = [ "testing", "typing" ]
 labels = [ "check" ]
+dependency_groups = [ "testing", "typing" ]
 commands = [
   [ "mypy", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ],
   [ "ty", "check", { replace = "posargs", default = [ "tap_neon", "tests" ], extend = true } ],
