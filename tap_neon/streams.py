@@ -30,7 +30,7 @@ __all__ = [
 def not_required_null(schema: dict[str, t.Any]) -> dict[str, t.Any]:
     """Add 'null' to the type of all properties that are not required."""
     new_schema = deepcopy(schema)
-    schema_type: str | list[str] = new_schema.get("type")  # type: ignore[assignment]
+    schema_type: str | list[str] = new_schema.get("type")  # type: ignore[assignment]  # ty:ignore[invalid-assignment]
     if "object" not in schema_type:
         errmsg = "Schema type must be of 'object' type"
         raise ValueError(errmsg)
