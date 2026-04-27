@@ -671,7 +671,8 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "A raw representation of PgBouncer settings",
+            "deprecated": true,
+            "description": "DEPRECATED. A raw representation of PgBouncer settings. This schema is deprecated and will be removed after 2026-06-20.\n",
             "type": [
               "object",
               "null"

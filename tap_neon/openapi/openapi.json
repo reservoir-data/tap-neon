@@ -897,46 +897,6 @@
         }
       }
     },
-    "/projects/{project_id}/restore": {
-      "parameters": [
-        {
-          "name": "project_id",
-          "in": "path",
-          "description": "The Neon project ID",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "pattern": "^[a-z0-9-]{1,60}$"
-          }
-        }
-      ],
-      "post": {
-        "summary": "Restore a deleted project",
-        "description": "DEPRECATED, use `/projects/{project_id}/recover` instead. Restores a deleted project during the deletion grace period.\nYou can obtain a `project_id` by listing the projects for your Neon account.\n",
-        "tags": [
-          "Project"
-        ],
-        "operationId": "restoreProject",
-        "deprecated": true,
-        "x-stability-level": "beta",
-        "x-sunset": "2026-02-06",
-        "responses": {
-          "200": {
-            "description": "Returned the restored project",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProjectRecoverResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "$ref": "#/components/responses/GeneralError"
-          }
-        }
-      }
-    },
     "/projects/{project_id}/recover": {
       "parameters": [
         {
@@ -3307,6 +3267,86 @@
         }
       }
     },
+    "/projects/{project_id}/branches/{branch_id}/auth/plugins/phone_number": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get phone number plugin configuration",
+        "description": "Returns the phone number plugin configuration for Neon Auth.\nThe phone number plugin enables phone-based OTP authentication.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "getNeonAuthPhoneNumberPlugin",
+        "responses": {
+          "200": {
+            "description": "Returns the phone number plugin configuration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthPhoneNumberConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update phone number plugin configuration",
+        "description": "Updates the phone number plugin configuration for Neon Auth.\nThe phone number plugin enables phone-based OTP authentication.\nOTP codes are delivered via the `send.otp` webhook event with `delivery_preference: \"sms\"`.\nA webhook must be configured with the `send.otp` event enabled for SMS delivery to work.\n",
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "updateNeonAuthPhoneNumberPlugin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NeonAuthPhoneNumberConfig"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The phone number plugin configuration has been updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NeonAuthPhoneNumberConfig"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/branches/{branch_id}/auth/webhooks": {
       "parameters": [
         {
@@ -3496,6 +3536,15 @@
           },
           {
             "$ref": "#/components/parameters/LimitParam"
+          },
+          {
+            "name": "include_deleted",
+            "description": "If true, return recoverable deleted branches too (soft-deleted within the recovery window).\nIf false or not provided, return only active (non-deleted) branches.\n\nThis parameter is part of the Branch Recovery feature, which is in preview and not available to all users.\n",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -3786,11 +3835,23 @@
       },
       "delete": {
         "summary": "Delete branch",
-        "description": "Deletes the specified branch from a project, and places\nall compute endpoints into an idle state, breaking existing client connections.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain a `branch_id` by listing the project's branches.\nFor related information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n\nWhen a successful response status is received, the compute endpoints are still active,\nand the branch is not yet deleted from storage.\nThe deletion occurs after all operations finish.\nYou cannot delete a project's root or default branch, and you cannot delete a branch that has a child branch.\nA project must have at least one branch.\n",
+        "description": "Deletes the specified branch from a project, and places\nall compute endpoints into an idle state, breaking existing client connections.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain a `branch_id` by listing the project's branches.\nFor related information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n\nWhen a successful response status is received, the compute endpoints are still active,\nand the branch is not yet deleted from storage.\nThe deletion occurs after all operations finish.\nYou cannot delete a project's root or default branch, and you cannot delete a branch that has a child branch.\nA project must have at least one branch.\n\nBy default, deleted branches can be recovered within a 7-day grace period.\nUse the `hard_delete` parameter to permanently delete the branch immediately without a recovery window.\n\nSoft delete and branch recovery are in preview and not available to all users.\n",
         "tags": [
           "Branch"
         ],
         "operationId": "deleteProjectBranch",
+        "parameters": [
+          {
+            "name": "hard_delete",
+            "in": "query",
+            "description": "If true, the branch is permanently deleted immediately without a recovery window.\nIf false (default), the branch can be recovered within 7 days via the recover endpoint.\n\nThis parameter is part of the Branch Recovery feature, which is in preview and not available to all users.\n",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Deleted the specified branch",
@@ -4393,6 +4454,54 @@
                     "init_source": "parent-data"
                   },
                   "operations": []
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/recover": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Recover a deleted branch",
+        "description": "Recovers a deleted branch during the deletion grace period (7 days).\nThe branch must have been soft deleted and not yet permanently deleted.\nRecovery restores the branch and its endpoints to an idle state.\nConnection strings remain valid after recovery.\nTTL branches become non-TTL branches after recovery.\n\nThis endpoint is in preview and not available to all users.\n",
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "recoverProjectBranch",
+        "x-stability-level": "beta",
+        "responses": {
+          "200": {
+            "description": "Recovered the specified branch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BranchRecoverResponse"
                 }
               }
             }
@@ -6512,7 +6621,7 @@
           {
             "name": "metrics",
             "required": true,
-            "description": "Specify a list of metrics to include in the response.\nPossible values:\n- `compute_unit_seconds`\n- `root_branch_bytes_month`\n- `child_branch_bytes_month`\n- `instant_restore_bytes_month`\n- `public_network_transfer_bytes`\n- `private_network_transfer_bytes`\n- `extra_branches_month`\n\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=compute_unit_seconds&metrics=extra_branches_month`\n- As a comma-separated list in a single parameter value: `metrics=compute_unit_seconds,extra_branches_month`\n",
+            "description": "Specify a list of metrics to include in the response.\nPossible values:\n- `compute_unit_seconds`\n- `root_branch_bytes_month`\n- `child_branch_bytes_month`\n- `instant_restore_bytes_month`\n- `public_network_transfer_bytes`\n- `private_network_transfer_bytes`\n- `extra_branches_month`\n- `snapshot_storage_bytes_month`\n\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=compute_unit_seconds&metrics=extra_branches_month`\n- As a comma-separated list in a single parameter value: `metrics=compute_unit_seconds,extra_branches_month`\n",
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/ConsumptionHistoryQueryMetrics"
@@ -6786,6 +6895,102 @@
                   "last_used_at": "2022-11-15T20:15:04Z",
                   "last_used_from_addr": "192.0.2.255",
                   "revoked": true
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/organizations/{org_id}/billing/spending_limit": {
+      "parameters": [
+        {
+          "name": "org_id",
+          "in": "path",
+          "description": "The Neon organization ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Retrieve the organization's monthly spending limit",
+        "description": "Returns the configured spending limit for a V3 paid organization.\n`spending_limit_cents: null` indicates that no limit is currently\nset. Available to organization members with read access on Launch\nand Scale plans only.\n",
+        "tags": [
+          "Organizations"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "getOrganizationSpendingLimit",
+        "responses": {
+          "200": {
+            "description": "The organization's current spending limit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpendingLimitResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Set the organization's monthly spending limit",
+        "description": "Sets the spending limit for a V3 paid organization. To remove a\npreviously configured limit, send a DELETE request to this endpoint.\nWhen a limit is configured, email notifications are sent at 80% and\n100% of the limit. Computes are not suspended by this feature.\nAvailable to organization admins on Launch and Scale plans only.\n",
+        "tags": [
+          "Organizations"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "setOrganizationSpendingLimit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpendingLimitUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated spending limit value.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpendingLimitResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Clear the organization's monthly spending limit",
+        "description": "Removes a previously configured spending limit for a V3 paid\norganization. Idempotent \u2014 deleting an already-unset limit still\nsucceeds. Available to organization admins on Launch and Scale plans\nonly.\n",
+        "tags": [
+          "Organizations"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "deleteOrganizationSpendingLimit",
+        "responses": {
+          "200": {
+            "description": "The spending limit has been cleared.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
                 }
               }
             }
@@ -7453,6 +7658,8 @@
     },
     "/users/me/projects/transfer": {
       "post": {
+        "deprecated": true,
+        "x-sunset": "2026-07-01",
         "summary": "Transfer projects from personal account to organization",
         "description": "Transfers selected projects, identified by their IDs, from your personal account to a specified organization.\n",
         "requestBody": {
@@ -8836,10 +9043,12 @@
           "sync_dbs_and_roles_from_compute",
           "apply_schema_from_branch",
           "timeline_mark_invisible",
+          "timeline_update_protected_config",
           "prewarm_replica",
           "promote_replica",
           "set_storage_non_dirty",
-          "swap_binding_id"
+          "swap_binding_id",
+          "finalize_migration"
         ]
       },
       "OperationStatus": {
@@ -10925,6 +11134,9 @@
             "type": "boolean"
           },
           "pooler_mode": {
+            "deprecated": true,
+            "x-sunset": "2026-06-20",
+            "description": "DEPRECATED. The connection pooler mode. This field is deprecated and will be removed after 2026-06-20.\n",
             "$ref": "#/components/schemas/EndpointPoolerMode"
           },
           "disabled": {
@@ -11024,7 +11236,9 @@
         ]
       },
       "EndpointPoolerMode": {
-        "description": "The connection pooler mode. Neon supports PgBouncer in `transaction` mode only.\n",
+        "deprecated": true,
+        "x-sunset": "2026-06-20",
+        "description": "DEPRECATED. The connection pooler mode. Neon supports PgBouncer in `transaction` mode only. This schema is deprecated and will be removed after 2026-06-20.\n",
         "type": "string",
         "enum": [
           "transaction"
@@ -11140,6 +11354,9 @@
                 "type": "boolean"
               },
               "pooler_mode": {
+                "deprecated": true,
+                "x-sunset": "2026-06-20",
+                "description": "DEPRECATED. The connection pooler mode. This field is deprecated and will be removed after 2026-06-20.\n",
                 "$ref": "#/components/schemas/EndpointPoolerMode"
               },
               "disabled": {
@@ -11198,6 +11415,9 @@
                 "type": "boolean"
               },
               "pooler_mode": {
+                "deprecated": true,
+                "x-sunset": "2026-06-20",
+                "description": "DEPRECATED. The connection pooler mode. This field is deprecated and will be removed after 2026-06-20.\n",
                 "$ref": "#/components/schemas/EndpointPoolerMode"
               },
               "disabled": {
@@ -11758,6 +11978,40 @@
           },
           "plan_details": {
             "$ref": "#/components/schemas/PlanDetails"
+          },
+          "spending_limit_cents": {
+            "description": "Monthly spending cap in cents for V3 paid plans. When set,\nnotifications are sent at 80% and 100% of this limit. `null`\nmeans no limit is configured.\n",
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        }
+      },
+      "SpendingLimitUpdateRequest": {
+        "type": "object",
+        "required": [
+          "spending_limit_cents"
+        ],
+        "properties": {
+          "spending_limit_cents": {
+            "description": "Monthly spending cap in cents. Must be positive. To remove a\npreviously configured limit, send a DELETE request to the\nspending_limit endpoint \u2014 `0` and `null` are rejected here.\nThe cap is alert-only: notifications fire at 80% and 100%, but\ncomputes are not suspended. Setting a cap below the period's\nalready-accrued spend is permitted and will trigger the\nover-limit notification on the next worker run.\n",
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          }
+        }
+      },
+      "SpendingLimitResponse": {
+        "type": "object",
+        "required": [
+          "spending_limit_cents"
+        ],
+        "properties": {
+          "spending_limit_cents": {
+            "description": "Monthly spending cap in cents. `null` indicates that no limit\nis currently configured.\n",
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           }
         }
       },
@@ -11803,7 +12057,8 @@
           "vercel_mp",
           "staff",
           "trial",
-          "sponsorship"
+          "sponsorship",
+          "shared_payment_token"
         ]
       },
       "Database": {
@@ -12705,6 +12960,9 @@
             "$ref": "#/components/schemas/PgSettingsData"
           },
           "pgbouncer_settings": {
+            "deprecated": true,
+            "x-sunset": "2026-06-20",
+            "description": "DEPRECATED. PgBouncer settings for the compute endpoint. This field is deprecated and will be removed after 2026-06-20.\n",
             "$ref": "#/components/schemas/PgbouncerSettingsData"
           },
           "preload_libraries": {
@@ -12756,6 +13014,9 @@
             "$ref": "#/components/schemas/PgSettingsData"
           },
           "pgbouncer_settings": {
+            "deprecated": true,
+            "x-sunset": "2026-06-20",
+            "description": "DEPRECATED. PgBouncer settings for the compute endpoint. This field is deprecated and will be removed after 2026-06-20.\n",
             "$ref": "#/components/schemas/PgbouncerSettingsData"
           },
           "autoscaling_limit_min_cu": {
@@ -12779,7 +13040,9 @@
         }
       },
       "PgbouncerSettingsData": {
-        "description": "A raw representation of PgBouncer settings",
+        "deprecated": true,
+        "x-sunset": "2026-06-20",
+        "description": "DEPRECATED. A raw representation of PgBouncer settings. This schema is deprecated and will be removed after 2026-06-20.\n",
         "type": "object",
         "additionalProperties": {
           "type": "string"
@@ -13556,6 +13819,33 @@
           }
         }
       },
+      "NeonAuthPhoneNumberConfig": {
+        "type": "object",
+        "required": [
+          "enabled"
+        ],
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the phone number plugin is enabled",
+            "default": false
+          },
+          "otp_expires_in": {
+            "type": "integer",
+            "description": "Time in seconds before the OTP expires",
+            "default": 300,
+            "minimum": 60,
+            "maximum": 600
+          },
+          "allowed_attempts": {
+            "type": "integer",
+            "description": "Maximum number of OTP verification attempts before lockout",
+            "default": 3,
+            "minimum": 1,
+            "maximum": 10
+          }
+        }
+      },
       "NeonAuthTransferAuthProviderProjectRequest": {
         "type": "object",
         "required": [
@@ -13622,6 +13912,9 @@
           "magic_link": {
             "$ref": "#/components/schemas/NeonAuthMagicLinkConfig"
           },
+          "phone_number": {
+            "$ref": "#/components/schemas/NeonAuthPhoneNumberConfig"
+          },
           "email_provider": {
             "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
           },
@@ -13661,7 +13954,8 @@
                 "send.otp",
                 "send.magic_link",
                 "organization.invitation.created",
-                "organization.invitation.accepted"
+                "organization.invitation.accepted",
+                "phone_number.verified"
               ]
             }
           },
@@ -14040,6 +14334,16 @@
           },
           {
             "$ref": "#/components/schemas/OperationsResponse"
+          }
+        ]
+      },
+      "BranchRecoverResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BranchResponse"
+          },
+          {
+            "$ref": "#/components/schemas/EndpointsOptionalResponse"
           }
         ]
       },

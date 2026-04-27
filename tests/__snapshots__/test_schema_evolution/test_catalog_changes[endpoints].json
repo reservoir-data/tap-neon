@@ -421,7 +421,8 @@
         ]
       },
       "pooler_mode": {
-        "description": "The connection pooler mode. Neon supports PgBouncer in `transaction` mode only.\n",
+        "deprecated": true,
+        "description": "DEPRECATED. The connection pooler mode. Neon supports PgBouncer in `transaction` mode only. This schema is deprecated and will be removed after 2026-06-20.\n",
         "type": [
           "string",
           "null"
@@ -472,7 +473,8 @@
             "additionalProperties": {
               "type": "string"
             },
-            "description": "A raw representation of PgBouncer settings",
+            "deprecated": true,
+            "description": "DEPRECATED. A raw representation of PgBouncer settings. This schema is deprecated and will be removed after 2026-06-20.\n",
             "type": [
               "object",
               "null"
