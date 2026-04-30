@@ -2,17 +2,16 @@
 
 from __future__ import annotations
 
-import typing as t
 from copy import deepcopy
 from importlib import resources
-from typing import override
+from typing import TYPE_CHECKING, Any, override
 
 from singer_sdk import OpenAPISchema, StreamSchema
 
 from tap_neon import openapi
 from tap_neon.client import NeonStream
 
-if t.TYPE_CHECKING:
+if TYPE_CHECKING:
     from singer_sdk.helpers.types import Context, Record
 
 
@@ -27,7 +26,7 @@ __all__ = [
 ]
 
 
-def not_required_null(schema: dict[str, t.Any]) -> dict[str, t.Any]:
+def not_required_null(schema: dict[str, Any]) -> dict[str, Any]:
     """Add 'null' to the type of all properties that are not required."""
     new_schema = deepcopy(schema)
     schema_type: str | list[str] = new_schema.get("type")  # type: ignore[assignment]  # ty:ignore[invalid-assignment]
@@ -54,7 +53,7 @@ def not_required_null(schema: dict[str, t.Any]) -> dict[str, t.Any]:
 
 class NeonOpenAPI(OpenAPISchema):
     @override
-    def fetch_schema(self, key: str) -> dict[str, t.Any]:
+    def fetch_schema(self, key: str) -> dict[str, Any]:
         schema = not_required_null(super().fetch_schema(key))
         if key == "ProjectListItem":
             schema["properties"]["default_endpoint_settings"]["properties"][
@@ -86,16 +85,8 @@ class Projects(NeonStream):
         self,
         record: Record,
         context: Context | None,
-    ) -> dict[str, t.Any]:
-        """Return the child context for this record.
-
-        Args:
-            record: The record to get the child context for.
-            context: The parent context.
-
-        Returns:
-            The child context.
-        """
+    ) -> dict[str, Any]:
+        """Return the child context for this record."""
         return {"project_id": record["id"]}
 
 
@@ -128,20 +119,22 @@ class Branches(NeonStream):
         self,
         record: Record,
         context: Context | None,
-    ) -> dict[str, t.Any]:
-        """Add branch_id to context.
-
-        Args:
-            record: A record dict.
-            context: A context dict.
-
-        Returns:
-            The updated context dict.
-        """
+    ) -> dict[str, Any]:
+        """Add project_id and branch_id to context."""
         return {
             "project_id": record["project_id"],
             "branch_id": record["id"],
         }
+
+    @override
+    def get_url_params(
+        self,
+        context: Context | None,
+        next_page_token: str | None,
+    ) -> dict[str, Any]:
+        params = super().get_url_params(context, next_page_token=next_page_token)
+        params["include_deleted"] = True
+        return params
 
 
 class Databases(NeonStream):
