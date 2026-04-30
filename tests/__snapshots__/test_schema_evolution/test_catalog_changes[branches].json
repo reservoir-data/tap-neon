@@ -296,6 +296,48 @@
       }
     },
     {
+      "breadcrumb": [
+        "properties",
+        "recovery"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "recovery",
+        "properties",
+        "deleted_at"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "recovery",
+        "properties",
+        "recoverable_until"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "recovery",
+        "properties",
+        "deletion_method"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
       "breadcrumb": [],
       "metadata": {
         "inclusion": "available",
@@ -485,6 +527,43 @@
         "description": "Whether the branch is protected\n",
         "type": [
           "boolean",
+          "null"
+        ]
+      },
+      "recovery": {
+        "description": "Recovery information for a deleted branch. Only present when listing deleted branches\nwith `include_deleted=true`.\n\nThis is part of the Branch Recovery feature, which is in preview and not available to all users.\n",
+        "properties": {
+          "deleted_at": {
+            "description": "Timestamp when the branch was deleted\n",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "deletion_method": {
+            "description": "How the branch was deleted: 'user' for manual deletion, 'ttl' for TTL expiration\n",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recoverable_until": {
+            "description": "Timestamp when the recovery window expires and the branch will be permanently deleted\n",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "deleted_at",
+          "recoverable_until",
+          "deletion_method"
+        ],
+        "type": [
+          "object",
           "null"
         ]
       },

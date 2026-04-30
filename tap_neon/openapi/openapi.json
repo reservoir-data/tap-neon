@@ -9048,7 +9048,8 @@
           "promote_replica",
           "set_storage_non_dirty",
           "swap_binding_id",
-          "finalize_migration"
+          "finalize_migration",
+          "mark_migration_prepared"
         ]
       },
       "OperationStatus": {
@@ -10466,6 +10467,9 @@
             "items": {
               "$ref": "#/components/schemas/BranchRestrictedAction"
             }
+          },
+          "recovery": {
+            "$ref": "#/components/schemas/BranchRecoveryInfo"
           }
         },
         "example": {
@@ -10512,6 +10516,35 @@
           "reason": {
             "description": "A human-readable explanation of why the action is restricted.\n",
             "type": "string"
+          }
+        }
+      },
+      "BranchRecoveryInfo": {
+        "description": "Recovery information for a deleted branch. Only present when listing deleted branches\nwith `include_deleted=true`.\n\nThis is part of the Branch Recovery feature, which is in preview and not available to all users.\n",
+        "type": "object",
+        "required": [
+          "deleted_at",
+          "recoverable_until",
+          "deletion_method"
+        ],
+        "properties": {
+          "deleted_at": {
+            "description": "Timestamp when the branch was deleted\n",
+            "type": "string",
+            "format": "date-time"
+          },
+          "recoverable_until": {
+            "description": "Timestamp when the recovery window expires and the branch will be permanently deleted\n",
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletion_method": {
+            "description": "How the branch was deleted: 'user' for manual deletion, 'ttl' for TTL expiration\n",
+            "type": "string",
+            "enum": [
+              "user",
+              "ttl"
+            ]
           }
         }
       },
