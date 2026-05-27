@@ -487,14 +487,14 @@
         ]
       },
       "parent_lsn": {
-        "description": "The Log Sequence Number (LSN) on the parent branch from which this branch was created.\nWhen restoring a branch using the [Restore branch](https://api-docs.neon.tech/reference/restoreprojectbranch) endpoint,\nthis value isn’t finalized until all operations related to the restore have completed successfully.\n",
+        "description": "The Log Sequence Number (LSN) on the parent branch from which this branch was created.\nWhen restoring a branch using the `POST /projects/{project_id}/branches/{branch_id}/restore` endpoint,\nthis value isn’t finalized until all operations related to the restore have completed successfully.\n",
         "type": [
           "string",
           "null"
         ]
       },
       "parent_timestamp": {
-        "description": "The point in time on the parent branch from which this branch was created.\nWhen restoring a branch using the [Restore branch](https://api-docs.neon.tech/reference/restoreprojectbranch) endpoint,\nthis value isn’t finalized until all operations related to the restore have completed successfully.\nAfter all the operations completed, this value might stay empty.\n",
+        "description": "The point in time on the parent branch from which this branch was created.\nWhen restoring a branch using the `POST /projects/{project_id}/branches/{branch_id}/restore` endpoint,\nthis value isn’t finalized until all operations related to the restore have completed successfully.\nAfter all the operations completed, this value might stay empty.\n",
         "format": "date-time",
         "type": [
           "string",
