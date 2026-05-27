@@ -7,7 +7,7 @@
   ],
   "info": {
     "title": "Neon API",
-    "description": "The Neon API allows you to access and manage Neon programmatically. You can use the Neon API to manage API keys, projects, branches, compute endpoints, databases, roles, and operations. For information about these features, refer to the [Neon documentation](https://neon.tech/docs/manage/overview/).\n\nYou can run Neon API requests from this API reference using the **Try It** feature. Enter your API key as a **Bearer** token in the **Authorization** section of the page.\n\nYou can create and manage API keys in the Neon Console. See [Manage API keys](https://neon.tech/docs/manage/api-keys/) for instructions.",
+    "description": "The Neon API allows you to access and manage Neon programmatically. You can use the Neon API to manage API keys, projects, branches, compute endpoints, databases, roles, and operations. For information about these features, refer to the [Neon documentation](https://neon.com/docs/manage/overview/).\n\nYou can run Neon API requests from this API reference using the **Try It** feature. Enter your API key as a **Bearer** token in the **Authorization** section of the page.\n\nYou can create and manage API keys in the Neon Console. See [Manage API keys](https://neon.com/docs/manage/api-keys/) for instructions.",
     "version": "v2",
     "contact": {
       "email": "help@databricks.com"
@@ -35,23 +35,23 @@
   "tags": [
     {
       "name": "API Key",
-      "description": "These methods allow you to create and manage API keys for your Neon account. For related information, see [Manage API keys](https://neon.tech/docs/manage/api-keys)."
+      "description": "These methods allow you to create and manage API keys for your Neon account. For related information, see [Manage API keys](https://neon.com/docs/manage/api-keys)."
     },
     {
       "name": "Operation",
-      "description": "These methods allow you to view operation details for your Neon project. For related information, see [Operations](https://neon.tech/docs/manage/operations)."
+      "description": "These methods allow you to view operation details for your Neon project. For related information, see [Operations](https://neon.com/docs/manage/operations)."
     },
     {
       "name": "Project",
-      "description": "These methods allow you to create and manage Neon projects. For related information, see [Manage projects](https://neon.tech/docs/manage/projects)."
+      "description": "These methods allow you to create and manage Neon projects. For related information, see [Manage projects](https://neon.com/docs/manage/projects)."
     },
     {
       "name": "Branch",
-      "description": "These methods allow you to create and manage branches in your Neon project. For related information, see [Manage branches](https://neon.tech/docs/manage/branches)."
+      "description": "These methods allow you to create and manage branches in your Neon project. For related information, see [Manage branches](https://neon.com/docs/manage/branches)."
     },
     {
       "name": "Endpoint",
-      "description": "These methods allow you to create and manage compute endpoints in your Neon project. For related information, see [Manage compute endpoints](https://neon.tech/docs/manage/endpoints)."
+      "description": "These methods allow you to create and manage compute endpoints in your Neon project. For related information, see [Manage compute endpoints](https://neon.com/docs/manage/endpoints)."
     },
     {
       "name": "Snapshot",
@@ -183,7 +183,7 @@
     "/api_keys": {
       "get": {
         "summary": "List API keys",
-        "description": "Retrieves the API keys for your Neon account.\nThe response does not include API key tokens. A token is only provided when creating an API key.\nAPI keys can also be managed in the Neon Console.\nFor more information, see [Manage API keys](https://neon.tech/docs/manage/api-keys/).\n",
+        "description": "Retrieves the API keys for your Neon account.\nThe response does not include API key tokens. A token is only provided when creating an API key.\nAPI keys can also be managed in the Neon Console.\nFor more information, see [Manage API keys](https://neon.com/docs/manage/api-keys/).\n",
         "tags": [
           "API Key"
         ],
@@ -235,7 +235,7 @@
       },
       "post": {
         "summary": "Create API key",
-        "description": "Creates an API key.\nThe `key_name` is a user-specified name for the key.\nThis method returns an `id` and `key`. The `key` is a randomly generated, 64-bit token required to access the Neon API.\nAPI keys can also be managed in the Neon Console.\nSee [Manage API keys](https://neon.tech/docs/manage/api-keys/).\n",
+        "description": "Creates an API key.\nThe `key_name` is a user-specified name for the key.\nReturns an `id` and `key`; the `key` is a randomly generated, 64-bit token required to access the Neon API.\nStore the key securely \u2014 it is only returned once.\nAPI keys can also be managed in the Neon Console.\nSee [Manage API keys](https://neon.com/docs/manage/api-keys/).\n",
         "tags": [
           "API Key"
         ],
@@ -280,7 +280,7 @@
     "/api_keys/{key_id}": {
       "delete": {
         "summary": "Revoke API key",
-        "description": "Revokes the specified API key.\nAn API key that is no longer needed can be revoked.\nThis action cannot be reversed.\nYou can obtain `key_id` values by listing the API keys for your Neon account.\nAPI keys can also be managed in the Neon Console.\nSee [Manage API keys](https://neon.tech/docs/manage/api-keys/).\n",
+        "description": "Revokes the specified API key.\nAn API key that is no longer needed can be revoked.\nThis action cannot be reversed.\nAPI keys can also be managed in the Neon Console.\nSee [Manage API keys](https://neon.com/docs/manage/api-keys/).\n",
         "tags": [
           "API Key"
         ],
@@ -348,7 +348,7 @@
       ],
       "get": {
         "summary": "Retrieve operation details",
-        "description": "Retrieves details for the specified operation.\nAn operation is an action performed on a Neon project resource.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain a `operation_id` by listing operations for the project.\n",
+        "description": "Retrieves details for the specified operation.\nAn operation is an action performed on a Neon project resource.\n",
         "tags": [
           "Operation"
         ],
@@ -387,7 +387,7 @@
     "/projects": {
       "get": {
         "summary": "List projects",
-        "description": "Retrieves a list of projects for an organization.\nYou may need to specify an org_id parameter depending on your API key type.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n",
+        "description": "Retrieves a list of projects for the specified organization.\nIf using a personal API key, include the `org_id` parameter to specify which organization to work with.\nIf using an org API key, `org_id` is automatically inferred from the key.\nFor more information, see [Manage organizations using the Neon API](https://neon.com/docs/manage/orgs-api)\nand [Manage projects](https://neon.com/docs/manage/projects/).\n",
         "tags": [
           "Project"
         ],
@@ -527,7 +527,7 @@
       },
       "post": {
         "summary": "Create project",
-        "description": "Creates a Neon project within an organization.\nYou may need to specify an org_id parameter depending on your API key type.\nPlan limits define how many projects you can create.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n\nYou can specify a region and Postgres version in the request body.\nNeon currently supports PostgreSQL 14, 15, 16, and 17.\nFor supported regions and `region_id` values, see [Regions](https://neon.tech/docs/introduction/regions/).\n",
+        "description": "Creates a Neon project within an organization.\nIf using a personal API key, include the `org_id` parameter to specify which organization to create the project in.\nIf using an org API key, `org_id` is automatically inferred from the key.\nPlan limits define how many projects you can create.\nFor more information, see [Manage projects](https://neon.com/docs/manage/projects/).\n\nYou can specify a region and Postgres version in the request body.\nNeon currently supports PostgreSQL 14, 15, 16, 17, and 18.\nFor supported regions and `region_id` values, see [Regions](https://neon.com/docs/introduction/regions/).\n",
         "tags": [
           "Project"
         ],
@@ -603,7 +603,7 @@
     "/projects/shared": {
       "get": {
         "summary": "List shared projects",
-        "description": "Retrieves a list of projects shared with your Neon account.\nFor more information, see [Manage projects](https://neon.tech/docs/manage/projects/).\n",
+        "description": "Retrieves a list of projects shared with your Neon account.\nFor more information, see [Manage projects](https://neon.com/docs/manage/projects/).\n",
         "tags": [
           "Project"
         ],
@@ -719,7 +719,7 @@
       ],
       "get": {
         "summary": "Retrieve project details",
-        "description": "Retrieves information about the specified project.\nYou can obtain a `project_id` by listing the projects for an organization.\n",
+        "description": "Retrieves information about the specified project.\nReturned details include the project settings, compute configuration, history retention, owner information, and current usage metrics.\n",
         "tags": [
           "Project"
         ],
@@ -775,7 +775,7 @@
       },
       "patch": {
         "summary": "Update project",
-        "description": "Updates the specified project.\nYou can obtain a `project_id` by listing the projects for your Neon account.\n",
+        "description": "Updates the specified project.\nConfigurable properties include the project name, default compute settings, history retention period, and IP allowlist.\n",
         "tags": [
           "Project"
         ],
@@ -848,7 +848,7 @@
       },
       "delete": {
         "summary": "Delete project",
-        "description": "Deletes the specified project.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nDeleting a project is a permanent action.\nDeleting a project also deletes endpoints, branches, databases, and users that belong to the project.\n",
+        "description": "Deletes the specified project and all its endpoints, branches, databases, and users.\nDeleted projects can be recovered within 7 days using `POST /projects/{project_id}/recover`.\nTo list recoverable projects, use `GET /projects?recoverable=true`.\n",
         "tags": [
           "Project"
         ],
@@ -912,7 +912,7 @@
       ],
       "post": {
         "summary": "Recover a deleted project",
-        "description": "Recovers a deleted project during the deletion grace period.\nYou can obtain a `project_id` by listing the projects for your Neon account.\n",
+        "description": "Recovers a deleted project within the 7-day deletion recovery period.\nRestores branches, endpoints, settings, and connection strings.\nSome integrations require manual reconfiguration after recovery.\nTo list recoverable projects, use `GET /projects?recoverable=true`.\n",
         "tags": [
           "Project"
         ],
@@ -938,7 +938,7 @@
     "/projects/{project_id}/operations": {
       "get": {
         "summary": "List operations",
-        "description": "Retrieves a list of operations for the specified Neon project.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nThe number of operations returned can be large.\nTo paginate the response, issue an initial request with a `limit` value.\nThen, add the `cursor` value that was returned in the response to the next request.\nOperations older than 6 months may be deleted from our systems.\nIf you need more history than that, you should store your own history.\n",
+        "description": "Retrieves a list of operations for the specified Neon project.\nThe number of operations returned can be large.\nTo paginate the response, issue an initial request with a `limit` value.\nThen, add the `cursor` value that was returned in the response to the next request.\nOperations older than 6 months may be deleted from our systems.\nIf you need more history than that, you should store your own history.\n",
         "tags": [
           "Operation"
         ],
@@ -1020,7 +1020,7 @@
       },
       "post": {
         "summary": "Grant project access",
-        "description": "Grants project access to the account associated with the specified email address",
+        "description": "Grants project access to the account associated with the specified email address.\n",
         "tags": [
           "Project"
         ],
@@ -1098,8 +1098,8 @@
     },
     "/projects/{project_id}/available_preload_libraries": {
       "get": {
-        "summary": "Return available shared preload libraries",
-        "description": "Return available shared preload libraries",
+        "summary": "List available shared preload libraries",
+        "description": "Returns the shared preload libraries available for the specified project's Postgres version.\nShared preload libraries are Postgres extensions that require the `shared_preload_libraries`\nsetting and a compute restart to activate.\nUse this list to determine which libraries can be enabled in the project's\n`settings.preload_libraries` configuration.\n",
         "tags": [
           "Project"
         ],
@@ -1147,7 +1147,7 @@
       ],
       "post": {
         "summary": "Create a project transfer request",
-        "description": "Creates a transfer request for the specified project. A transfer request allows\nthe project to be transferred to another account or organization. The request\nhas an expiration time after which it can no longer be used. To accept/claim\nthe transfer request, the recipient user/organization must call the\n`/projects/{project_id}/transfer_requests/{request_id}` API endpoint, or visit\n`https://console.neon.tech/app/claim?p={project_id}&tr={request_id}&ru={redirect_url}`\nin the Neon Console. The `ru` parameter is optional and can be used to redirect\nthe user after accepting the transfer request.\n",
+        "description": "Creates a transfer request for the specified project. The request expires after a set period.\nTo accept the request, the recipient calls `PUT /projects/{project_id}/transfer_requests/{request_id}`\nor uses the Neon Console claim link.\nThe optional `ru` parameter redirects the recipient after acceptance.\n",
         "tags": [
           "Project"
         ],
@@ -1289,7 +1289,7 @@
       },
       "post": {
         "summary": "Add JWKS URL",
-        "description": "Add a new JWKS URL to a project, such that it can be used for verifying JWTs used as the authentication mechanism for the specified project.\n\nThe URL must be a valid HTTPS URL that returns a JSON Web Key Set.\n\nThe `provider_name` field allows you to specify which authentication provider you're using (e.g., Clerk, Auth0, AWS Cognito, etc.).\n\nThe `branch_id` can be used to specify on which branches the JWKS URL will be accepted. If not specified, then it will work on any branch.\n\nThe `role_names` can be used to specify for which roles the JWKS URL will be accepted. If not specified, then default roles will be used (authenticator, authenticated and anonymous).\n\nThe `jwt_audience` can be used to specify which \"aud\" values should be accepted by Neon in the JWTs that are used for authentication.\n",
+        "description": "Adds a JWKS URL to the specified project for verifying JWTs used as the authentication mechanism.\n\nThe URL must be a valid HTTPS URL that returns a JSON Web Key Set.\n\nThe `provider_name` field allows you to specify which authentication provider you're using (e.g., Clerk, Auth0, AWS Cognito).\n\nThe `branch_id` scopes the JWKS URL to specific branches; if not specified, it applies to all branches.\n\nThe `role_names` scopes the URL to specific roles; if not specified, default roles are used (`authenticator`, `authenticated`, `anonymous`).\n\nThe `jwt_audience` specifies which `aud` values are accepted in JWTs.\n",
         "tags": [
           "Project"
         ],
@@ -1345,7 +1345,7 @@
       ],
       "delete": {
         "summary": "Delete JWKS URL",
-        "description": "Deletes a JWKS URL from the specified project",
+        "description": "Removes the specified JWKS URL from the project.\nJWTs signed by keys from the removed URL can no longer authenticate to the project's endpoints.\n",
         "tags": [
           "Project"
         ],
@@ -1401,7 +1401,7 @@
       ],
       "post": {
         "summary": "Create Neon Data API",
-        "description": "Creates a new instance of Neon Data API in the specified branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "description": "Creates a new instance of Neon Data API in the specified branch.\nThe Data API exposes a REST interface over the branch database. The `database_name` path parameter determines which database the API serves.\n",
         "tags": [
           "DataAPI"
         ],
@@ -1433,7 +1433,7 @@
       },
       "patch": {
         "summary": "Update Neon Data API",
-        "description": "Updates the Neon Data API configuration for the specified branch.\nYou can optionally provide settings to update the Data API configuration.\nThe schema cache is always refreshed as part of this operation.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "description": "Updates the Neon Data API configuration for the specified branch.\nYou can optionally provide settings to update the Data API configuration.\nThe schema cache is always refreshed as part of this operation.\n",
         "tags": [
           "DataAPI"
         ],
@@ -1465,7 +1465,7 @@
       },
       "delete": {
         "summary": "Delete Neon Data API",
-        "description": "Deletes the Neon Data API for the specified branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "description": "Deletes the Neon Data API for the specified branch.\nExisting connections using the Data API endpoint will fail after deletion.\n",
         "tags": [
           "DataAPI"
         ],
@@ -1487,8 +1487,8 @@
         }
       },
       "get": {
-        "summary": "Get Neon Data API",
-        "description": "Retrieves the Neon Data API for the specified branch.\n",
+        "summary": "Retrieve Neon Data API configuration",
+        "description": "Retrieves the Neon Data API configuration for the specified branch,\nincluding endpoint URL, enabled state, and database settings.\n",
         "tags": [
           "DataAPI"
         ],
@@ -1571,8 +1571,8 @@
         }
       ],
       "get": {
-        "summary": "Get details of Neon Auth for the branch",
-        "description": "/ Fetches the details of the Neon Auth for the specified branch. You can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.",
+        "summary": "Retrieve Neon Auth details for the branch",
+        "description": "Retrieves the Neon Auth integration details for the specified branch,\nincluding the auth provider type and integration status.\n",
         "tags": [
           "Auth"
         ],
@@ -1596,7 +1596,7 @@
       },
       "post": {
         "summary": "Enable Neon Auth for the branch",
-        "description": "Enables Neon Auth integrationfor the branch.\nYou can obtain the `project_id` and `branch_id` by listing the projects and branches for your Neon account.\n",
+        "description": "Enables Neon Auth for the specified branch by connecting it to an authentication provider.\nCreating the integration provisions the `neon_auth` schema in the branch database, which stores user identity data synchronized from the provider.\n",
         "tags": [
           "Auth"
         ],
@@ -1629,7 +1629,8 @@
         }
       },
       "delete": {
-        "summary": "Disables Neon Auth for the branch",
+        "summary": "Disable Neon Auth for the branch",
+        "description": "Disables the Neon Auth integration for the specified branch, removing the connection\nto the authentication provider.\nIf `delete_data` is `true`, also deletes the `neon_auth` schema and all associated tables\nfrom the branch database.\nThe integration can be re-enabled by calling `POST /projects/{project_id}/branches/{branch_id}/auth`.\n",
         "tags": [
           "Auth"
         ],
@@ -1675,7 +1676,7 @@
         }
       ],
       "get": {
-        "summary": "List domains in redirect_uri whitelist",
+        "summary": "List trusted redirect URI domains",
         "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/domains` instead. Lists the domains in the redirect_uri whitelist for the specified project.\n",
         "tags": [
           "Auth (legacy)"
@@ -1700,7 +1701,7 @@
         }
       },
       "post": {
-        "summary": "Add domain to redirect_uri whitelist",
+        "summary": "Add trusted redirect URI domain",
         "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/domains` instead. Adds a domain to the redirect_uri whitelist for the specified project.\n",
         "tags": [
           "Auth (legacy)"
@@ -1728,7 +1729,7 @@
         }
       },
       "delete": {
-        "summary": "Delete domain from redirect_uri whitelist",
+        "summary": "Delete trusted redirect URI domain",
         "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/domains` instead. Deletes a domain from the redirect_uri whitelist for the specified project.\n",
         "tags": [
           "Auth (legacy)"
@@ -1781,7 +1782,7 @@
       ],
       "get": {
         "summary": "List domains in redirect_uri whitelist",
-        "description": "Lists the domains in the redirect_uri whitelist for the specified project.\n",
+        "description": "Lists the trusted domains in the redirect URI whitelist for the specified branch.\nOnly domains in this list are permitted as redirect targets after authentication.\n",
         "tags": [
           "Auth"
         ],
@@ -1805,7 +1806,7 @@
       },
       "post": {
         "summary": "Add domain to redirect_uri whitelist",
-        "description": "Adds a domain to the redirect_uri whitelist for the specified project.\n",
+        "description": "Adds a domain to the redirect URI whitelist for the specified branch.\nOnly domains in this list are permitted as redirect targets after authentication.\n",
         "tags": [
           "Auth"
         ],
@@ -1832,7 +1833,7 @@
       },
       "delete": {
         "summary": "Delete domain from redirect_uri whitelist",
-        "description": "Deletes a domain from the redirect_uri whitelist for the specified project.\n",
+        "description": "Removes a domain from the redirect URI whitelist for the specified branch.\nAfter removal, the domain can no longer be used as a redirect target after authentication.\n",
         "tags": [
           "Auth"
         ],
@@ -1955,7 +1956,7 @@
       ],
       "post": {
         "summary": "Create new auth user",
-        "description": "Creates a new user in Neon Auth.\n",
+        "description": "Creates a new user in the Neon Auth user directory for the specified branch.\nThe user is created in the `neon_auth.users_sync` table and can immediately authenticate\nusing the branch's configured auth providers.\n",
         "tags": [
           "Auth"
         ],
@@ -2022,7 +2023,7 @@
       ],
       "delete": {
         "summary": "Delete auth user",
-        "description": "Deletes the auth user for the specified project.\n",
+        "description": "Deletes the specified user from the Neon Auth user directory for the specified branch.\nRemoves the user record from `neon_auth.users_sync`. This action cannot be undone.\n",
         "tags": [
           "Auth"
         ],
@@ -2072,7 +2073,7 @@
       ],
       "put": {
         "summary": "Update auth user role",
-        "description": "Updates the role of an auth user for the specified project.\n",
+        "description": "Updates the role of a user in the Neon Auth user directory for the specified branch.\nThe role controls the user's level of access within the Neon Auth integration.\n",
         "tags": [
           "Auth"
         ],
@@ -2148,7 +2149,7 @@
     "/projects/auth/transfer_ownership": {
       "post": {
         "summary": "Transfer Neon-managed auth project to your own account",
-        "description": "Transfer ownership of your Neon-managed auth project to your own auth provider account.\n",
+        "description": "Transfers ownership of your Neon-managed auth project to your own auth provider account.\n",
         "tags": [
           "Auth (legacy)"
         ],
@@ -2182,7 +2183,7 @@
     },
     "/projects/{project_id}/auth/integrations": {
       "get": {
-        "summary": "Lists active integrations with auth providers",
+        "summary": "List active integrations with auth providers",
         "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth` instead.",
         "tags": [
           "Auth (legacy)"
@@ -2258,8 +2259,8 @@
         }
       },
       "post": {
-        "summary": "Add a OAuth provider",
-        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/oauth_providers` instead. Adds a OAuth provider to the specified project.\n",
+        "summary": "Add an OAuth provider",
+        "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/oauth_providers` instead.\nAdds an OAuth provider to the specified project.\n",
         "tags": [
           "Auth (legacy)"
         ],
@@ -2317,8 +2318,8 @@
         }
       ],
       "get": {
-        "summary": "List OAuth providers for neon auth for a branch",
-        "description": "Lists the OAuth providers for the specified project and branch.\n",
+        "summary": "List OAuth providers for the branch",
+        "description": "Lists the OAuth providers configured for the specified branch's Neon Auth integration.\n",
         "tags": [
           "Auth"
         ],
@@ -2341,8 +2342,8 @@
         }
       },
       "post": {
-        "summary": "Add a OAuth provider",
-        "description": "Adds a OAuth provider to the specified project.\n",
+        "summary": "Add an OAuth provider",
+        "description": "Adds an OAuth provider configuration to the specified branch's Neon Auth integration.\nAfter adding, users can authenticate using the configured provider.\n",
         "tags": [
           "Auth"
         ],
@@ -2549,7 +2550,7 @@
         }
       ],
       "get": {
-        "summary": "Get email server configuration",
+        "summary": "Retrieve email server configuration",
         "description": "DEPRECATED, use `/projects/{project_id}/branches/{branch_id}/auth/email_provider` instead. Gets the email server configuration for the specified project.\n",
         "tags": [
           "Auth (legacy)"
@@ -2634,7 +2635,7 @@
       ],
       "post": {
         "summary": "Send test email",
-        "description": "Sends a test email to the specified email address.\n",
+        "description": "Sends a test email using the configured email server settings to verify SMTP connectivity and credentials.\nThe request body must include the SMTP server settings\n(`host`, `port`, `username`, `password`, `sender_email`, `sender_name`) and the `recipient_email` address.\n",
         "tags": [
           "Auth"
         ],
@@ -2691,8 +2692,8 @@
         }
       ],
       "get": {
-        "summary": "Get email and password configuration",
-        "description": "Gets the email and password authentication configuration for Neon Auth\n",
+        "summary": "Retrieve email and password configuration",
+        "description": "Retrieves the email and password authentication configuration for the specified branch's Neon Auth integration,\nincluding whether it is enabled and the email verification method.\n",
         "tags": [
           "Auth"
         ],
@@ -2715,7 +2716,7 @@
       },
       "patch": {
         "summary": "Update email and password configuration",
-        "description": "Updates the email and password authentication configuration for Neon Auth\n",
+        "description": "Updates the email and password authentication configuration for the specified branch's Neon Auth integration.\nOnly the fields provided in the request body are updated.\n",
         "tags": [
           "Auth"
         ],
@@ -2771,8 +2772,8 @@
         }
       ],
       "get": {
-        "summary": "Get email provider configuration",
-        "description": "Gets the email provider configuration for the specified branch.\n",
+        "summary": "Retrieve email provider configuration",
+        "description": "Retrieves the email provider configuration for the specified branch's Neon Auth integration,\nincluding the provider type and server settings.\n",
         "tags": [
           "Auth"
         ],
@@ -2795,7 +2796,7 @@
       },
       "patch": {
         "summary": "Update email provider configuration",
-        "description": "Updates the email provider configuration for the specified branch.\n",
+        "description": "Updates the email provider configuration for the specified branch's Neon Auth integration.\nThe email provider handles transactional messages such as verification emails and password reset links.\n",
         "tags": [
           "Auth"
         ],
@@ -2887,7 +2888,7 @@
     "/projects/{project_id}/connection_uri": {
       "get": {
         "summary": "Retrieve connection URI",
-        "description": "Retrieves a connection URI for the specified database.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `database_name` by listing the databases for a branch.\nYou can obtain a `role_name` by listing the roles for a branch.\n",
+        "description": "Retrieves a connection URI for the specified database.\nThe URI uses the standard PostgreSQL connection string format. Set `pooled=true` to include the `-pooler` suffix for a connection pooler URI.\n",
         "tags": [
           "Project"
         ],
@@ -2992,8 +2993,8 @@
         }
       ],
       "get": {
-        "summary": "Get allow localhost",
-        "description": "Get the allow localhost configuration for the specified branch.\n",
+        "summary": "Retrieve localhost allow setting",
+        "description": "Retrieves the localhost allow setting for the specified branch's Neon Auth integration.\nWhen enabled, authentication flows work from `localhost` without adding it to the redirect URI whitelist.\n",
         "tags": [
           "Auth"
         ],
@@ -3015,8 +3016,8 @@
         }
       },
       "patch": {
-        "summary": "Update allow localhost",
-        "description": "Updates the allow localhost configuration for the specified branch.\n",
+        "summary": "Update localhost allow setting",
+        "description": "Updates the localhost allow setting for the specified branch's Neon Auth integration.\nWhen enabled, authentication flows work from `localhost` without adding it to the redirect URI whitelist.\n",
         "tags": [
           "Auth"
         ],
@@ -3072,7 +3073,7 @@
         }
       ],
       "get": {
-        "summary": "Get all plugin configurations",
+        "summary": "Retrieve Neon Auth plugin configurations",
         "description": "Returns all plugin configurations for Neon Auth in a single response.\nThis endpoint aggregates organization, email provider, email and password,\nOAuth providers, and localhost settings.\n",
         "tags": [
           "Auth"
@@ -3267,7 +3268,7 @@
         }
       }
     },
-    "/projects/{project_id}/branches/{branch_id}/auth/plugins/phone_number": {
+    "/projects/{project_id}/branches/{branch_id}/auth/plugins/phone-number": {
       "parameters": [
         {
           "name": "project_id",
@@ -3291,7 +3292,7 @@
         }
       ],
       "get": {
-        "summary": "Get phone number plugin configuration",
+        "summary": "Retrieve phone number plugin configuration",
         "description": "Returns the phone number plugin configuration for Neon Auth.\nThe phone number plugin enables phone-based OTP authentication.\n",
         "tags": [
           "Auth"
@@ -3313,9 +3314,9 @@
           }
         }
       },
-      "put": {
+      "patch": {
         "summary": "Update phone number plugin configuration",
-        "description": "Updates the phone number plugin configuration for Neon Auth.\nThe phone number plugin enables phone-based OTP authentication.\nOTP codes are delivered via the `send.otp` webhook event with `delivery_preference: \"sms\"`.\nA webhook must be configured with the `send.otp` event enabled for SMS delivery to work.\n",
+        "description": "Updates the phone number plugin configuration for Neon Auth.\nOnly the fields provided in the request body are updated; omitted fields retain their current values.\nThe phone number plugin enables phone-based OTP authentication.\nOTP codes are delivered via the `send.otp` webhook event with `delivery_preference: \"sms\"`.\nA webhook must be configured with the `send.otp` event enabled for SMS delivery to work.\n",
         "tags": [
           "Auth"
         ],
@@ -3324,7 +3325,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NeonAuthPhoneNumberConfig"
+                "$ref": "#/components/schemas/NeonAuthPhoneNumberConfigUpdate"
               }
             }
           },
@@ -3371,8 +3372,8 @@
         }
       ],
       "get": {
-        "summary": "Get webhook configuration for Neon Auth",
-        "description": "Returns the webhook configuration for Neon Auth.\n",
+        "summary": "Retrieve Neon Auth webhook configuration",
+        "description": "Returns the webhook configuration for the specified branch's Neon Auth integration,\nincluding the endpoint URL and the events that trigger it.\n",
         "tags": [
           "Auth"
         ],
@@ -3394,8 +3395,8 @@
         }
       },
       "put": {
-        "summary": "Update webhook configuration for Neon Auth",
-        "description": "Updates the webhook configuration for Neon Auth on a specific branch.\n",
+        "summary": "Update Neon Auth webhook configuration",
+        "description": "Updates the webhook configuration for the specified branch's Neon Auth integration.\nWebhooks notify an external endpoint when auth events occur, such as user creation or sign-in.\n",
         "tags": [
           "Auth"
         ],
@@ -3442,7 +3443,7 @@
       ],
       "post": {
         "summary": "Create branch",
-        "description": "Creates a branch in the specified project.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nThis method does not require a request body, but you can specify one to create a compute endpoint for the branch or to select a non-default parent branch.\nBy default, the branch is created from the project's default branch with no compute endpoint, and the branch name is auto-generated.\nTo access the branch, you must add an endpoint object. A `read_write` endpoint allows you to perform read and write operations on the branch.\nEach branch supports one read-write endpoint and multiple read-only endpoints.\nFor related information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n",
+        "description": "Creates a branch in the specified project.\nNo request body is required, but you can specify one to create a compute endpoint or select a non-default parent branch.\nBy default, the branch is created from the project's default branch with no compute endpoint, and the branch name is auto-generated.\nTo access the branch, add a `read_write` endpoint.\nEach branch supports one read-write endpoint and multiple read-only endpoints.\nFor related information, see [Manage branches](https://neon.com/docs/manage/branches/).\n",
         "tags": [
           "Branch"
         ],
@@ -3500,7 +3501,7 @@
       },
       "get": {
         "summary": "List branches",
-        "description": "Retrieves a list of branches for the specified project.\nYou can obtain a `project_id` by listing the projects for your Neon account.\n\nEach Neon project has a root branch named `main`.\nA `branch_id` value has a `br-` prefix.\nA project may contain child branches that were branched from `main` or from another branch.\nA parent branch is identified by the `parent_id` value, which is the `id` of the parent branch.\nFor related information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n",
+        "description": "Retrieves a list of branches for the specified project.\n\nEach Neon project has a root branch named `main`.\nA `branch_id` value has a `br-` prefix.\nA project may contain child branches that were branched from `main` or from another branch.\nA parent branch is identified by the `parent_id` value, which is the `id` of the parent branch.\nFor related information, see [Manage branches](https://neon.com/docs/manage/branches/).\n",
         "tags": [
           "Branch"
         ],
@@ -3712,7 +3713,7 @@
       ],
       "get": {
         "summary": "Retrieve number of branches",
-        "description": "Retrieves the total number of branches in the specified project.\nYou can obtain a `project_id` by listing the projects for your Neon account.\n",
+        "description": "Retrieves the total number of branches in the specified project.\nSupports an optional `search` parameter to count branches matching a name filter.\n",
         "tags": [
           "Branch"
         ],
@@ -3773,7 +3774,7 @@
       ],
       "get": {
         "summary": "Retrieve branch details",
-        "description": "Retrieves information about the specified branch.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain a `branch_id` by listing the project's branches.\nA `branch_id` value has a `br-` prefix.\n\nEach Neon project is initially created with a root and default branch named `main`.\nA project can contain one or more branches.\nA parent branch is identified by a `parent_id` value, which is the `id` of the parent branch.\nFor related information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n",
+        "description": "Retrieves information about the specified branch.\nA `branch_id` value has a `br-` prefix.\n\nEach Neon project is initially created with a root and default branch named `main`.\nA project can contain one or more branches.\nA parent branch is identified by a `parent_id` value, which is the `id` of the parent branch.\nFor related information, see [Manage branches](https://neon.com/docs/manage/branches/).\n",
         "tags": [
           "Branch"
         ],
@@ -3835,7 +3836,7 @@
       },
       "delete": {
         "summary": "Delete branch",
-        "description": "Deletes the specified branch from a project, and places\nall compute endpoints into an idle state, breaking existing client connections.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain a `branch_id` by listing the project's branches.\nFor related information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n\nWhen a successful response status is received, the compute endpoints are still active,\nand the branch is not yet deleted from storage.\nThe deletion occurs after all operations finish.\nYou cannot delete a project's root or default branch, and you cannot delete a branch that has a child branch.\nA project must have at least one branch.\n\nBy default, deleted branches can be recovered within a 7-day grace period.\nUse the `hard_delete` parameter to permanently delete the branch immediately without a recovery window.\n\nSoft delete and branch recovery are in preview and not available to all users.\n",
+        "description": "Deletes the specified branch from a project and places all compute endpoints into an idle state, breaking existing client connections.\n\nThe deletion completes after all operations finish.\nYou cannot delete a project's root or default branch, or a branch that has a child branch.\nA project must have at least one branch.\n\nBy default, deleted branches can be recovered within a 7-day grace period.\nUse the `hard_delete` parameter to permanently delete the branch immediately.\nFor related information, see [Manage branches](https://neon.com/docs/manage/branches/).\n",
         "tags": [
           "Branch"
         ],
@@ -3922,7 +3923,7 @@
           "Branch"
         ],
         "summary": "Update branch",
-        "description": "Updates the specified branch.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nFor more information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n",
+        "description": "Updates the specified branch.\nFor more information, see [Manage branches](https://neon.com/docs/manage/branches/).\n",
         "operationId": "updateProjectBranch",
         "requestBody": {
           "content": {
@@ -3984,8 +3985,8 @@
         "tags": [
           "Branch"
         ],
-        "summary": "Restore branch",
-        "description": "Restores a branch to an earlier state in its own or another branch's history",
+        "summary": "Restore branch to a historical state",
+        "description": "Restores a branch to an earlier state in its own or another branch's history\nby specifying an LSN or timestamp.\nCreates a new branch from the historical state.\n",
         "operationId": "restoreProjectBranch",
         "parameters": [
           {
@@ -4247,8 +4248,8 @@
         "tags": [
           "Branch"
         ],
-        "summary": "Get masking rules",
-        "description": "Retrieves the masking rules for the specified anonymized branch.\nMasking rules define how sensitive data should be anonymized using PostgreSQL Anonymizer.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "summary": "Retrieve masking rules",
+        "description": "Retrieves the masking rules for the specified anonymized branch.\nMasking rules define how sensitive data should be anonymized using PostgreSQL Anonymizer.\n\n**Note**: This endpoint is currently in Beta.\n",
         "operationId": "getMaskingRules",
         "responses": {
           "200": {
@@ -4271,7 +4272,7 @@
           "Branch"
         ],
         "summary": "Update masking rules",
-        "description": "Updates the masking rules for the specified anonymized branch.\nMasking rules define how sensitive data should be anonymized using PostgreSQL Anonymizer.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "description": "Updates the masking rules for the specified anonymized branch.\nMasking rules define how sensitive data should be anonymized using PostgreSQL Anonymizer.\n\n**Note**: This endpoint is currently in Beta.\n",
         "operationId": "updateMaskingRules",
         "requestBody": {
           "content": {
@@ -4327,8 +4328,8 @@
         "tags": [
           "Branch"
         ],
-        "summary": "Get anonymized branch status",
-        "description": "Retrieves the current status of an anonymized branch, including its state and progress information.\nThis endpoint allows you to monitor the anonymization process from initialization through completion.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nOnly anonymized branches will have status information available.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "summary": "Retrieve anonymized branch status",
+        "description": "Retrieves the current status of an anonymized branch, including its state and progress information.\nThis endpoint allows you to monitor the anonymization process from initialization through completion.\nOnly anonymized branches will have status information available.\n\n**Note**: This endpoint is currently in Beta.\n",
         "operationId": "getAnonymizedBranchStatus",
         "responses": {
           "200": {
@@ -4375,7 +4376,7 @@
           "Branch"
         ],
         "summary": "Start anonymization",
-        "description": "Starts the anonymization process for an anonymized branch that is in the initialized, error, or anonymized state.\nThis will apply all defined masking rules to anonymize sensitive data in the branch databases.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nThe branch must be an anonymized branch to start anonymization.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "description": "Starts the anonymization process for an anonymized branch that is in the initialized, error, or anonymized state.\nThis will apply all defined masking rules to anonymize sensitive data in the branch databases.\nThe branch must be an anonymized branch to start anonymization.\n\n**Note**: This endpoint is currently in Beta.\n",
         "operationId": "startAnonymization",
         "responses": {
           "200": {
@@ -4422,7 +4423,7 @@
           "Branch"
         ],
         "summary": "Set branch as default",
-        "description": "Sets the specified branch as the project's default branch.\nThe default designation is automatically removed from the previous default branch.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nFor more information, see [Manage branches](https://neon.tech/docs/manage/branches/).\n",
+        "description": "Sets the specified branch as the project's default branch.\nThe default designation is automatically removed from the previous default branch.\nFor more information, see [Manage branches](https://neon.com/docs/manage/branches/).\n",
         "operationId": "setDefaultProjectBranch",
         "responses": {
           "200": {
@@ -4489,7 +4490,7 @@
       ],
       "post": {
         "summary": "Recover a deleted branch",
-        "description": "Recovers a deleted branch during the deletion grace period (7 days).\nThe branch must have been soft deleted and not yet permanently deleted.\nRecovery restores the branch and its endpoints to an idle state.\nConnection strings remain valid after recovery.\nTTL branches become non-TTL branches after recovery.\n\nThis endpoint is in preview and not available to all users.\n",
+        "description": "Recovers a deleted branch within the 7-day deletion recovery period.\nThe branch must have been soft deleted and not yet permanently deleted.\nRecovery restores the branch and its endpoints to an idle state.\nConnection strings remain valid after recovery.\nTTL branches become non-TTL branches after recovery.\n\nTo list deleted branches available for recovery, use `GET /projects/{project_id}/branches?include_deleted=true`.\n",
         "tags": [
           "Branch"
         ],
@@ -4536,7 +4537,7 @@
         }
       ],
       "post": {
-        "summary": "Finalize restore",
+        "summary": "Finalize branch restore from snapshot",
         "description": "Finalize the restore operation for a branch created from a snapshot.\nThis operation updates the branch so it functions as the original branch it replaced.\nThis includes:\n  - Reassigning any computes from the original branch to the restored branch (this will restart the computes)\n  - Renaming the restored branch to the original branch's name\n  - Renaming the original branch so it no longer uses the original name\n\nThis operation only applies to branches created using the `restoreSnapshot` endpoint with `finalize_restore: false`.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Branch"
@@ -4600,7 +4601,7 @@
       ],
       "get": {
         "summary": "List branch endpoints",
-        "description": "Retrieves a list of compute endpoints for the specified branch.\nNeon permits only one read-write compute endpoint per branch.\nA branch can have multiple read-only compute endpoints.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\n",
+        "description": "Retrieves a list of compute endpoints for the specified branch.\nNeon permits only one read-write compute endpoint per branch.\nA branch can have multiple read-only compute endpoints.\n",
         "tags": [
           "Branch"
         ],
@@ -4676,7 +4677,7 @@
       ],
       "get": {
         "summary": "List databases",
-        "description": "Retrieves a list of databases for the specified branch.\nA branch can have multiple databases.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nFor related information, see [Manage databases](https://neon.tech/docs/manage/databases/).\n",
+        "description": "Retrieves a list of databases for the specified branch.\nA branch can have multiple databases.\nFor related information, see [Manage databases](https://neon.com/docs/manage/databases/).\n",
         "tags": [
           "Branch"
         ],
@@ -4722,7 +4723,7 @@
           "Branch"
         ],
         "summary": "Create database",
-        "description": "Creates a database in the specified branch.\nA branch can have multiple databases.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nFor related information, see [Manage databases](https://neon.tech/docs/manage/databases/).\n",
+        "description": "Creates a database in the specified branch.\nA branch can have multiple databases.\nFor related information, see [Manage databases](https://neon.com/docs/manage/databases/).\n",
         "operationId": "createProjectBranchDatabase",
         "requestBody": {
           "content": {
@@ -4827,7 +4828,7 @@
       ],
       "get": {
         "summary": "Retrieve database details",
-        "description": "Retrieves information about the specified database.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` and `database_name` by listing the branch's databases.\nFor related information, see [Manage databases](https://neon.tech/docs/manage/databases/).\n",
+        "description": "Retrieves information about the specified database.\nFor related information, see [Manage databases](https://neon.com/docs/manage/databases/).\n",
         "tags": [
           "Branch"
         ],
@@ -4863,7 +4864,7 @@
           "Branch"
         ],
         "summary": "Update database",
-        "description": "Updates the specified database in the branch.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` and `database_name` by listing the branch's databases.\nFor related information, see [Manage databases](https://neon.tech/docs/manage/databases/).\n",
+        "description": "Updates the specified database in the branch.\nFor related information, see [Manage databases](https://neon.com/docs/manage/databases/).\n",
         "operationId": "updateProjectBranchDatabase",
         "requestBody": {
           "content": {
@@ -4935,7 +4936,7 @@
       },
       "delete": {
         "summary": "Delete database",
-        "description": "Deletes the specified database from the branch.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` and `database_name` by listing the branch's databases.\nFor related information, see [Manage databases](https://neon.tech/docs/manage/databases/).\n",
+        "description": "Deletes the specified database from the branch.\nFor related information, see [Manage databases](https://neon.com/docs/manage/databases/).\n",
         "tags": [
           "Branch"
         ],
@@ -5021,7 +5022,7 @@
       ],
       "get": {
         "summary": "List roles",
-        "description": "Retrieves a list of Postgres roles from the specified branch.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nFor related information, see [Manage roles](https://neon.tech/docs/manage/roles/).\n",
+        "description": "Retrieves a list of Postgres roles from the specified branch.\nFor related information, see [Manage roles](https://neon.com/docs/manage/roles/).\n",
         "tags": [
           "Branch"
         ],
@@ -5062,7 +5063,7 @@
       },
       "post": {
         "summary": "Create role",
-        "description": "Creates a Postgres role in the specified branch.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nFor related information, see [Manage roles](https://neon.tech/docs/manage/roles/).\n\nConnections established to the active compute endpoint will be dropped.\nIf the compute endpoint is idle, the endpoint becomes active for a short period of time and is suspended afterward.\n",
+        "description": "Creates a Postgres role in the specified branch.\nFor related information, see [Manage roles](https://neon.com/docs/manage/roles/).\n\nConnections established to the active compute endpoint will be dropped.\nIf the compute endpoint is idle, the endpoint becomes active for a short period of time and is suspended afterward.\n",
         "tags": [
           "Branch"
         ],
@@ -5157,7 +5158,7 @@
       ],
       "get": {
         "summary": "Retrieve role details",
-        "description": "Retrieves details about the specified role.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nYou can obtain the `role_name` by listing the roles for a branch.\nIn Neon, the terms \"role\" and \"user\" are synonymous.\nFor related information, see [Manage roles](https://neon.tech/docs/manage/roles/).\n",
+        "description": "Retrieves details about the specified role.\nIn Neon, the terms \"role\" and \"user\" are synonymous.\nFor related information, see [Manage roles](https://neon.com/docs/manage/roles/).\n",
         "tags": [
           "Branch"
         ],
@@ -5189,7 +5190,7 @@
       },
       "delete": {
         "summary": "Delete role",
-        "description": "Deletes the specified Postgres role from the branch.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nYou can obtain the `role_name` by listing the roles for a branch.\nFor related information, see [Manage roles](https://neon.tech/docs/manage/roles/).\n",
+        "description": "Deletes the specified Postgres role from the branch.\nFor related information, see [Manage roles](https://neon.com/docs/manage/roles/).\n",
         "tags": [
           "Branch"
         ],
@@ -5283,7 +5284,7 @@
       ],
       "get": {
         "summary": "Retrieve role password",
-        "description": "Retrieves the password for the specified Postgres role, if possible.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nYou can obtain the `role_name` by listing the roles for a branch.\nFor related information, see [Manage roles](https://neon.tech/docs/manage/roles/).\n",
+        "description": "Retrieves the password for the specified Postgres role, if possible.\nFor related information, see [Manage roles](https://neon.com/docs/manage/roles/).\n",
         "tags": [
           "Branch"
         ],
@@ -5362,7 +5363,7 @@
       ],
       "post": {
         "summary": "Reset role password",
-        "description": "Resets the password for the specified Postgres role.\nReturns a new password and operations. The new password is ready to use when the last operation finishes.\nThe old password remains valid until last operation finishes.\nConnections to the compute endpoint are dropped. If idle,\nthe compute endpoint becomes active for a short period of time.\n\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain the `branch_id` by listing the project's branches.\nYou can obtain the `role_name` by listing the roles for a branch.\nFor related information, see [Manage roles](https://neon.tech/docs/manage/roles/).\n",
+        "description": "Resets the password for the specified Postgres role.\nReturns a new password and operations. The new password is ready to use when the last operation finishes.\nThe old password remains valid until last operation finishes.\nConnections to the compute endpoint are dropped. If idle,\nthe compute endpoint becomes active for a short period of time.\n\nFor related information, see [Manage roles](https://neon.com/docs/manage/roles/).\n",
         "tags": [
           "Branch"
         ],
@@ -5537,7 +5538,7 @@
       ],
       "post": {
         "summary": "Create compute endpoint",
-        "description": "Creates a compute endpoint for the specified branch.\nAn endpoint is a Neon compute instance.\nThere is a maximum of one read-write compute endpoint per branch.\nIf the specified branch already has a read-write compute endpoint, the operation fails.\nA branch can have multiple read-only compute endpoints.\n\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain `branch_id` by listing the project's branches.\nA `branch_id` has a `br-` prefix.\nFor supported regions and `region_id` values, see [Regions](https://neon.tech/docs/introduction/regions/).\nFor more information about compute endpoints, see [Manage computes](https://neon.tech/docs/manage/endpoints/).\n",
+        "description": "Creates a compute endpoint for the specified branch.\nA compute endpoint is a Neon compute instance.\nThere is a maximum of one read-write compute endpoint per branch.\nIf the specified branch already has a read-write compute endpoint, the operation fails.\nA branch can have multiple read-only compute endpoints.\n\nFor more information about compute endpoints, see [Manage computes](https://neon.com/docs/manage/endpoints/).\n",
         "tags": [
           "Endpoint"
         ],
@@ -5642,7 +5643,7 @@
       },
       "get": {
         "summary": "List compute endpoints",
-        "description": "Retrieves a list of compute endpoints for the specified project.\nA compute endpoint is a Neon compute instance.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nFor information about compute endpoints, see [Manage computes](https://neon.tech/docs/manage/endpoints/).\n",
+        "description": "Retrieves a list of compute endpoints for the specified project.\nA compute endpoint is a Neon compute instance.\nFor information about compute endpoints, see [Manage computes](https://neon.com/docs/manage/endpoints/).\n",
         "tags": [
           "Endpoint"
         ],
@@ -5768,7 +5769,7 @@
       ],
       "get": {
         "summary": "Retrieve compute endpoint details",
-        "description": "Retrieves information about the specified compute endpoint.\nA compute endpoint is a Neon compute instance.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain an `endpoint_id` by listing your project's compute endpoints.\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.tech/docs/manage/endpoints/).\n",
+        "description": "Retrieves information about the specified compute endpoint.\nA compute endpoint is a Neon compute instance.\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.com/docs/manage/endpoints/).\n",
         "tags": [
           "Endpoint"
         ],
@@ -5818,7 +5819,7 @@
       },
       "delete": {
         "summary": "Delete compute endpoint",
-        "description": "Delete the specified compute endpoint.\nA compute endpoint is a Neon compute instance.\nDeleting a compute endpoint drops existing network connections to the compute endpoint.\nThe deletion is completed when last operation in the chain finishes successfully.\n\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain an `endpoint_id` by listing your project's compute endpoints.\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.tech/docs/manage/endpoints/).\n",
+        "description": "Deletes the specified compute endpoint.\nA compute endpoint is a Neon compute instance.\nDeleting a compute endpoint drops existing network connections to the compute endpoint.\nThe deletion is completed when the last operation in the chain finishes successfully.\n\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.com/docs/manage/endpoints/).\n",
         "tags": [
           "Endpoint"
         ],
@@ -5888,7 +5889,7 @@
           "Endpoint"
         ],
         "summary": "Update compute endpoint",
-        "description": "Updates the specified compute endpoint.\n\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain an `endpoint_id` and `branch_id` by listing your project's compute endpoints.\nAn `endpoint_id` has an `ep-` prefix. A `branch_id` has a `br-` prefix.\n For more information about compute endpoints, see [Manage computes](https://neon.tech/docs/manage/endpoints/).\n\nIf the returned list of operations is not empty, the compute endpoint is not ready to use.\nThe client must wait for the last operation to finish before using the compute endpoint.\nIf the compute endpoint was idle before the update, it becomes active for a short period of time,\nand the control plane suspends it again after the update.\n",
+        "description": "Updates the specified compute endpoint.\n\nAn `endpoint_id` has an `ep-` prefix. A `branch_id` has a `br-` prefix.\nFor more information about compute endpoints, see [Manage computes](https://neon.com/docs/manage/endpoints/).\n\nIf the returned list of operations is not empty, the compute endpoint is not ready to use.\nThe client must wait for the last operation to finish before using the compute endpoint.\nIf the compute endpoint was idle before the update, it becomes active for a short period of time,\nand the control plane suspends it again after the update.\n",
         "operationId": "updateProjectEndpoint",
         "requestBody": {
           "required": true,
@@ -5978,7 +5979,7 @@
     "/projects/{project_id}/endpoints/{endpoint_id}/start": {
       "post": {
         "summary": "Start compute endpoint",
-        "description": "Starts a compute endpoint. The compute endpoint is ready to use\nafter the last operation in chain finishes successfully.\n\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain an `endpoint_id` by listing your project's compute endpoints.\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.tech/docs/manage/endpoints/).\n",
+        "description": "Starts a compute endpoint.\nThe compute endpoint is ready to use after the last operation in the chain finishes successfully.\n\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.com/docs/manage/endpoints/).\n",
         "tags": [
           "Endpoint"
         ],
@@ -6088,7 +6089,7 @@
       ],
       "post": {
         "summary": "Suspend compute endpoint",
-        "description": "Suspend the specified compute endpoint\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain an `endpoint_id` by listing your project's compute endpoints.\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.tech/docs/manage/endpoints/).\n",
+        "description": "Suspends the specified compute endpoint.\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.com/docs/manage/endpoints/).\n",
         "tags": [
           "Endpoint"
         ],
@@ -6176,7 +6177,7 @@
       ],
       "post": {
         "summary": "Restart compute endpoint",
-        "description": "Restart the specified compute endpoint: suspend immediately followed by start operations.\nYou can obtain a `project_id` by listing the projects for your Neon account.\nYou can obtain an `endpoint_id` by listing your project's compute endpoints.\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.tech/docs/manage/endpoints/).\n",
+        "description": "Restarts the specified compute endpoint by immediately suspending it and then starting it again.\nAn `endpoint_id` has an `ep-` prefix.\nFor information about compute endpoints, see [Manage computes](https://neon.com/docs/manage/endpoints/).\n",
         "tags": [
           "Endpoint"
         ],
@@ -6254,7 +6255,7 @@
     "/consumption_history/account": {
       "get": {
         "summary": "Retrieve account consumption metrics (legacy plans)",
-        "description": "Retrieves consumption metrics for Scale and Enterprise plan accounts, and for legacy Scale, Business, and Enterprise plan accounts.\nConsumption history begins at the time the account was upgraded to a supported plan.\n\n**Deprecated**: This endpoint will be removed on June 1, 2026.\n",
+        "description": "Retrieves consumption metrics for Scale and Enterprise plan accounts, and for legacy Scale, Business, and Enterprise plan accounts.\nConsumption history begins at the time the account was upgraded to a supported plan.\n\n**Deprecated.** Use `GET /consumption_history/projects` (`getConsumptionHistoryPerProject`)\nor `GET /consumption_history/v2/projects` (`getConsumptionHistoryPerProjectV2`) instead.\n",
         "deprecated": true,
         "x-sunset": "2026-06-01",
         "tags": [
@@ -6707,7 +6708,7 @@
       ],
       "get": {
         "summary": "Retrieve organization details",
-        "description": "Retrieves information about the specified organization.\n",
+        "description": "Retrieves details for the specified organization, including its name, plan, and configuration.\n",
         "tags": [
           "Organizations"
         ],
@@ -6727,7 +6728,8 @@
                   "plan": "scale",
                   "managed_by": "console",
                   "created_at": "2024-02-23T17:42:25Z",
-                  "updated_at": "2024-02-26T20:41:25Z"
+                  "updated_at": "2024-02-26T20:41:25Z",
+                  "require_mfa": false
                 }
               }
             }
@@ -6753,7 +6755,7 @@
       ],
       "get": {
         "summary": "List organization API keys",
-        "description": "Retrieves the API keys for the specified organization.\nThe response does not include API key tokens. A token is only provided when creating an API key.\nAPI keys can also be managed in the Neon Console.\nFor more information, see [Manage API keys](https://neon.tech/docs/manage/api-keys/).\n",
+        "description": "Retrieves the API keys for the specified organization.\nThe response does not include API key tokens. A token is only provided when creating an API key.\nAPI keys can also be managed in the Neon Console.\nFor more information, see [Manage API keys](https://neon.com/docs/manage/api-keys/).\n",
         "tags": [
           "Organizations"
         ],
@@ -6805,7 +6807,7 @@
       },
       "post": {
         "summary": "Create organization API key",
-        "description": "Creates an API key for the specified organization.\nThe `key_name` is a user-specified name for the key.\nThis method returns an `id` and `key`. The `key` is a randomly generated, 64-bit token required to access the Neon API.\nAPI keys can also be managed in the Neon Console.\nSee [Manage API keys](https://neon.tech/docs/manage/api-keys/).\n",
+        "description": "Creates an API key for the specified organization.\nThe `key_name` is a user-specified name for the key.\nReturns an `id` and `key`; the `key` is a randomly generated, 64-bit token required to access the Neon API.\nStore the key securely \u2014 it is only returned once.\nAPI keys can also be managed in the Neon Console.\nSee [Manage API keys](https://neon.com/docs/manage/api-keys/).\n",
         "tags": [
           "Organizations"
         ],
@@ -6862,7 +6864,7 @@
       ],
       "delete": {
         "summary": "Revoke organization API key",
-        "description": "Revokes the specified organization API key.\nAn API key that is no longer needed can be revoked.\nThis action cannot be reversed.\nYou can obtain `key_id` values by listing the API keys for an organization.\nAPI keys can also be managed in the Neon Console.\nSee [Manage API keys](https://neon.tech/docs/manage/api-keys/).\n",
+        "description": "Revokes the specified organization API key.\nAn API key that is no longer needed can be revoked.\nThis action cannot be reversed.\nAPI keys can also be managed in the Neon Console.\nSee [Manage API keys](https://neon.com/docs/manage/api-keys/).\n",
         "tags": [
           "Organizations"
         ],
@@ -6919,8 +6921,8 @@
         }
       ],
       "get": {
-        "summary": "Retrieve the organization's monthly spending limit",
-        "description": "Returns the configured spending limit for a V3 paid organization.\n`spending_limit_cents: null` indicates that no limit is currently\nset. Available to organization members with read access on Launch\nand Scale plans only.\n",
+        "summary": "Retrieve organization spending limit",
+        "description": "Returns the configured monthly spending limit for the specified organization.\n`spending_limit_cents: null` indicates that no limit is currently set.\nAvailable to organization members with read access on Launch and Scale plans only.\n",
         "tags": [
           "Organizations"
         ],
@@ -6943,8 +6945,8 @@
         }
       },
       "put": {
-        "summary": "Set the organization's monthly spending limit",
-        "description": "Sets the spending limit for a V3 paid organization. To remove a\npreviously configured limit, send a DELETE request to this endpoint.\nWhen a limit is configured, email notifications are sent at 80% and\n100% of the limit. Computes are not suspended by this feature.\nAvailable to organization admins on Launch and Scale plans only.\n",
+        "summary": "Set organization spending limit",
+        "description": "Sets the monthly spending limit for the specified organization.\nTo remove a previously configured limit, send a DELETE request to this endpoint.\nWhen a limit is configured, email notifications are sent at 80% and 100% of the limit.\nComputes are not suspended when the limit is reached.\nAvailable to organization admins on Launch and Scale plans only.\n",
         "tags": [
           "Organizations"
         ],
@@ -6977,8 +6979,8 @@
         }
       },
       "delete": {
-        "summary": "Clear the organization's monthly spending limit",
-        "description": "Removes a previously configured spending limit for a V3 paid\norganization. Idempotent \u2014 deleting an already-unset limit still\nsucceeds. Available to organization admins on Launch and Scale plans\nonly.\n",
+        "summary": "Remove organization spending limit",
+        "description": "Removes the configured monthly spending limit for the specified organization.\nIdempotent \u2014 removing an already-unset limit still succeeds.\nAvailable to organization admins on Launch and Scale plans only.\n",
         "tags": [
           "Organizations"
         ],
@@ -7015,7 +7017,7 @@
         }
       ],
       "get": {
-        "summary": "Retrieve organization members details",
+        "summary": "List organization members",
         "description": "Retrieves a paginated list of members for the specified organization.\n",
         "tags": [
           "Organizations"
@@ -7165,7 +7167,7 @@
       },
       "patch": {
         "summary": "Update role for organization member",
-        "description": "Only an admin can perform this action.\n",
+        "description": "Updates the role of an existing member in the specified organization.\nSupported roles are `admin` and `member`.\nOnly organization admins can call this endpoint.\n",
         "tags": [
           "Organizations"
         ],
@@ -7200,8 +7202,8 @@
         }
       },
       "delete": {
-        "summary": "Remove member from the organization",
-        "description": "Remove member from the organization.\nOnly an admin of the organization can perform this action.\nIf another admin is being removed, it will not be allows in case it is the only admin left in the organization.\n",
+        "summary": "Remove organization member",
+        "description": "Removes the specified member from the organization.\nOnly organization admins can perform this action.\nThe last admin in an organization cannot be removed.\n",
         "tags": [
           "Organizations"
         ],
@@ -7237,8 +7239,8 @@
         }
       ],
       "get": {
-        "summary": "Retrieve organization invitation details",
-        "description": "Retrieves information about extended invitations for the specified organization\n",
+        "summary": "List organization invitations",
+        "description": "Retrieves pending and accepted invitations for the specified organization.\n",
         "tags": [
           "Organizations"
         ],
@@ -7608,7 +7610,7 @@
     "/users/me": {
       "get": {
         "summary": "Retrieve current user details",
-        "description": "Retrieves information about the current Neon user account.\n",
+        "description": "Retrieves information about the currently authenticated Neon user,\nincluding account identifiers, plan details, and linked auth accounts.\n",
         "tags": [
           "Users"
         ],
@@ -7632,8 +7634,8 @@
     },
     "/users/me/organizations": {
       "get": {
-        "summary": "Retrieve current user organizations list",
-        "description": "Retrieves information about the current Neon user's organizations\n",
+        "summary": "List organizations for the current user",
+        "description": "Retrieves the organizations that the currently authenticated user belongs to.\n",
         "operationId": "getCurrentUserOrganizations",
         "tags": [
           "Users",
@@ -7661,7 +7663,7 @@
         "deprecated": true,
         "x-sunset": "2026-07-01",
         "summary": "Transfer projects from personal account to organization",
-        "description": "Transfers selected projects, identified by their IDs, from your personal account to a specified organization.\n",
+        "description": "DEPRECATED. Personal accounts have been migrated to organizations, making this operation no longer applicable.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -7715,8 +7717,8 @@
     },
     "/auth": {
       "get": {
-        "summary": "Get request authentication details",
-        "description": "Returns auth information about the passed credentials. It can refer to an API key, Bearer token or OAuth session.\n",
+        "summary": "Retrieve request authentication details",
+        "description": "Returns authentication details for the credentials used in the request,\nincluding the credential type (API key, Bearer token, or OAuth session)\nand the associated identity.\n",
         "tags": [
           "Users"
         ],
@@ -7763,7 +7765,7 @@
       ],
       "post": {
         "summary": "Create snapshot",
-        "description": "Create a snapshot from the specified branch using the provided parameters.\nThis endpoint may initiate an asynchronous operation.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "description": "Creates a snapshot from the specified branch.\nThis operation may initiate an asynchronous process.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -7853,7 +7855,7 @@
       ],
       "get": {
         "summary": "List project snapshots",
-        "description": "List the snapshots for the specified project.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "description": "Lists the snapshots for the specified project.\nEach snapshot represents a point-in-time backup of the project data.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -7911,7 +7913,7 @@
       ],
       "delete": {
         "summary": "Delete snapshot",
-        "description": "Delete the specified snapshot.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "description": "Deletes the specified snapshot.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -7934,7 +7936,7 @@
       },
       "patch": {
         "summary": "Update snapshot",
-        "description": "Update the specified snapshot.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "description": "Updates the specified snapshot.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -8000,7 +8002,7 @@
       "post": {
         "x-stability-level": "beta",
         "summary": "Restore snapshot",
-        "description": "Restore the specified snapshot to a new branch and optionally finalize the restore operation.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "description": "Restores the specified snapshot to a new branch,\nand optionally finalizes the restore operation to replace the original branch.\n\n**Note**: This endpoint is currently in Beta.\n",
         "parameters": [
           {
             "name": "name",
@@ -8077,8 +8079,8 @@
         }
       ],
       "get": {
-        "summary": "View backup schedule",
-        "description": "View the backup schedule for the specified branch.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "summary": "Retrieve backup schedule",
+        "description": "Returns the backup schedule for the specified branch, including the configured snapshot frequencies.\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -8094,7 +8096,7 @@
       },
       "put": {
         "summary": "Update backup schedule",
-        "description": "Update the backup schedule for the specified branch.\n\n**Note** : This endpoint is currently in Beta.\n",
+        "description": "Updates the backup schedule for the specified branch.\nThe schedule defines how often automatic snapshots are created (e.g., `hourly`, `daily`).\n\n**Note**: This endpoint is currently in Beta.\n",
         "tags": [
           "Snapshot"
         ],
@@ -8265,7 +8267,7 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "The Neon API requires an API key to authorize your requests, which you can enter below.\nRefer to our documentation to find out how to generate and use [API keys](https://neon.tech/docs/manage/api-keys).\n"
+        "description": "The Neon API requires an API key to authorize your requests, which you can enter below.\nRefer to our documentation to find out how to generate and use [API keys](https://neon.com/docs/manage/api-keys).\n"
       },
       "CookieAuth": {
         "type": "apiKey",
@@ -8665,7 +8667,7 @@
           "remediation": {
             "type": "string",
             "description": "URL to documentation on how to fix this issue",
-            "example": "https://neon.tech/docs/guides/database-advisor"
+            "example": "https://neon.com/docs/data-api/database-advisor"
           },
           "metadata": {
             "type": "object",
@@ -9492,19 +9494,19 @@
               },
               "autoscaling_limit_min_cu": {
                 "deprecated": true,
-                "description": "DEPRECATED, use default_endpoint_settings.autoscaling_limit_min_cu instead.\n\nThe minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+                "description": "DEPRECATED, use default_endpoint_settings.autoscaling_limit_min_cu instead.\n\nThe minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
                 "$ref": "#/components/schemas/ComputeUnit"
               },
               "autoscaling_limit_max_cu": {
                 "deprecated": true,
-                "description": "DEPRECATED, use default_endpoint_settings.autoscaling_limit_max_cu instead.\n\nThe maximum number of Compute Units. See [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+                "description": "DEPRECATED, use default_endpoint_settings.autoscaling_limit_max_cu instead.\n\nThe maximum number of Compute Units. See [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
                 "$ref": "#/components/schemas/ComputeUnit"
               },
               "provisioner": {
                 "$ref": "#/components/schemas/Provisioner"
               },
               "region_id": {
-                "description": "The region identifier. Refer to our [Regions](https://neon.tech/docs/introduction/regions) documentation for supported regions. Values are specified in this format: `aws-us-east-1`\n",
+                "description": "The region identifier. Refer to our [Regions](https://neon.com/docs/introduction/regions) documentation for supported regions. Values are specified in this format: `aws-us-east-1`\n",
                 "type": "string"
               },
               "default_endpoint_settings": {
@@ -9856,6 +9858,46 @@
         },
         "required": [
           "project_id",
+          "periods"
+        ]
+      },
+      "ConsumptionHistoryPerBranchV2Response": {
+        "type": "object",
+        "properties": {
+          "branches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConsumptionHistoryPerBranchV2"
+            }
+          }
+        },
+        "required": [
+          "branches"
+        ]
+      },
+      "ConsumptionHistoryPerBranchV2": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "description": "The project that owns the branch",
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          },
+          "branch_id": {
+            "description": "The branch ID",
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          },
+          "periods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConsumptionHistoryPerPeriodV2"
+            }
+          }
+        },
+        "required": [
+          "project_id",
+          "branch_id",
           "periods"
         ]
       },
@@ -10339,11 +10381,11 @@
             "pattern": "^[a-z0-9-]{1,60}$"
           },
           "parent_lsn": {
-            "description": "The Log Sequence Number (LSN) on the parent branch from which this branch was created.\nWhen restoring a branch using the [Restore branch](https://api-docs.neon.tech/reference/restoreprojectbranch) endpoint,\nthis value isn\u2019t finalized until all operations related to the restore have completed successfully.\n",
+            "description": "The Log Sequence Number (LSN) on the parent branch from which this branch was created.\nWhen restoring a branch using the `POST /projects/{project_id}/branches/{branch_id}/restore` endpoint,\nthis value isn\u2019t finalized until all operations related to the restore have completed successfully.\n",
             "type": "string"
           },
           "parent_timestamp": {
-            "description": "The point in time on the parent branch from which this branch was created.\nWhen restoring a branch using the [Restore branch](https://api-docs.neon.tech/reference/restoreprojectbranch) endpoint,\nthis value isn\u2019t finalized until all operations related to the restore have completed successfully.\nAfter all the operations completed, this value might stay empty.\n",
+            "description": "The point in time on the parent branch from which this branch was created.\nWhen restoring a branch using the `POST /projects/{project_id}/branches/{branch_id}/restore` endpoint,\nthis value isn\u2019t finalized until all operations related to the restore have completed successfully.\nAfter all the operations completed, this value might stay empty.\n",
             "type": "string",
             "format": "date-time"
           },
@@ -10605,11 +10647,11 @@
             "$ref": "#/components/schemas/EndpointSettingsData"
           },
           "autoscaling_limit_min_cu": {
-            "description": "The minimum number of Compute Units. The minimum value is `0.25`.\n    See [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\n    for more information.\n",
+            "description": "The minimum number of Compute Units. The minimum value is `0.25`.\n    See [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\n    for more information.\n",
             "$ref": "#/components/schemas/ComputeUnit"
           },
           "autoscaling_limit_max_cu": {
-            "description": "The maximum number of Compute Units.\n    See [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\n    for more information.\n",
+            "description": "The maximum number of Compute Units.\n    See [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\n    for more information.\n",
             "$ref": "#/components/schemas/ComputeUnit"
           },
           "provisioner": {
@@ -11278,7 +11320,7 @@
         ]
       },
       "SuspendTimeoutSeconds": {
-        "description": "Duration of inactivity in seconds after which the compute endpoint is\nautomatically suspended. The value `0` means use the default value.\nThe value `-1` means never suspend. The default value is `300` seconds (5 minutes).\nThe minimum value is `60` seconds (1 minute).\nThe maximum value is `604800` seconds (1 week). For more information, see\n[Scale to zero configuration](https://neon.tech/docs/manage/endpoints#scale-to-zero-configuration).\n",
+        "description": "Duration of inactivity in seconds after which the compute endpoint is\nautomatically suspended. The value `0` means use the default value.\nThe value `-1` means never suspend. The default value is `300` seconds (5 minutes).\nThe minimum value is `60` seconds (1 minute).\nThe maximum value is `604800` seconds (1 week). For more information, see\n[Scale to zero configuration](https://neon.com/docs/manage/endpoints#scale-to-zero-configuration).\n",
         "type": "integer",
         "format": "int64",
         "minimum": -1,
@@ -11371,11 +11413,11 @@
                 "$ref": "#/components/schemas/EndpointSettingsData"
               },
               "autoscaling_limit_min_cu": {
-                "description": "The minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+                "description": "The minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
                 "$ref": "#/components/schemas/ComputeUnit"
               },
               "autoscaling_limit_max_cu": {
-                "description": "The maximum number of Compute Units.\nSee [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+                "description": "The maximum number of Compute Units.\nSee [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
                 "$ref": "#/components/schemas/ComputeUnit"
               },
               "provisioner": {
@@ -11429,11 +11471,11 @@
                 "pattern": "^[a-z0-9-]{1,60}$"
               },
               "autoscaling_limit_min_cu": {
-                "description": "The minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+                "description": "The minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
                 "$ref": "#/components/schemas/ComputeUnit"
               },
               "autoscaling_limit_max_cu": {
-                "description": "The maximum number of Compute Units.\nSee [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+                "description": "The maximum number of Compute Units.\nSee [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
                 "$ref": "#/components/schemas/ComputeUnit"
               },
               "provisioner": {
@@ -12324,6 +12366,11 @@
           "has_mfa": {
             "type": "boolean",
             "description": "Whether the member has MFA (TOTP) enabled"
+          },
+          "deactivated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of when the user account was deactivated.\nAbsent for active users. When present, the UI should render a\n\"Deactivated\" badge inline next to the member.\n"
           }
         }
       },
@@ -12383,6 +12430,10 @@
           },
           "allow_hipaa_projects": {
             "description": "If true, allow account to mark projects as HIPAA",
+            "type": "boolean"
+          },
+          "require_mfa": {
+            "description": "If true, all members must have MFA enabled to access this organization",
             "type": "boolean"
           }
         }
@@ -12447,13 +12498,14 @@
       },
       "OrganizationsUpdateRequest": {
         "type": "object",
-        "required": [
-          "name"
-        ],
         "properties": {
           "name": {
             "type": "string",
             "maxLength": 64
+          },
+          "require_mfa": {
+            "description": "If true, all members must have MFA enabled to access this organization",
+            "type": "boolean"
           }
         }
       },
@@ -13053,11 +13105,11 @@
             "$ref": "#/components/schemas/PgbouncerSettingsData"
           },
           "autoscaling_limit_min_cu": {
-            "description": "The minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+            "description": "The minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
             "$ref": "#/components/schemas/ComputeUnit"
           },
           "autoscaling_limit_max_cu": {
-            "description": "The maximum number of Compute Units. See [Compute size and Autoscaling configuration](https://neon.tech/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+            "description": "The maximum number of Compute Units. See [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
             "$ref": "#/components/schemas/ComputeUnit"
           },
           "suspend_timeout_seconds": {
@@ -13266,7 +13318,7 @@
           "jwt_role_claim_key": {
             "type": "string",
             "description": "JWT claim key to use for role extraction",
-            "default": ".\"role\""
+            "default": ".role"
           },
           "jwt_cache_max_lifetime": {
             "type": "integer",
@@ -13869,13 +13921,21 @@
             "default": 300,
             "minimum": 60,
             "maximum": 600
+          }
+        }
+      },
+      "NeonAuthPhoneNumberConfigUpdate": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the phone number plugin is enabled"
           },
-          "allowed_attempts": {
+          "otp_expires_in": {
             "type": "integer",
-            "description": "Maximum number of OTP verification attempts before lockout",
-            "default": 3,
-            "minimum": 1,
-            "maximum": 10
+            "description": "Time in seconds before the OTP expires",
+            "minimum": 60,
+            "maximum": 600
           }
         }
       },
