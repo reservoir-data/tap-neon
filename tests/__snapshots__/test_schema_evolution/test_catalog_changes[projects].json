@@ -566,6 +566,15 @@
       }
     },
     {
+      "breadcrumb": [
+        "properties",
+        "effective_project_permission"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
       "breadcrumb": [],
       "metadata": {
         "inclusion": "available",
@@ -697,6 +706,13 @@
       "deleted_at": {
         "description": "A timestamp indicating when the project was deleted",
         "format": "date-time",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "effective_project_permission": {
+        "description": "The caller's effective permission for a project list item when\nper-project permissions are enabled. Values correspond to viewer,\neditor, and admin/manage project access levels. Omitted for personal\nprojects, flag-off organizations, and non-user subjects.\n",
         "type": [
           "string",
           "null"
