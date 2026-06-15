@@ -84,6 +84,10 @@
     {
       "name": "Auth (legacy)",
       "description": "These methods allow you to create and manage Neon Auth projects. Deprecated. See routes with the `Auth` tag instead."
+    },
+    {
+      "name": "Storage",
+      "description": "These methods allow you to inspect branchable object-storage state for Neon branches."
     }
   ],
   "paths": {
@@ -7338,7 +7342,7 @@
       },
       "patch": {
         "summary": "Update role for organization member",
-        "description": "Updates the role of an existing member in the specified organization.\nSupported roles are `admin` and `member`.\nOnly organization admins can call this endpoint.\n",
+        "description": "Updates the role of an existing member in the specified organization.\nThe requested role must be valid for the organization.\nOnly organization admins can call this endpoint.\n",
         "tags": [
           "Organizations"
         ],
@@ -7351,7 +7355,7 @@
                 "$ref": "#/components/schemas/OrganizationMemberUpdateRequest"
               },
               "example": {
-                "role": "admin"
+                "role": "member"
               }
             }
           }
@@ -11394,7 +11398,8 @@
             "$ref": "#/components/schemas/EndpointSettingsData"
           },
           "pooler_enabled": {
-            "description": "Whether connection pooling is enabled for the compute endpoint\n",
+            "deprecated": true,
+            "description": "DEPRECATED. Whether to enable connection pooling for the compute endpoint.\nThe recommended way to enable connection pooling is to append `-pooler` to the endpoint ID in the connection string.\nSee [How to use connection pooling](https://neon.com/docs/connect/connection-pooling#how-to-use-connection-pooling)\n",
             "type": "boolean"
           },
           "pooler_mode": {
@@ -11614,7 +11619,7 @@
               },
               "pooler_enabled": {
                 "deprecated": true,
-                "description": "Whether to enable connection pooling for the compute endpoint\n",
+                "description": "DEPRECATED. Whether to enable connection pooling for the compute endpoint.\nThe recommended way to enable connection pooling is to append `-pooler` to the endpoint ID in the connection string.\nSee [How to use connection pooling](https://neon.com/docs/connect/connection-pooling#how-to-use-connection-pooling)\n",
                 "type": "boolean"
               },
               "pooler_mode": {
@@ -11675,7 +11680,7 @@
               },
               "pooler_enabled": {
                 "deprecated": true,
-                "description": "Whether to enable connection pooling for the compute endpoint\n",
+                "description": "DEPRECATED. Whether to enable connection pooling for the compute endpoint.\nThe recommended way to enable connection pooling is to append `-pooler` to the endpoint ID in the connection string.\nSee [How to use connection pooling](https://neon.com/docs/connect/connection-pooling#how-to-use-connection-pooling)\n",
                 "type": "boolean"
               },
               "pooler_mode": {
@@ -12500,11 +12505,14 @@
         }
       },
       "MemberRole": {
-        "description": "The role of the organization member",
+        "description": "The role of the organization member. Some role values may not be\navailable for all organizations.\n",
         "type": "string",
         "enum": [
           "admin",
-          "member"
+          "member",
+          "editor",
+          "viewer",
+          "collaborator"
         ]
       },
       "Member": {
