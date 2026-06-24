@@ -62,6 +62,10 @@ class NeonOpenAPI(OpenAPISchema):
             schema["properties"]["default_endpoint_settings"]["properties"][
                 "autoscaling_limit_max_cu"
             ]["minimum"] = 0
+            schema["properties"]["effective_project_permission"]["allOf"][0]["type"] = [
+                "string",
+                "null",
+            ]
         elif key == "Endpoint":
             schema["properties"]["pooler_mode"]["enum"].append("READ_ONLY")
         return schema
