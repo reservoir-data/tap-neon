@@ -4469,54 +4469,6 @@
         }
       }
     },
-    "/projects/{project_id}/branches/{branch_id}/recover": {
-      "parameters": [
-        {
-          "name": "project_id",
-          "in": "path",
-          "description": "The Neon project ID",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "pattern": "^[a-z0-9-]{1,60}$"
-          }
-        },
-        {
-          "name": "branch_id",
-          "in": "path",
-          "description": "The branch ID",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "pattern": "^[a-z0-9-]{1,60}$"
-          }
-        }
-      ],
-      "post": {
-        "summary": "Recover a deleted branch",
-        "description": "Recovers a deleted branch within the 7-day deletion recovery period.\nThe branch must have been soft deleted and not yet permanently deleted.\nRecovery restores the branch and its endpoints to an idle state.\nConnection strings remain valid after recovery.\nTTL branches become non-TTL branches after recovery.\n\nTo list deleted branches available for recovery, use `GET /projects/{project_id}/branches?include_deleted=true`.\n",
-        "tags": [
-          "Branch"
-        ],
-        "operationId": "recoverProjectBranch",
-        "x-stability-level": "beta",
-        "responses": {
-          "200": {
-            "description": "Recovered the specified branch",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BranchRecoverResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "$ref": "#/components/responses/GeneralError"
-          }
-        }
-      }
-    },
     "/projects/{project_id}/branches/{branch_id}/finalize_restore": {
       "parameters": [
         {
@@ -6246,130 +6198,6 @@
                       "total_duration_ms": 100
                     }
                   ]
-                }
-              }
-            }
-          },
-          "default": {
-            "$ref": "#/components/responses/GeneralError"
-          }
-        }
-      }
-    },
-    "/consumption_history/account": {
-      "get": {
-        "summary": "Retrieve account consumption metrics (legacy plans)",
-        "description": "Retrieves consumption metrics for Scale and Enterprise plan accounts, and for legacy Scale, Business, and Enterprise plan accounts.\nConsumption history begins at the time the account was upgraded to a supported plan.\n\n**Deprecated.** Use `GET /consumption_history/projects` (`getConsumptionHistoryPerProject`)\nor `GET /consumption_history/v2/projects` (`getConsumptionHistoryPerProjectV2`) instead.\n",
-        "deprecated": true,
-        "x-sunset": "2026-06-01",
-        "tags": [
-          "Consumption"
-        ],
-        "operationId": "getConsumptionHistoryPerAccount",
-        "parameters": [
-          {
-            "name": "from",
-            "description": "Specify the start `date-time` for the consumption period.\nThe `date-time` value is rounded according to the specified `granularity`.\nFor example, `2024-03-15T15:30:00Z` for `daily` granularity will be rounded to `2024-03-15T00:00:00Z`.\nThe specified `date-time` value must respect the specified granularity:\n- For `hourly`, consumption metrics are limited to the last 168 hours.\n- For `daily`, consumption metrics are limited to the last 60 days.\n- For `monthly`, consumption metrics are limited to the past year.\n\nThe consumption history is available starting from `March 1, 2024, at 00:00:00 UTC`.\n",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": true
-          },
-          {
-            "name": "to",
-            "description": "Specify the end `date-time` for the consumption period.\nThe `date-time` value is rounded according to the specified granularity.\nFor example, `2024-03-15T15:30:00Z` for `daily` granularity will be rounded to `2024-03-15T00:00:00Z`.\nThe specified `date-time` value must respect the specified granularity:\n- For `hourly`, consumption metrics are limited to the last 168 hours.\n- For `daily`, consumption metrics are limited to the last 60 days.\n- For `monthly`, consumption metrics are limited to the past year.\n",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "required": true
-          },
-          {
-            "name": "granularity",
-            "description": "Specify the granularity of consumption metrics.\nHourly, daily, and monthly metrics are available for the last 168 hours, 60 days,\nand 1 year, respectively.\n",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ConsumptionHistoryGranularity"
-            },
-            "required": true
-          },
-          {
-            "name": "org_id",
-            "description": "Specify the organization for which the consumption metrics should be returned.\nIf this parameter is not provided, the endpoint will return the metrics for the\nauthenticated user's account.\n",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "pattern": "^[a-z0-9-]{1,60}$"
-            }
-          },
-          {
-            "name": "include_v1_metrics",
-            "description": "The field is deprecated. Please use `metrics` instead.\nIf `metrics` is specified, this field is ignored.\nInclude metrics utilized in previous pricing models.\n- **data_storage_bytes_hour**: The sum of the maximum observed storage values for each hour\n  for each project, which never decreases.\n",
-            "in": "query",
-            "deprecated": true,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "metrics",
-            "description": "Specify a list of metrics to include in the response.\nIf omitted, active_time, compute_time, written_data, synthetic_storage_size are returned.\nPossible values:\n- `active_time_seconds`\n- `compute_time_seconds`\n- `written_data_bytes`\n- `synthetic_storage_size_bytes`\n- `data_storage_bytes_hour`\n\nA list of metrics can be specified as an array of parameter values or as a comma-separated list in a single parameter value.\n- As an array of parameter values: `metrics=cpu_seconds&metrics=ram_bytes`\n- As a comma-separated list in a single parameter value: `metrics=cpu_seconds,ram_bytes`\n",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ConsumptionHistoryQueryMetrics"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returned consumption metrics for the Neon account",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConsumptionHistoryPerAccountResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "This endpoint is not available. It is only supported for Scale, Business, and Enterprise plan accounts.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GeneralError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Account is not a member of the organization specified by `org_id`.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GeneralError"
-                }
-              }
-            }
-          },
-          "406": {
-            "description": "The specified `date-time` range is outside the boundaries of the specified `granularity`.\nAdjust your `from` and `to` values or select a different `granularity`.\n",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GeneralError"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many requests",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GeneralError"
                 }
               }
             }
@@ -8489,7 +8317,7 @@
               "grpc",
               "http"
             ],
-            "description": "Required. Communication protocol used to send telemetry data. Options: grpc, http.\n"
+            "description": "Required. Communication protocol used to send telemetry data. Options: grpc, http.\nFor gRPC, the endpoint must include an explicit port.\n"
           },
           "endpoint": {
             "type": "string",
@@ -9392,7 +9220,13 @@
             "format": "date-time"
           },
           "effective_project_permission": {
-            "$ref": "#/components/schemas/ProjectPermissionLevel"
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectPermissionLevel"
+              }
+            ],
+            "nullable": true
           }
         },
         "example": {
@@ -9594,6 +9428,15 @@
             "description": "A timestamp indicating when HIPAA was enabled for this project",
             "type": "string",
             "format": "date-time"
+          },
+          "effective_project_permission": {
+            "type": "string",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProjectPermissionLevel"
+              }
+            ],
+            "nullable": true
           }
         },
         "example": {
@@ -9964,21 +9807,7 @@
           "CAN_EDIT",
           "CAN_MANAGE"
         ],
-        "description": "The caller's effective permission for a project list item when\nper-project permissions are enabled. Values correspond to viewer,\neditor, and admin/manage project access levels. Omitted for personal\nprojects, flag-off organizations, and non-user subjects.\n"
-      },
-      "ConsumptionHistoryPerAccountResponse": {
-        "type": "object",
-        "properties": {
-          "periods": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ConsumptionHistoryPerPeriod"
-            }
-          }
-        },
-        "required": [
-          "periods"
-        ]
+        "description": "The caller's effective permission for a project when\nper-project permissions are enabled. Values correspond to viewer,\neditor, and admin/manage project access levels. Omitted for personal\nprojects, flag-off organizations, and non-user subjects.\n"
       },
       "ConsumptionHistoryPerProjectResponse": {
         "type": "object",

@@ -712,11 +712,8 @@
         ]
       },
       "effective_project_permission": {
-        "description": "The caller's effective permission for a project list item when\nper-project permissions are enabled. Values correspond to viewer,\neditor, and admin/manage project access levels. Omitted for personal\nprojects, flag-off organizations, and non-user subjects.\n",
-        "type": [
-          "string",
-          "null"
-        ]
+        "description": "The caller's effective permission for a project when\nper-project permissions are enabled. Values correspond to viewer,\neditor, and admin/manage project access levels. Omitted for personal\nprojects, flag-off organizations, and non-user subjects.\n",
+        "type": "string"
       },
       "hipaa_enabled_at": {
         "description": "A timestamp indicating when HIPAA was enabled for this project",
