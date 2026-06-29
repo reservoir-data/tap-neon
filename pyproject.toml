@@ -27,7 +27,7 @@ dynamic = [
 ]
 dependencies = [
   "requests~=2.34",
-  "singer-sdk~=0.54.0",
+  "singer-sdk~=0.54.5",
 ]
 [[project.authors]]
 name = "Edgar Ramírez-Mondragón"
@@ -44,11 +44,11 @@ Source = "https://github.com/reservoir-data/tap-neon"
 
 [dependency-groups]
 dev = [
+  "deptry>=0.25",
   { include-group = "testing" },
   { include-group = "typing" },
 ]
 testing = [
-  "deptry>=0.12",
   "pytest>=9",
   "singer-sdk[testing]",
   "syrupy>=5",
@@ -90,12 +90,13 @@ unfixable = [
 flake8-annotations.allow-star-arg-any = true
 pydocstyle.convention = "google"
 
-[tool.deptry.package_module_name_map]
-mypy = "mypy"
-ty = "ty"
-
 [tool.pyproject-fmt]
 table_format = "long"
+
+[tool.typos.files]
+extend-exclude = [
+  "tap_neon/openapi/openapi.json",
+]
 
 [tool.mypy]
 warn_redundant_casts = true
@@ -138,7 +139,7 @@ env_list = [
 ]
 [tool.tox.env.dependencies]
 description = "check for unused, missing and transitive dependencies"
-dependency_groups = [ "testing" ]
+dependency_groups = [ "dev" ]
 commands = [ [ "deptry", "." ] ]
 labels = [ "check" ]
 [tool.tox.env.test]
