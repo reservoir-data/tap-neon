@@ -778,8 +778,8 @@
       },
       "pg_version": {
         "default": 17,
-        "description": "The major Postgres version number. Currently supported versions are `14`, `15`, `16`, `17`, and `18`.",
-        "maximum": 18,
+        "description": "The major Postgres version number. Generally available versions are `14`, `15`, `16`, `17`, and `18`. `19` is being rolled out and is only accepted in regions where it has been enabled; requesting it in a region where it is not yet available returns an error.",
+        "maximum": 19,
         "minimum": 14,
         "type": [
           "integer",
