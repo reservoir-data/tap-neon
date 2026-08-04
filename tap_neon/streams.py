@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__lazy_modules__ = {"copy"}
+
 from copy import deepcopy
 from importlib import resources
 from typing import TYPE_CHECKING, Any, override

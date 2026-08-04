@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+__lazy_modules__ = {"singer_sdk.authenticators"}
+
 from typing import TYPE_CHECKING, Any, override
 
 from singer_sdk import RESTStream
