@@ -588,7 +588,7 @@
   ],
   "replication_method": "FULL_TABLE",
   "schema": {
-    "description": "Essential data about the project. Full data is available at the getProject endpoint.\n",
+    "description": "Essential data about the project. Full data is available at `GET /projects/{project_id}`.\n",
     "properties": {
       "active_time": {
         "description": "Control plane observed endpoints of this project being active this amount of wall-clock time.\n",
@@ -625,7 +625,7 @@
       },
       "cpu_used_sec": {
         "deprecated": true,
-        "description": "DEPRECATED. Use data from the getProject endpoint instead.\n",
+        "description": "Deprecated. Use `compute_time_seconds` from `GET /projects/{project_id}` instead.\n",
         "format": "int64",
         "type": [
           "integer",
@@ -651,7 +651,7 @@
         "description": "A collection of settings for a Neon endpoint",
         "properties": {
           "autoscaling_limit_max_cu": {
-            "description": "The maximum number of Compute Units. See [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+            "description": "Default maximum number of Compute Units for endpoints created under this account. At least 0.25.\n",
             "minimum": 0,
             "type": [
               "number",
@@ -659,7 +659,7 @@
             ]
           },
           "autoscaling_limit_min_cu": {
-            "description": "The minimum number of Compute Units. The minimum value is `0.25`.\nSee [Compute size and Autoscaling configuration](https://neon.com/docs/manage/endpoints#compute-size-and-autoscaling-configuration)\nfor more information.\n",
+            "description": "Minimum number of Compute Units for this endpoint. At least 0.25 and no greater than `autoscaling_limit_max_cu`.\n",
             "minimum": 0,
             "type": [
               "number",
@@ -681,7 +681,7 @@
               "type": "string"
             },
             "deprecated": true,
-            "description": "DEPRECATED. A raw representation of PgBouncer settings. This schema is deprecated and will be removed after 2026-06-20.\n",
+            "description": "Deprecated. A raw representation of PgBouncer settings. Removal scheduled for June 20, 2026.\n",
             "type": [
               "object",
               "null"
@@ -735,7 +735,7 @@
         ]
       },
       "id": {
-        "description": "The project ID",
+        "description": "The Neon project ID. Use as the `project_id` path parameter in other endpoints.",
         "type": [
           "string",
           "null"
@@ -757,28 +757,29 @@
         ]
       },
       "org_id": {
-        "description": "Organization id if the project belongs to an organization.\nPermissions for the project will be given to organization members as defined by the organization admins.\nThe permissions of the project do not depend on the user that created the project if a project belongs to an organization.\n",
+        "description": "ID of the organization that owns the project. Project permissions are granted to organization members as configured by the organization's admins, independent of which member created the project.\n",
         "type": [
           "string",
           "null"
         ]
       },
       "org_name": {
-        "description": "Organization name if the project belongs to an organization.\n",
+        "description": "Name of the organization that owns the project.\n",
         "type": [
           "string",
           "null"
         ]
       },
       "owner_id": {
+        "description": "ID of the organization that owns the project.",
         "type": [
           "string",
           "null"
         ]
       },
       "pg_version": {
-        "default": 17,
-        "description": "The major Postgres version number. Generally available versions are `14`, `15`, `16`, `17`, and `18`. `19` is being rolled out and is only accepted in regions where it has been enabled; requesting it in a region where it is not yet available returns an error.",
+        "default": 18,
+        "description": "The major Postgres version number. Supported versions are `14`, `15`, `16`, `17`, and `18`. `19` is rolling out and is accepted only in regions where it is enabled; requesting it elsewhere returns an error.",
         "maximum": 19,
         "minimum": 14,
         "type": [
@@ -794,7 +795,7 @@
         ]
       },
       "provisioner": {
-        "description": "The Neon compute provisioner.\nSpecify the `k8s-neonvm` provisioner to create a compute endpoint that supports Autoscaling.\n\nProvisioner can be one of the following values:\n* k8s-pod\n* k8s-neonvm\n* serverless-platform\n\nClients must expect, that any string value that is not documented in the description above should be treated as a error. UNKNOWN value if safe to treat as an error too.\n",
+        "description": "",
         "type": [
           "string",
           "null"
@@ -809,7 +810,7 @@
       },
       "quota_reset_at": {
         "deprecated": true,
-        "description": "DEPRECATED. Use `consumption_period_end` from the getProject endpoint instead.\nA timestamp indicating when the project quota resets\n",
+        "description": "Deprecated. Use `consumption_period_end` from `GET /projects/{project_id}` instead. A timestamp indicating when the project quota resets.\n",
         "format": "date-time",
         "type": [
           "string",
@@ -825,13 +826,14 @@
         ]
       },
       "region_id": {
-        "description": "The region identifier\n",
+        "description": "Cloud region where the project's Postgres compute and storage reside (for example, `aws-us-east-2`). Valid values are returned by `GET /regions`.\n",
         "type": [
           "string",
           "null"
         ]
       },
       "settings": {
+        "description": "Project-level settings, for example `quota`, `allowed_ips`, `enable_logical_replication`, and `maintenance_window`.",
         "properties": {
           "allowed_ips": {
             "description": "A list of IP addresses that are allowed to connect to the compute endpoint.\nIf the list is empty or not set, all IP addresses are allowed.\nIf protected_branches_only is true, the list will be applied only to protected branches.\n",
@@ -860,6 +862,7 @@
             ]
           },
           "audit_log_level": {
+            "description": "Audit logging level, set only on HIPAA-enabled organizations (absent otherwise). Values: `base`, `extended`, `full`; HIPAA defaults to `extended`. Cannot be lowered back to `base` once `extended` or `full`.",
             "type": [
               "string",
               "null"
@@ -887,6 +890,7 @@
             ]
           },
           "hipaa": {
+            "description": "Enables HIPAA compliance mode for the project, including audit logging.",
             "type": [
               "boolean",
               "null"
@@ -934,6 +938,7 @@
             "description": "The shared libraries to preload into the project's compute instances.\n",
             "properties": {
               "enabled_libraries": {
+                "description": "Names of shared preload libraries to enable for the project.",
                 "items": {
                   "type": "string"
                 },
@@ -943,6 +948,7 @@
                 ]
               },
               "use_defaults": {
+                "description": "When true, the project's preload libraries include the platform default set in addition to any libraries listed in `enabled_libraries`.",
                 "type": [
                   "boolean",
                   "null"
@@ -1022,7 +1028,7 @@
         ]
       },
       "synthetic_storage_size": {
-        "description": "The current space occupied by the project in storage, in bytes. Synthetic storage size combines the logical data size and Write-Ahead Log (WAL) size for all branches in a project.\n",
+        "description": "The current space occupied by the project in Postgres storage, in bytes. Synthetic Postgres storage size combines the logical data size and Write-Ahead Log (WAL) size for all branches in a project.\n",
         "format": "int64",
         "type": [
           "integer",

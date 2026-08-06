@@ -73,7 +73,7 @@
   "schema": {
     "properties": {
       "branch_id": {
-        "description": "The ID of the branch to which the database belongs\n",
+        "description": "The ID of the branch this database belongs to.",
         "type": [
           "string",
           "null"

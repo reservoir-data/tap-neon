@@ -1,5 +1,5 @@
 version = 1
-revision = 4
+revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.15'",
@@ -820,6 +820,34 @@ typing = [
     { name = "singer-sdk", extra = ["testing"] },
     { name = "syrupy" },
     { name = "ty" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "requests", specifier = "~=2.34" },
+    { name = "singer-sdk", specifier = "~=0.55.0a4" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "deptry", specifier = ">=0.25" },
+    { name = "mypy" },
+    { name = "pytest", specifier = ">=9" },
+    { name = "singer-sdk", extras = ["testing"] },
+    { name = "syrupy", specifier = ">=5" },
+    { name = "ty", specifier = ">=0.0.30" },
+]
+testing = [
+    { name = "pytest", specifier = ">=9" },
+    { name = "singer-sdk", extras = ["testing"] },
+    { name = "syrupy", specifier = ">=5" },
+]
+typing = [
+    { name = "mypy" },
+    { name = "pytest", specifier = ">=9" },
+    { name = "singer-sdk", extras = ["testing"] },
+    { name = "syrupy", specifier = ">=5" },
+    { name = "ty", specifier = ">=0.0.30" },
 ]
 
 [[package]]
