@@ -41,6 +41,7 @@ class TapNeon(Tap):
         return [
             streams.Operations(tap=self),
             streams.Projects(tap=self),
+            streams.ProjectMembers(tap=self),
             streams.Branches(tap=self),
             streams.Endpoints(tap=self),
             streams.Roles(tap=self),
