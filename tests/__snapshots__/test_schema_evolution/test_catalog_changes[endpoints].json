@@ -328,7 +328,7 @@
         ]
       },
       "branch_id": {
-        "description": "The ID of the branch that the compute endpoint is associated with\n",
+        "description": "The ID of the branch this compute endpoint belongs to.",
         "type": [
           "string",
           "null"
@@ -357,7 +357,7 @@
         ]
       },
       "current_state": {
-        "description": "The state of the compute endpoint\n",
+        "description": "Lifecycle state of the compute endpoint. `init`: being initialized. `active`: running and accepting connections. `idle`: suspended (scaled to zero).",
         "type": [
           "string",
           "null"
@@ -407,7 +407,7 @@
         ]
       },
       "pending_state": {
-        "description": "The state of the compute endpoint\n",
+        "description": "Lifecycle state of the compute endpoint. `init`: being initialized. `active`: running and accepting connections. `idle`: suspended (scaled to zero).",
         "type": [
           "string",
           "null"
@@ -415,7 +415,7 @@
       },
       "pooler_enabled": {
         "deprecated": true,
-        "description": "DEPRECATED. Whether to enable connection pooling for the compute endpoint.\nThe recommended way to enable connection pooling is to append `-pooler` to the endpoint ID in the connection string.\nSee [How to use connection pooling](https://neon.com/docs/connect/connection-pooling#how-to-use-connection-pooling)\n",
+        "description": "Deprecated. To use connection pooling, append `-pooler` to the endpoint ID in the connection string.\n",
         "type": [
           "boolean",
           "null"
@@ -423,35 +423,35 @@
       },
       "pooler_mode": {
         "deprecated": true,
-        "description": "DEPRECATED. The connection pooler mode. Neon supports PgBouncer in `transaction` mode only. This schema is deprecated and will be removed after 2026-06-20.\n",
+        "description": "Deprecated. The connection pooler mode. Neon supports PgBouncer in `transaction` mode only. Removal scheduled for June 20, 2026.\n",
         "type": [
           "string",
           "null"
         ]
       },
       "project_id": {
-        "description": "The ID of the project to which the compute endpoint belongs\n",
+        "description": "The ID of the project this compute endpoint belongs to.",
         "type": [
           "string",
           "null"
         ]
       },
       "provisioner": {
-        "description": "The Neon compute provisioner.\nSpecify the `k8s-neonvm` provisioner to create a compute endpoint that supports Autoscaling.\n\nProvisioner can be one of the following values:\n* k8s-pod\n* k8s-neonvm\n* serverless-platform\n\nClients must expect, that any string value that is not documented in the description above should be treated as a error. UNKNOWN value if safe to treat as an error too.\n",
+        "description": "",
         "type": [
           "string",
           "null"
         ]
       },
       "proxy_host": {
-        "description": "DEPRECATED. Use the \"host\" property instead.\n",
+        "description": "Deprecated. Use the `host` property instead.\n",
         "type": [
           "string",
           "null"
         ]
       },
       "region_id": {
-        "description": "The region identifier\n",
+        "description": "Cloud region where the resource's Postgres compute and storage reside (for example, `aws-us-east-1`). Valid values are returned by `GET /regions`.\n",
         "type": [
           "string",
           "null"
@@ -475,7 +475,7 @@
               "type": "string"
             },
             "deprecated": true,
-            "description": "DEPRECATED. A raw representation of PgBouncer settings. This schema is deprecated and will be removed after 2026-06-20.\n",
+            "description": "Deprecated. A raw representation of PgBouncer settings. Removal scheduled for June 20, 2026.\n",
             "type": [
               "object",
               "null"
@@ -485,6 +485,7 @@
             "description": "The shared libraries to preload into the project's compute instances.\n",
             "properties": {
               "enabled_libraries": {
+                "description": "Names of shared preload libraries to enable for the project.",
                 "items": {
                   "type": "string"
                 },
@@ -494,6 +495,7 @@
                 ]
               },
               "use_defaults": {
+                "description": "When true, the project's preload libraries include the platform default set in addition to any libraries listed in `enabled_libraries`.",
                 "type": [
                   "boolean",
                   "null"
@@ -538,7 +540,7 @@
         ]
       },
       "type": {
-        "description": "The compute endpoint type. Either `read_write` or `read_only`.\n",
+        "description": "Compute endpoint type. `read_write`: the primary read-write endpoint (one per branch). `read_only`: a read replica endpoint (multiple allowed per branch).",
         "type": [
           "string",
           "null"

@@ -353,6 +353,7 @@
   "schema": {
     "properties": {
       "active_time_seconds": {
+        "description": "Total time this branch's compute has been active during the current billing period, in seconds (not weighted by compute size). Distinct from `compute_time_seconds`, which is CU-weighted.",
         "format": "int64",
         "type": [
           "integer",
@@ -360,6 +361,7 @@
         ]
       },
       "compute_time_seconds": {
+        "description": "Total Postgres compute time consumed by this branch during the current billing period, in CU-seconds (weighted by compute size). Divide by 3600 for CU-hours.",
         "format": "int64",
         "type": [
           "integer",
@@ -368,7 +370,7 @@
       },
       "cpu_used_sec": {
         "deprecated": true,
-        "description": "CPU seconds used by all of the branch's compute endpoints, including deleted ones.\nThis value is reset at the beginning of each billing period.\nExamples:\n1. A branch that uses 1 CPU for 1 second is equal to `cpu_used_sec=1`.\n2. A branch that uses 2 CPUs simultaneously for 1 second is equal to `cpu_used_sec=2`.\n",
+        "description": "Deprecated. Use `compute_time_seconds` instead. CPU seconds used by all of the branch's compute endpoints, including deleted ones. This value is reset at the beginning of each billing period.\n",
         "format": "int64",
         "type": [
           "integer",
@@ -394,7 +396,7 @@
             ]
           },
           "name": {
-            "description": "The name of the user.",
+            "description": "Display name of the user who created the branch.",
             "type": [
               "string",
               "null"
@@ -414,13 +416,14 @@
         ]
       },
       "current_state": {
-        "description": "The branch’s state, indicating if it is initializing, ready for use, or archived.\n  * 'init' - the branch is being created but is not available for querying.\n  * 'resetting' - the branch is being reset to a specific point in time or LSN and is not yet available for querying.\n  * 'ready' - the branch is fully operational and ready for querying. Expect normal query response times.\n  * 'archived' - the branch is stored in cost-effective archival storage. Expect slow query response times.\n",
+        "description": "The branch’s state, indicating if it is initializing, ready for use, or archived.\n  * 'init' - the branch is being created but is not available for querying.\n  * 'resetting' - the branch is being reset to a specific point in time or LSN and is not yet available for querying.\n  * 'ready' - the branch is fully operational and ready for querying. Expect normal query response times.\n  * 'archived' - the branch is stored in cost-effective archival Postgres storage. Expect slow query response times.\n",
         "type": [
           "string",
           "null"
         ]
       },
       "data_transfer_bytes": {
+        "description": "Total data transferred out of the branch, in bytes. Used as a consumption metric.",
         "format": "int64",
         "type": [
           "integer",
@@ -450,7 +453,7 @@
         ]
       },
       "init_source": {
-        "description": "The source of initialization for the branch. Valid values are `schema-only` and `parent-data` (default).\n  * `schema-only` - creates a new root branch containing only the schema. Use `parent_id` to specify the source branch. Optionally, you can provide `parent_lsn` or `parent_timestamp` to branch from a specific point in time or LSN. These fields define which branch to copy the schema from and at what point—they do not establish a parent-child relationship between the `parent_id` branch and the new schema-only branch.\n  * `parent-data` - creates the branch with both schema and data from the parent.\n",
+        "description": "Source of initialization for the branch. `parent-data` (default) copies schema and data from the parent. `parent-schema` copies schema only from the parent. `schema-only` creates a root branch with schema only. `import` initializes from an external import.\n",
         "type": [
           "string",
           "null"
@@ -502,7 +505,7 @@
         ]
       },
       "pending_state": {
-        "description": "The branch’s state, indicating if it is initializing, ready for use, or archived.\n  * 'init' - the branch is being created but is not available for querying.\n  * 'resetting' - the branch is being reset to a specific point in time or LSN and is not yet available for querying.\n  * 'ready' - the branch is fully operational and ready for querying. Expect normal query response times.\n  * 'archived' - the branch is stored in cost-effective archival storage. Expect slow query response times.\n",
+        "description": "The branch’s state, indicating if it is initializing, ready for use, or archived.\n  * 'init' - the branch is being created but is not available for querying.\n  * 'resetting' - the branch is being reset to a specific point in time or LSN and is not yet available for querying.\n  * 'ready' - the branch is fully operational and ready for querying. Expect normal query response times.\n  * 'archived' - the branch is stored in cost-effective archival Postgres storage. Expect slow query response times.\n",
         "type": [
           "string",
           "null"
@@ -510,21 +513,21 @@
       },
       "primary": {
         "deprecated": true,
-        "description": "DEPRECATED. Use `default` field.\nWhether the branch is the project's primary branch\n",
+        "description": "Deprecated. Use the `default` field. Whether the branch is the project's primary branch.\n",
         "type": [
           "boolean",
           "null"
         ]
       },
       "project_id": {
-        "description": "The ID of the project to which the branch belongs\n",
+        "description": "The ID of the project this branch belongs to.",
         "type": [
           "string",
           "null"
         ]
       },
       "protected": {
-        "description": "Whether the branch is protected\n",
+        "description": "Whether the branch is protected. Protected branches (and their computes) cannot be deleted, archived, or reset, and block deletion of the project.\n",
         "type": [
           "boolean",
           "null"
@@ -594,7 +597,7 @@
           "description": "An action that is currently restricted for the branch and the reason why.\n",
           "properties": {
             "name": {
-              "description": "The name of a restricted action. Possible values include `restore`, `delete-rw-endpoint`.\n",
+              "description": "The name of a restricted action on a branch. `restore`: the branch cannot be used as a restore target. `delete-rw-endpoint`: the read-write endpoint for the branch cannot be deleted.\n",
               "type": [
                 "string",
                 "null"
@@ -646,6 +649,7 @@
         ]
       },
       "written_data_bytes": {
+        "description": "Data written by this branch during the current billing period, in bytes.",
         "format": "int64",
         "type": [
           "integer",

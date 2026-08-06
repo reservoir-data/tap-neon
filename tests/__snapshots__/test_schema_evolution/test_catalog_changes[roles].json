@@ -82,14 +82,14 @@
   "schema": {
     "properties": {
       "authentication_method": {
-        "description": "Authentication method configured for this role. Valid options: `password`, `oauth`, `no_login`\n",
+        "description": "Authentication method configured for this role: `password`, `oauth`, or `no_login`.\n",
         "type": [
           "string",
           "null"
         ]
       },
       "branch_id": {
-        "description": "The ID of the branch to which the role belongs\n",
+        "description": "The ID of the branch this role belongs to.",
         "type": [
           "string",
           "null"
@@ -104,7 +104,7 @@
         ]
       },
       "name": {
-        "description": "The role name\n",
+        "description": "Postgres role name within the branch.\n",
         "type": [
           "string",
           "null"

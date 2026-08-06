@@ -125,6 +125,7 @@
   ],
   "replication_method": "FULL_TABLE",
   "schema": {
+    "description": "An asynchronous action Neon performs on your resources (for example, starting a compute or creating a branch). Fields such as `action`, `status`, and `total_duration_ms` describe the operation and its progress.",
     "properties": {
       "action": {
         "description": "The action performed by the operation",
@@ -134,7 +135,7 @@
         ]
       },
       "branch_id": {
-        "description": "The branch ID",
+        "description": "The ID of the branch this operation ran on.",
         "type": [
           "string",
           "null"
@@ -149,14 +150,14 @@
         ]
       },
       "endpoint_id": {
-        "description": "The endpoint ID",
+        "description": "The ID of the compute endpoint this operation ran on.",
         "type": [
           "string",
           "null"
         ]
       },
       "error": {
-        "description": "The error that occurred",
+        "description": "Human-readable message describing why the operation failed.",
         "type": [
           "string",
           "null"
@@ -179,7 +180,7 @@
         ]
       },
       "project_id": {
-        "description": "The Neon project ID",
+        "description": "The ID of the project this operation ran on.",
         "type": [
           "string",
           "null"
@@ -194,7 +195,7 @@
         ]
       },
       "status": {
-        "description": "The status of the operation",
+        "description": "Lifecycle state of the operation. `scheduling`: queued, not yet started. `running`: actively executing. `finished`: completed successfully. `failed`: ended with a failure. `error`: ended with a terminal error. `cancelling`: cancellation requested but not yet complete. `cancelled`: stopped before completion. `skipped`: bypassed without executing.",
         "type": [
           "string",
           "null"
