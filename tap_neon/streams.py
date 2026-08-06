@@ -70,6 +70,8 @@ class NeonOpenAPI(OpenAPISchema):
             ]
         elif key == "Endpoint":
             schema["properties"]["pooler_mode"]["enum"].append("READ_ONLY")
+        elif key == "ProjectMember":
+            schema["properties"]["project_id"] = {"type": "string"}
         return schema
 
 
@@ -94,6 +96,19 @@ class Projects(NeonStream):
     ) -> dict[str, Any]:
         """Return the child context for this record."""
         return {"project_id": record["id"]}
+
+
+class ProjectMembers(NeonStream):
+    """Project members stream."""
+
+    name = "project_members"
+    path = "/projects/{project_id}/members"
+    primary_keys = ("project_id", "member_id")
+    replication_key = None
+    schema = StreamSchema(OPENAPI_SCHEMA, key="ProjectMember")
+    records_jsonpath = "$.members[*]"
+    next_page_token_jsonpath = "$.pagination.cursor"  # noqa: S105
+    parent_stream_type = Projects
 
 
 class Operations(NeonStream):

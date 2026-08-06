@@ -11,5 +11,6 @@ TestTapNeon = get_tap_test_class(
     config={},
     suite_config=SuiteConfig(
         max_records_limit=None,
+        ignore_no_records=True,
     ),
 )

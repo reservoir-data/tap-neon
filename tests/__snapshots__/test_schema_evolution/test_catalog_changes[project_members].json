@@ -1,0 +1,210 @@
+{
+  "key_properties": [
+    "project_id",
+    "member_id"
+  ],
+  "metadata": [
+    {
+      "breadcrumb": [
+        "properties",
+        "member_id"
+      ],
+      "metadata": {
+        "inclusion": "automatic"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "user_id"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "email"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "name"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "org_role"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "project_role"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "org_default_project_permission"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "explicit_project_permission"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "effective_project_permission"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "grant_source"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
+        "project_id"
+      ],
+      "metadata": {
+        "inclusion": "automatic"
+      }
+    },
+    {
+      "breadcrumb": [],
+      "metadata": {
+        "inclusion": "available",
+        "selected": true,
+        "selected-by-default": true,
+        "table-key-properties": [
+          "project_id",
+          "member_id"
+        ]
+      }
+    }
+  ],
+  "replication_method": "FULL_TABLE",
+  "schema": {
+    "properties": {
+      "effective_project_permission": {
+        "description": "The caller's effective permission for a project when\nper-project permissions are enabled. `VIEWER` grants read access,\n`EDITOR` adds update access, and `ADMIN` grants full management.\nOmitted for personal projects, flag-off organizations, and non-user\nsubjects.\n",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "email": {
+        "description": "Email address of the user who has been granted access to the project.",
+        "format": "email",
+        "maxLength": 256,
+        "minLength": 1,
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "explicit_project_permission": {
+        "description": "The caller's effective permission for a project when\nper-project permissions are enabled. `VIEWER` grants read access,\n`EDITOR` adds update access, and `ADMIN` grants full management.\nOmitted for personal projects, flag-off organizations, and non-user\nsubjects.\n",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "grant_source": {
+        "description": "How a member's project access is granted.\n",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "member_id": {
+        "description": "The organization member ID.",
+        "format": "uuid",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "name": {
+        "description": "The user's display name.",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "org_default_project_permission": {
+        "description": "The caller's effective permission for a project when\nper-project permissions are enabled. `VIEWER` grants read access,\n`EDITOR` adds update access, and `ADMIN` grants full management.\nOmitted for personal projects, flag-off organizations, and non-user\nsubjects.\n",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "org_role": {
+        "description": "Organization-level role used by project member role management.\n",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "project_id": {
+        "type": "string"
+      },
+      "project_role": {
+        "description": "Per-project role. `viewer` maps to `VIEWER`, `editor` maps to `EDITOR`,\nand `admin` maps to `ADMIN`.\n",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "user_id": {
+        "description": "The user ID for the organization member.",
+        "format": "uuid",
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    },
+    "required": [
+      "member_id",
+      "user_id",
+      "org_role"
+    ],
+    "type": "object"
+  },
+  "stream": "project_members",
+  "tap_stream_id": "project_members"
+}

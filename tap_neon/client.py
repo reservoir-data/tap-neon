@@ -22,25 +22,8 @@ class NeonStream(RESTStream[str]):
     @property
     @override
     def authenticator(self) -> BearerTokenAuthenticator:
-        """Get an authenticator object.
-
-        Returns:
-            The authenticator instance for this REST stream.
-        """
+        """An authenticator object."""
         return BearerTokenAuthenticator(token=self.config["api_key"])
-
-    @property
-    @override
-    def http_headers(self) -> dict[str, str]:
-        """Return the http headers needed.
-
-        Returns:
-            A dictionary of HTTP headers.
-        """
-        return {
-            "User-Agent": f"{self.tap_name}/{self._tap.plugin_version}",
-            "Content-Type": "application/json",
-        }
 
     @override
     def get_url_params(

@@ -46,10 +46,12 @@ jobs:
             - 'tests/**'
             - 'pyproject.toml'
             - 'uv.lock'
-            - '.github/workflows/test.yml'
+            - '.github/workflows/test.yaml'
 
   build-package:
     name: Build & verify package
+    needs: files-changed
+    if: ${{ needs.files-changed.outputs.runtime == 'true' }}
     runs-on: ubuntu-latest
     outputs:
       supported-python-versions: ${{ steps.baipp.outputs.supported_python_classifiers_json_array }}
