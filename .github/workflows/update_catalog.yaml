@@ -49,3 +49,4 @@ jobs:
         commit-message: 'fix: Update catalog'
         token: ${{ steps.generate-token.outputs.token }}
         signoff: true
+        branch: fix/update-catalog
