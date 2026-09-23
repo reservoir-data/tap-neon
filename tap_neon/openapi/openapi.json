@@ -2739,7 +2739,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+                  "$ref": "#/components/schemas/NeonAuthEmailServerConfigResponse"
                 }
               }
             }
@@ -2774,7 +2774,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+                  "$ref": "#/components/schemas/NeonAuthEmailServerConfigResponse"
                 }
               }
             }
@@ -2810,7 +2810,9 @@
       ],
       "post": {
         "summary": "Send test email",
-        "description": "Sends a test email using the configured email server settings to verify SMTP connectivity and credentials.\nThe request body must include the SMTP server settings\n(`host`, `port`, `username`, `password`, `sender_email`, `sender_name`) and the `recipient_email` address.\n",
+        "description": "Sends a test email using the SMTP server settings supplied in the request body to verify connectivity and credentials.\nThe request body must include the full SMTP server settings\n(`host`, `port`, `username`, `password`, `sender_email`, `sender_name`) and the `recipient_email` address.\n\nDeprecated: to test a branch's already-saved configuration, use `sendNeonAuthEmailProviderTest`, which\nreuses the stored SMTP password server-side so the caller never has to re-supply (or be able to read) it.\nThis endpoint remains available for testing an unsaved full configuration and for non-Better-Auth providers.\n",
+        "deprecated": true,
+        "x-sunset": "2027-02-28",
         "tags": [
           "Auth"
         ],
@@ -2821,6 +2823,64 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SendNeonAuthTestEmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Response with the result of the test email send",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendNeonAuthTestEmailResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/auth/email_provider/test": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Send test email using the saved email provider",
+        "description": "Sends a test email using the branch's already-saved custom SMTP configuration. Only the\n`recipient_email` is provided \u2014 the stored SMTP settings and password are used server-side,\nso the caller does not need to re-supply (or be able to read) the password. This avoids the\nGET response's masked password being sent back, which would fail SMTP authentication.\n\nRequires a configured custom SMTP provider on a Better Auth integration. A shared provider,\na missing configuration, or a non-Better-Auth integration is rejected.\n",
+        "tags": [
+          "Auth"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "sendNeonAuthEmailProviderTest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendNeonAuthEmailProviderTestRequest"
               }
             }
           },
@@ -2959,7 +3019,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+                  "$ref": "#/components/schemas/NeonAuthEmailServerConfigResponse"
                 }
               }
             }
@@ -2971,7 +3031,7 @@
       },
       "patch": {
         "summary": "Update email provider configuration",
-        "description": "Updates the email provider configuration for the specified branch's Neon Auth integration.\nThe email provider handles transactional messages such as verification emails and password reset links.\n",
+        "description": "Updates the email provider configuration for the specified branch's Neon Auth integration.\nThe email provider handles transactional messages such as verification emails and password reset links.\n\nPartial `standard` updates \u2014 omitting fields to keep their stored values \u2014 are supported only for\nBetter Auth integrations, which merge omitted fields server-side. Legacy Stack Auth integrations do\nnot merge and require all six `standard` fields (`host`, `port`, `username`, `password`,\n`sender_email`, `sender_name`) on every update; a partial `standard` body is rejected with 400.\n",
         "tags": [
           "Auth"
         ],
@@ -2992,7 +3052,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NeonAuthEmailServerConfig"
+                  "$ref": "#/components/schemas/NeonAuthEmailServerConfigResponse"
                 }
               }
             }
@@ -4011,23 +4071,12 @@
       },
       "delete": {
         "summary": "Delete branch",
-        "description": "Deletes the specified branch from a project and places all compute endpoints into an idle state, breaking existing client connections.\n\nThe deletion completes after all operations finish.\nYou cannot delete a project's root or default branch, or a branch that has a child branch.\nA project must have at least one branch.\n\nBy default, deleted branches can be recovered within a 7-day grace period.\nUse the `hard_delete` parameter to permanently delete the branch immediately.\nFor related information, see [Manage branches](https://neon.com/docs/manage/branches/).\n",
+        "description": "Deletes the specified branch from a project and places all compute endpoints into an idle state, breaking existing client connections.\n\nThe deletion completes after all operations finish.\nYou cannot delete a project's root or default branch, or a branch that has a child branch.\nA project must have at least one branch.\n\nFor related information, see [Manage branches](https://neon.com/docs/manage/branches/).\n",
         "tags": [
           "Branch"
         ],
         "operationId": "deleteProjectBranch",
-        "parameters": [
-          {
-            "name": "hard_delete",
-            "in": "query",
-            "description": "If true, the branch is permanently deleted immediately without a recovery window.\nIf false (default), the branch can be recovered within 7 days via the recover endpoint.\n\nThis parameter is part of the Branch Recovery feature, which is in preview and not available to all users.\n",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Deleted the specified branch",
@@ -7974,6 +8023,18 @@
             }
           },
           {
+            "name": "slug",
+            "in": "query",
+            "description": "User-defined snapshot resource ID. Must be unique within the project.\nMust start with a lowercase letter, contain only lowercase letters, numbers, and hyphens,\nand end with a letter or number. If omitted, the control plane generates a value.\n",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 63,
+              "pattern": "^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$"
+            }
+          },
+          {
             "name": "expires_at",
             "in": "query",
             "description": "The time at which the snapshot will be automatically deleted. RFC 3339 format.\n",
@@ -9424,6 +9485,140 @@
         }
       }
     },
+    "/projects/{project_id}/branches/{branch_id}/credentials/{token_id}/reveal": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "token_id",
+          "in": "path",
+          "description": "The opaque credential id (e.g. nak_live_<32hex>).",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Reveal a credential's secrets",
+        "description": "Returns the live `api_token` and `s3_secret_access_key` of an existing\ncredential, so a credential whose issuance response was lost can be\nrecovered without minting a new one.\n\nThis is a POST with an explicit `/reveal` verb so the secrets never ride\na GET, where they would land in access logs, browser history and proxy\ncaches. Revoked and expired credentials return 404, as does a\n`token_id` that does not belong to this project.\n\nA credential issued before secret retrieval was supported has no\nrecoverable secret and returns 409 \u2014 rotate it to obtain one.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Credentials"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "revealCredential",
+        "responses": {
+          "200": {
+            "description": "The credential's live secrets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CredentialSecret"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Credential not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The credential exists but has no recoverable secret because it was\nissued before secret retrieval was supported. Rotate the credential\nto obtain a recoverable secret.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/credentials/{token_id}/rotate": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "token_id",
+          "in": "path",
+          "description": "The opaque credential id (e.g. nak_live_<32hex>).",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Rotate a credential's secrets",
+        "description": "Replaces the secret material on an existing scoped credential in\nplace. `token_id` is preserved \u2014 it is the `AWS_ACCESS_KEY_ID` for\nS3-compatible clients, so the access key id your application already\nholds keeps working and only the secret changes. This is the analog of\nresetting a Postgres password, not of issuing a second credential.\n\nThe response carries the new `api_token` and `s3_secret_access_key`\nexactly once. Rotation is **not** idempotent: retrying after an\nambiguous timeout mints another secret and supersedes the previous\nreplacement, so a retry does not recover a lost response \u2014 it only\ninvalidates the secret you did not receive. If you lose the response,\nissue a replacement credential and revoke this one.\n\nThe old secret stops authenticating as soon as the rotation commits.\nWhere a region caches credentials on its data-plane verifiers, a\nreplica may briefly keep accepting the old secret \u2014 and rejecting the\nnew one \u2014 until its cache entry expires; where it does not, the\ncutover is immediate apart from requests already in flight. Either way\nthe changeover is not atomic across replicas, so retry an unexpected\nauthentication failure right after rotating rather than treating the\nnew secret as bad. `last_used_at` continues to report the logical\ncredential's prior usage and says nothing about whether the new secret\nhas been used yet.\n\nOnly a live, unexpired, unrevoked customer-managed (`user`) credential\non a live project and live branch is eligible. Anything else \u2014\nincluding the platform-internal `function` and `system` credentials \u2014\nis reported as not found, indistinguishable from an unknown\n`token_id`.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Credentials"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "rotateCredential",
+        "responses": {
+          "200": {
+            "description": "Credential rotated \u2014 new secrets shown once.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RotateCredentialResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
     "/projects/{project_id}/branches/{branch_id}/functions": {
       "parameters": [
         {
@@ -9664,6 +9859,353 @@
                 }
               }
             }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/triggers": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "List triggers on the branch",
+        "description": "Lists the complete project-bounded set of triggers visible on the branch,\nordered by `trigger_id`. An inherited trigger keeps its project-wide ID\nand configuration, and is disabled on the child until explicitly enabled\nthere.\n\nThe supported trigger types are `schedule` and\n`storage_object_created`. A storage-object-created trigger watches one\nexact bucket and fires only after an object upload succeeds.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Functions"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "listProjectBranchTriggers",
+        "responses": {
+          "200": {
+            "description": "The branch-effective trigger list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriggersListResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a trigger",
+        "description": "Creates a trigger for a Function visible on the branch. The required\n`type` discriminator selects the trigger-specific configuration. The\nsupported types are `schedule` and `storage_object_created`. A schedule\ntrigger uses a numeric five-field cron expression interpreted in UTC. A\nstorage-object-created trigger fires only after a successful upload to\none exact bucket and may narrow matches to an object-key prefix.\n\nThe name must be unique among triggers visible on the branch, including\ninherited triggers.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Functions"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "createProjectBranchTrigger",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TriggerCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Trigger created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriggerResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/triggers/{trigger_id}": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "trigger_id",
+          "in": "path",
+          "description": "The opaque, project-wide trigger ID",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/TriggerID"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get a trigger",
+        "description": "Returns the trigger visible on the branch. The supported trigger types\nare `schedule` and `storage_object_created`.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Functions"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "getProjectBranchTrigger",
+        "responses": {
+          "200": {
+            "description": "The trigger",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriggerResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a trigger",
+        "description": "Applies a partial update. The required `type` discriminator must identify\nthe existing trigger kind. The supported types are `schedule` and\n`storage_object_created`. Editing an inherited trigger creates a\nchild-local shadow with the same `trigger_id`; it remains disabled unless\nthis request explicitly enables it. For a schedule trigger, updating the\nschedule or enabled state increments `version` and recomputes\n`next_run_at`.\n\nDisabling stops future scheduling but does not cancel occurrences already\ncommitted for delivery. For `storage_object_created`, the configuration\nselects one exact bucket. An omitted object-key prefix matches every key\nin that bucket; a present prefix is matched byte-for-byte and\ncase-sensitively against the full key, without path normalization or a\npath-segment boundary.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Functions"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "updateProjectBranchTrigger",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TriggerUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated trigger",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TriggerResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a trigger",
+        "description": "Deletes a branch-local trigger or writes a branch-local tombstone for an\ninherited trigger so it does not reappear. Deletion stops future\nscheduling or storage-event matching but does not cancel invocations\nalready committed for delivery. The supported trigger types are\n`schedule` and `storage_object_created`.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Functions"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "deleteProjectBranchTrigger",
+        "responses": {
+          "204": {
+            "description": "Trigger deleted"
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/custom-domains": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Register a custom domain on a branch",
+        "description": "Registers a customer-owned domain (for example `dashboard.acme.com`) on the\nbranch and points it at a target entity, chosen by `entity_type` +\n`entity_id`. In v1 only `entity_type: function` is supported (an\nunsupported type is rejected with `400`), where `entity_id` is the function\nslug and the function must already exist on the branch (else `404`).\n\nThe response includes the `cname_target` the customer must point their\ndomain at with a CNAME record; the domain goes live only once that DNS\nresolves and a certificate is issued on the first request. A domain already\nregistered to another resource is rejected with `409` and no detail about\nthe owner. Re-registering the same domain for the same entity is idempotent.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Functions"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "registerProjectBranchCustomDomain",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomDomainRegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The registered custom domain",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomDomain"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      },
+      "get": {
+        "summary": "List the custom domains on a branch",
+        "description": "Lists all custom domains registered on the branch, across every target\nentity.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Functions"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "listProjectBranchCustomDomains",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/CursorParam"
+          },
+          {
+            "name": "limit",
+            "description": "Specify a value from 1 to 1000 to limit number of domains in the response",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of custom domains",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/CustomDomainsListResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CursorPaginationResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/GeneralError"
+          }
+        }
+      }
+    },
+    "/projects/{project_id}/branches/{branch_id}/custom-domains/{domain}": {
+      "parameters": [
+        {
+          "name": "project_id",
+          "in": "path",
+          "description": "The Neon project ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "branch_id",
+          "in": "path",
+          "description": "The Neon branch ID",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          }
+        },
+        {
+          "name": "domain",
+          "in": "path",
+          "description": "The registered custom domain (case-insensitive).",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 254,
+            "pattern": "^[A-Za-z0-9.-]+$"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Delete a custom domain from a branch",
+        "description": "Removes a custom domain registered on the branch and stops routing it.\n\n**Note**: This endpoint is currently in Beta.\n",
+        "tags": [
+          "Functions"
+        ],
+        "x-stability-level": "beta",
+        "operationId": "deleteProjectBranchCustomDomain",
+        "responses": {
+          "204": {
+            "description": "Custom domain deleted"
           },
           "default": {
             "$ref": "#/components/responses/GeneralError"
@@ -15144,7 +15686,7 @@
             "description": "Configuration for the phone number authentication plugin."
           },
           "email_provider": {
-            "$ref": "#/components/schemas/NeonAuthEmailServerConfig",
+            "$ref": "#/components/schemas/NeonAuthEmailServerConfigResponse",
             "description": "Email server configuration used to send authentication emails."
           },
           "email_and_password": {
@@ -15309,14 +15851,6 @@
       },
       "StandardEmailServer": {
         "type": "object",
-        "required": [
-          "host",
-          "port",
-          "username",
-          "password",
-          "sender_email",
-          "sender_name"
-        ],
         "x-sensitive": [
           "host",
           "password",
@@ -15349,6 +15883,48 @@
           }
         }
       },
+      "StandardEmailServerResponse": {
+        "type": "object",
+        "required": [
+          "host",
+          "port",
+          "username",
+          "password",
+          "sender_email",
+          "sender_name"
+        ],
+        "x-sensitive": [
+          "host",
+          "password",
+          "username"
+        ],
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "Hostname of the email server."
+          },
+          "port": {
+            "type": "integer",
+            "description": "TCP port of the SMTP server. Common values: 25 (SMTP), 465 (SMTPS), 587 (submission)."
+          },
+          "username": {
+            "type": "string",
+            "description": "Username for authenticating with the SMTP server."
+          },
+          "password": {
+            "type": "string",
+            "description": "On GET, returned redacted (empty) for ordinary callers, while callers with project-credential read permission receive the stored password \u2014 do not assume this field is empty. Update (PATCH) responses always return it redacted (empty) regardless of permission. Provide a value on update to set or rotate the password."
+          },
+          "sender_email": {
+            "type": "string",
+            "description": "Email address used as the From address on outgoing auth emails."
+          },
+          "sender_name": {
+            "type": "string",
+            "description": "Display name shown as the sender in outgoing emails."
+          }
+        }
+      },
       "NeonAuthEmailServerConfig": {
         "type": "object",
         "discriminator": {
@@ -15367,28 +15943,89 @@
           }
         ]
       },
-      "SendNeonAuthTestEmailRequest": {
+      "NeonAuthEmailServerConfigResponse": {
         "type": "object",
-        "allOf": [
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "standard": "#/components/schemas/StandardEmailServerResponse",
+            "shared": "#/components/schemas/SharedEmailServer"
+          }
+        },
+        "oneOf": [
           {
-            "$ref": "#/components/schemas/StandardEmailServer"
+            "$ref": "#/components/schemas/StandardEmailServerResponse"
           },
           {
-            "type": "object",
-            "required": [
-              "recipient_email"
-            ],
-            "properties": {
-              "recipient_email": {
-                "description": "The email address to send the test email to.",
-                "type": "string",
-                "format": "email",
-                "minLength": 1,
-                "maxLength": 256
-              }
-            }
+            "$ref": "#/components/schemas/SharedEmailServer"
           }
         ]
+      },
+      "SendNeonAuthTestEmailRequest": {
+        "type": "object",
+        "required": [
+          "host",
+          "port",
+          "username",
+          "password",
+          "sender_email",
+          "sender_name",
+          "recipient_email"
+        ],
+        "x-sensitive": [
+          "host",
+          "password",
+          "username"
+        ],
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "Hostname of the email server."
+          },
+          "port": {
+            "type": "integer",
+            "description": "TCP port of the SMTP server. Common values: 25 (SMTP), 465 (SMTPS), 587 (submission)."
+          },
+          "username": {
+            "type": "string",
+            "description": "Username for authenticating with the SMTP server."
+          },
+          "password": {
+            "type": "string",
+            "description": "Password for authenticating with the SMTP server."
+          },
+          "sender_email": {
+            "type": "string",
+            "description": "Email address used as the From address on outgoing auth emails."
+          },
+          "sender_name": {
+            "type": "string",
+            "description": "Display name shown as the sender in outgoing emails."
+          },
+          "recipient_email": {
+            "description": "The email address to send the test email to.",
+            "type": "string",
+            "format": "email",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        }
+      },
+      "SendNeonAuthEmailProviderTestRequest": {
+        "type": "object",
+        "description": "Request to test the branch's saved email provider. Only the recipient is supplied; the stored\nSMTP settings and password are used server-side.\n",
+        "required": [
+          "recipient_email"
+        ],
+        "properties": {
+          "recipient_email": {
+            "description": "The email address to send the test email to.",
+            "type": "string",
+            "format": "email",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        }
       },
       "SendNeonAuthTestEmailResponse": {
         "type": "object",
@@ -15889,6 +16526,10 @@
             "type": "string",
             "description": "Human-readable label for the snapshot."
           },
+          "slug": {
+            "type": "string",
+            "description": "Snapshot resource ID, unique within the project. Distinct from the internal snapshot ID and display name."
+          },
           "lsn": {
             "type": "string",
             "description": "WAL position (Log Sequence Number) at which the snapshot was captured, in Postgres LSN format (for example, `0/3000000`)."
@@ -15984,7 +16625,9 @@
           "retention_seconds": {
             "type": "integer",
             "minimum": 3600,
-            "description": "How long to keep a snapshot (in seconds) before it's automatically deleted.\nIf not set, the snapshot is kept indefinitely.\n"
+            "maximum": 3024000,
+            "default": 3024000,
+            "description": "How long to keep a scheduled snapshot (in seconds) before it's automatically deleted.\nThe default is 3024000 seconds (35 days), which is also the maximum.\nManually created snapshots have no maximum retention: set their `expires_at` instead.\n"
           }
         }
       },
@@ -16723,11 +17366,22 @@
       },
       "CredentialScope": {
         "type": "string",
-        "description": "A single capability a credential may exercise. A credential is granted\na set of these; it may only perform actions explicitly listed in its\nscopes.\n",
+        "description": "A single capability you may request when issuing a credential. A\ncredential is granted a set of these; it may only perform actions\nexplicitly listed in its scopes.\n\nThis is the *requestable* set. Responses describing an existing\ncredential use `GrantedCredentialScope`, which is deliberately wider:\na credential may have been granted a scope that this endpoint does not\noffer, and a response must be able to report it.\n",
         "enum": [
           "storage:read",
           "storage:write",
           "ai_gateway:invoke",
+          "functions:invoke"
+        ]
+      },
+      "GrantedCredentialScope": {
+        "type": "string",
+        "description": "A single capability a credential actually carries, as reported by\nresponses that describe an existing credential.\n\nThis set is a superset of `CredentialScope` (the requestable set)\nbecause a credential's scopes are not limited to what this API offers:\nthe platform accepts additional scopes for customer-managed (`user`)\ncredentials, so one may exist on your branch that was not issued\nthrough this endpoint. Responses must be able to report such a\ncredential rather than fail to describe it \u2014 a client that rejected\nthe value would, on rotate, discard the replacement secret after the\nrotation had already committed. Treat unknown values as opaque.\n",
+        "enum": [
+          "storage:read",
+          "storage:write",
+          "ai_gateway:invoke",
+          "telemetry:write",
           "functions:invoke"
         ]
       },
@@ -16799,7 +17453,7 @@
           "scopes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CredentialScope"
+              "$ref": "#/components/schemas/GrantedCredentialScope"
             }
           },
           "branch_id": {
@@ -16814,6 +17468,100 @@
             "type": "string",
             "format": "date-time",
             "description": "When the credential expires; absent means never expires.\n"
+          }
+        }
+      },
+      "CredentialSecret": {
+        "type": "object",
+        "required": [
+          "token_id",
+          "api_token",
+          "s3_secret_access_key"
+        ],
+        "description": "The live secrets of an existing credential, recovered on demand by the\nreveal endpoint. `api_token` and `s3_secret_access_key` are the same\nvalues handed back once at issuance.\n\nThe field set is deliberately narrower than `CreateCredentialResponse`:\nit carries only what reveal can actually recover. `token_id_short`,\n`scopes`, `principal_type`, `created_at` and `expires_at` are metadata,\nnot secrets \u2014 read them from the list endpoint instead.\n\nNo `branch_id` is returned. Reveal is scoped by `(project_id,\ntoken_id)`, so the branch in the request path authorizes the call but\nis not proven to be the branch the credential was issued on. Echoing it\nback would assert an anchor this endpoint never verified. For a\ncredential's true anchor branch, read `branch_id` from the list\nendpoint, which is branch-exact.\n",
+        "x-sensitive": [
+          "api_token",
+          "s3_secret_access_key"
+        ],
+        "properties": {
+          "token_id": {
+            "type": "string",
+            "description": "Opaque credential id (e.g. nak_live_<32hex>)."
+          },
+          "api_token": {
+            "type": "string",
+            "description": "Bearer token."
+          },
+          "s3_secret_access_key": {
+            "type": "string",
+            "description": "nsk_live_<64 hex>; the AWS_SECRET_ACCESS_KEY."
+          }
+        }
+      },
+      "RotateCredentialResponse": {
+        "type": "object",
+        "required": [
+          "token_id",
+          "token_id_short",
+          "api_token",
+          "s3_secret_access_key",
+          "scopes",
+          "branch_id",
+          "principal_type",
+          "created_at"
+        ],
+        "x-sensitive": [
+          "api_token",
+          "s3_secret_access_key"
+        ],
+        "description": "The replacement secret material for an existing credential, returned\nexactly once. `token_id`, `scopes`, `branch_id` and `created_at` are\nunchanged by the rotation \u2014 only `api_token` and\n`s3_secret_access_key` are new.\n",
+        "properties": {
+          "token_id": {
+            "type": "string",
+            "description": "Opaque credential id (e.g. nak_live_<32hex>), unchanged by the\nrotation. Doubles as the `AWS_ACCESS_KEY_ID` for SigV4.\n"
+          },
+          "token_id_short": {
+            "type": "string",
+            "description": "First 12 hex chars of token_id; safe to log."
+          },
+          "name": {
+            "type": "string",
+            "description": "Customer-supplied label carried on the credential. Absent when none was set at issuance."
+          },
+          "api_token": {
+            "type": "string",
+            "description": "The new Bearer token; returned exactly once."
+          },
+          "s3_secret_access_key": {
+            "type": "string",
+            "description": "The new nsk_live_<64 hex> AWS_SECRET_ACCESS_KEY; returned exactly once."
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantedCredentialScope"
+            }
+          },
+          "branch_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,60}$"
+          },
+          "principal_type": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Always `user`: only customer-managed credentials are rotatable\nthrough this endpoint.\n"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the credential was originally issued. Rotation replaces the\nsecrets in place and does not reset this.\n"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the credential expires; absent means never expires. Rotation\ndoes not extend it.\n"
           }
         }
       },
@@ -16841,7 +17589,7 @@
           "scopes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CredentialScope"
+              "$ref": "#/components/schemas/GrantedCredentialScope"
             }
           },
           "branch_id": {
@@ -17003,6 +17751,507 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NeonFunction"
+            }
+          }
+        }
+      },
+      "TriggerID": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.\\-]{0,127}$",
+        "minLength": 1,
+        "maxLength": 128,
+        "description": "Opaque, server-minted project-wide trigger identifier."
+      },
+      "FunctionTriggerSchedule": {
+        "type": "object",
+        "description": "A numeric five-field cron schedule interpreted in UTC.",
+        "required": [
+          "cron"
+        ],
+        "properties": {
+          "cron": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Numeric five-field cron expression (minute through day-of-week), interpreted in UTC.",
+            "example": "0 9 * * 1-5"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FunctionTriggerStorageObjectCreated": {
+        "type": "object",
+        "description": "Matches successful uploads to one exact bucket and, when configured, an\nobject-key prefix. The Function receives a JSON request body with\n`type` set to `storage_object_created` and a `data` object containing\nexactly `bucket_name` and `object_key`.\n",
+        "required": [
+          "bucket_name"
+        ],
+        "properties": {
+          "bucket_name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 63,
+            "description": "The exact object-storage bucket name to watch."
+          },
+          "prefix": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f]+$",
+            "description": "Optional object-key prefix of at most 1024 UTF-8 bytes. When omitted,\nevery key in the bucket matches. When present, the full object key\nmust start with these exact bytes; matching is case-sensitive and\ndoes not normalize paths or require a path-segment boundary.\nMatch-all responses omit this field rather than returning an empty\nstring.\n"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TriggerCreateRequest": {
+        "type": "object",
+        "description": "Trigger creation payload discriminated by `type`. The supported trigger\ntypes are `schedule` and `storage_object_created`.\n",
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "schedule": "#/components/schemas/ScheduleTriggerCreateRequest",
+            "storage_object_created": "#/components/schemas/StorageObjectCreatedTriggerCreateRequest"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ScheduleTriggerCreateRequest"
+          },
+          {
+            "$ref": "#/components/schemas/StorageObjectCreatedTriggerCreateRequest"
+          }
+        ]
+      },
+      "ScheduleTriggerCreateRequest": {
+        "type": "object",
+        "required": [
+          "type",
+          "function_slug",
+          "name",
+          "schedule"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "schedule"
+            ],
+            "description": "Trigger type discriminator."
+          },
+          "function_slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]{1,20}$",
+            "description": "The branch-local Function slug to invoke."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Human-readable name, unique among triggers visible on the branch."
+          },
+          "function_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "default": "/",
+            "description": "Path passed to the target Function. Defaults to `/`."
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/FunctionTriggerSchedule"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether future occurrences should be scheduled."
+          }
+        },
+        "additionalProperties": false
+      },
+      "StorageObjectCreatedTriggerCreateRequest": {
+        "type": "object",
+        "required": [
+          "type",
+          "function_slug",
+          "name",
+          "storage_object_created"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "storage_object_created"
+            ],
+            "description": "Trigger type discriminator."
+          },
+          "function_slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]{1,20}$",
+            "description": "The branch-local Function slug to invoke."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Human-readable name, unique among triggers visible on the branch."
+          },
+          "function_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "default": "/",
+            "description": "Path passed to the target Function. Defaults to `/`."
+          },
+          "storage_object_created": {
+            "$ref": "#/components/schemas/FunctionTriggerStorageObjectCreated"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether successful matching uploads should invoke the Function."
+          }
+        },
+        "additionalProperties": false
+      },
+      "TriggerUpdateRequest": {
+        "type": "object",
+        "description": "Partial trigger update discriminated by `type`. The supported trigger\ntypes are `schedule` and `storage_object_created`.\n",
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "schedule": "#/components/schemas/ScheduleTriggerUpdateRequest",
+            "storage_object_created": "#/components/schemas/StorageObjectCreatedTriggerUpdateRequest"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ScheduleTriggerUpdateRequest"
+          },
+          {
+            "$ref": "#/components/schemas/StorageObjectCreatedTriggerUpdateRequest"
+          }
+        ]
+      },
+      "ScheduleTriggerUpdateRequest": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "minProperties": 2,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "schedule"
+            ],
+            "description": "Trigger type discriminator; it does not change the trigger type."
+          },
+          "function_slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]{1,20}$",
+            "description": "Replacement branch-local Function slug."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "function_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/FunctionTriggerSchedule"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "True enables and false disables future scheduling."
+          }
+        },
+        "additionalProperties": false
+      },
+      "StorageObjectCreatedTriggerUpdateRequest": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "minProperties": 2,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "storage_object_created"
+            ],
+            "description": "Trigger type discriminator; it does not change the trigger type."
+          },
+          "function_slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9]{1,20}$",
+            "description": "Replacement branch-local Function slug."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "function_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "storage_object_created": {
+            "$ref": "#/components/schemas/FunctionTriggerStorageObjectCreated"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "True enables and false disables future matching uploads."
+          }
+        },
+        "additionalProperties": false
+      },
+      "Trigger": {
+        "type": "object",
+        "description": "A branch-effective trigger discriminated by `type`. The supported trigger\ntypes are `schedule` and `storage_object_created`.\n",
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "schedule": "#/components/schemas/ScheduleTrigger",
+            "storage_object_created": "#/components/schemas/StorageObjectCreatedTrigger"
+          }
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ScheduleTrigger"
+          },
+          {
+            "$ref": "#/components/schemas/StorageObjectCreatedTrigger"
+          }
+        ]
+      },
+      "ScheduleTrigger": {
+        "type": "object",
+        "description": "A branch-effective schedule trigger for a Function.",
+        "required": [
+          "type",
+          "trigger_id",
+          "function_slug",
+          "name",
+          "function_path",
+          "schedule",
+          "enabled",
+          "version",
+          "next_run_at",
+          "inherited"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "schedule"
+            ],
+            "description": "Trigger type discriminator."
+          },
+          "trigger_id": {
+            "$ref": "#/components/schemas/TriggerID"
+          },
+          "function_slug": {
+            "type": "string",
+            "description": "The branch-local Function slug resolved when an occurrence is consumed."
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable trigger name."
+          },
+          "function_path": {
+            "type": "string",
+            "description": "Path passed to the target Function."
+          },
+          "schedule": {
+            "$ref": "#/components/schemas/FunctionTriggerSchedule"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Monotonic configuration version."
+          },
+          "next_run_at": {
+            "type": "string",
+            "nullable": true,
+            "description": "Next scheduled occurrence as an RFC 3339 UTC timestamp, or null\nwhile disabled or inherited and not explicitly enabled on this branch.\n"
+          },
+          "inherited": {
+            "type": "boolean",
+            "description": "True when the effective configuration was authored on an ancestor branch."
+          }
+        },
+        "additionalProperties": false
+      },
+      "StorageObjectCreatedTrigger": {
+        "type": "object",
+        "description": "A branch-effective trigger that invokes a Function after a successful\nupload matching its exact bucket and optional object-key prefix.\n",
+        "required": [
+          "type",
+          "trigger_id",
+          "function_slug",
+          "name",
+          "function_path",
+          "storage_object_created",
+          "enabled",
+          "version",
+          "inherited"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "storage_object_created"
+            ],
+            "description": "Trigger type discriminator."
+          },
+          "trigger_id": {
+            "$ref": "#/components/schemas/TriggerID"
+          },
+          "function_slug": {
+            "type": "string",
+            "description": "The branch-local Function slug resolved when an invocation is consumed."
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable trigger name."
+          },
+          "function_path": {
+            "type": "string",
+            "description": "Path passed to the target Function."
+          },
+          "storage_object_created": {
+            "$ref": "#/components/schemas/FunctionTriggerStorageObjectCreated"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Monotonic configuration version."
+          },
+          "inherited": {
+            "type": "boolean",
+            "description": "True when the effective configuration was authored on an ancestor branch."
+          }
+        },
+        "additionalProperties": false
+      },
+      "TriggerResponse": {
+        "type": "object",
+        "required": [
+          "trigger"
+        ],
+        "properties": {
+          "trigger": {
+            "$ref": "#/components/schemas/Trigger"
+          }
+        }
+      },
+      "TriggersListResponse": {
+        "type": "object",
+        "required": [
+          "triggers"
+        ],
+        "properties": {
+          "triggers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Trigger"
+            }
+          }
+        }
+      },
+      "CustomDomain": {
+        "type": "object",
+        "required": [
+          "domain",
+          "entity_type",
+          "entity_id",
+          "cname_target"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "The registered custom domain (normalized, lowercase)."
+          },
+          "entity_type": {
+            "type": "string",
+            "description": "The kind of branch entity the domain targets. Possible values:\n`function` (v1 supports only `function`). Not an `enum`: new values may\nship in later spec versions \u2014 treat any undocumented value as unknown.\n"
+          },
+          "entity_id": {
+            "type": "string",
+            "description": "The target entity's identifier within the branch. For `function` this\nis the function slug.\n"
+          },
+          "cname_target": {
+            "type": "string",
+            "description": "The hostname the customer must point their custom domain at with a\nCNAME record. Empty when the serving region has no custom-domains\nfront door configured. This is the activation input: point DNS here\nand the domain goes live (see `status`) once a certificate is issued\non the first request.\n"
+          },
+          "status": {
+            "type": "string",
+            "description": "The domain's current validity, computed by a background check:\n`pending` (still converging \u2014 point your CNAME at `cname_target` and\nwait), `active` (live: DNS resolves to the edge, the CA is authorized,\nand routing is published), or `error` (a fixable problem \u2014 see\n`status_reason`). Not an `enum`: treat any undocumented value as\nunknown. May be absent briefly right after registration.\n"
+          },
+          "dns_status": {
+            "type": "string",
+            "description": "The DNS + CAA portion of the check: `pending` (no records yet), `ok`\n(resolves to our edge and the CA is authorized), `misconfigured` (your\nCNAME does not resolve to our edge), or `caa_blocked` (your CAA records\nforbid Let's Encrypt). Not an `enum`.\n"
+          },
+          "binding_status": {
+            "type": "string",
+            "description": "Whether Neon's internal routing for the domain is published:\n`pending`, `present`, or `missing`. `missing` is an internal fault\nsurfaced for support. Not an `enum`.\n"
+          },
+          "status_reason": {
+            "type": "string",
+            "description": "A short, stable machine-readable reason for a non-active `status`\n(e.g. `cname-not-pointing-at-edge`, `caa-blocks-lets-encrypt`,\n`binding-missing`), suitable for keying an actionable hint. Empty when\nactive or pending.\n"
+          }
+        }
+      },
+      "CustomDomainRegisterRequest": {
+        "type": "object",
+        "required": [
+          "domain",
+          "entity_type",
+          "entity_id"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 254,
+            "description": "The custom domain to register (for example `dashboard.acme.com`).\nCase-insensitive; normalized to lowercase (a trailing root dot is\nstripped, so the 254-char bound admits a fully-qualified name whose\nnormalized form is 253 chars). Neon-managed and internal hostnames are\nrejected.\n"
+          },
+          "entity_type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "example": "function",
+            "description": "The kind of branch entity to point the domain at. v1 supports only\n`function`; any other value is rejected with `invalid_entity_type`.\n"
+          },
+          "entity_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "The target entity's identifier within the branch. For `function` this\nis the function slug (which must already exist on the branch).\n"
+          }
+        }
+      },
+      "CustomDomainsListResponse": {
+        "type": "object",
+        "required": [
+          "custom_domains"
+        ],
+        "properties": {
+          "custom_domains": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomDomain"
             }
           }
         }

@@ -24,6 +24,15 @@
     {
       "breadcrumb": [
         "properties",
+        "slug"
+      ],
+      "metadata": {
+        "inclusion": "available"
+      }
+    },
+    {
+      "breadcrumb": [
+        "properties",
         "lsn"
       ],
       "metadata": {
@@ -161,6 +170,13 @@
       },
       "name": {
         "description": "Human-readable label for the snapshot.",
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "slug": {
+        "description": "Snapshot resource ID, unique within the project. Distinct from the internal snapshot ID and display name.",
         "type": [
           "string",
           "null"
