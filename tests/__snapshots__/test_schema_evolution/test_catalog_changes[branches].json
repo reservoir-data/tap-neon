@@ -353,7 +353,7 @@
   "schema": {
     "properties": {
       "active_time_seconds": {
-        "description": "Total time this branch's compute has been active during the current billing period, in seconds (not weighted by compute size). Distinct from `compute_time_seconds`, which is CU-weighted.",
+        "description": "Total time this branch's compute has been active during the current billing period, in seconds (not weighted by compute size). Distinct from `compute_time_seconds`, which is CU-weighted.\nNot intended for billing or metering. For billing, use `/consumption_history/v2/branches`.\n",
         "format": "int64",
         "type": [
           "integer",
@@ -361,7 +361,7 @@
         ]
       },
       "compute_time_seconds": {
-        "description": "Total Postgres compute time consumed by this branch during the current billing period, in CU-seconds (weighted by compute size). Divide by 3600 for CU-hours.",
+        "description": "Total Postgres compute time consumed by this branch during the current billing period, in CU-seconds (weighted by compute size). Divide by 3600 for CU-hours.\nNot intended for billing or metering. For billing, use `/consumption_history/v2/branches`.\n",
         "format": "int64",
         "type": [
           "integer",
@@ -423,7 +423,7 @@
         ]
       },
       "data_transfer_bytes": {
-        "description": "Total data transferred out of the branch, in bytes. Used as a consumption metric.",
+        "description": "Total data transferred out of the branch, in bytes. Used as a consumption metric.\nNot intended for billing or metering. For billing, use `/consumption_history/v2/branches`.\n",
         "format": "int64",
         "type": [
           "integer",
@@ -649,7 +649,7 @@
         ]
       },
       "written_data_bytes": {
-        "description": "Data written by this branch during the current billing period, in bytes.",
+        "description": "Data written by this branch during the current billing period, in bytes.\nNot intended for billing or metering. For billing, use `/consumption_history/v2/branches`.\n",
         "format": "int64",
         "type": [
           "integer",
