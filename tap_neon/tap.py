@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-__lazy_modules__ = {"typing"}
+from typing import TYPE_CHECKING, override
 
-from typing import override
-
-from singer_sdk import Stream, Tap
+from singer_sdk import Tap
 from singer_sdk import typing as th
 
 from tap_neon import streams
+
+if TYPE_CHECKING:
+    from singer_sdk import Stream
 
 
 class TapNeon(Tap):
